@@ -19,7 +19,7 @@ return new class extends Migration
              $table->date('DOB');
              $table->string('company', 50);
              $table->unsignedInteger('phone_no');
-             $table->foreign('profile_id')->references('user_id')->on('accounts');
+             $table->foreign('profile_id')->references('user_id')->on('users');
          });
      }
 
