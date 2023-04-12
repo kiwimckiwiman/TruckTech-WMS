@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('username', 20)->unique();
             $table->string('password');
             $table->string('email', 50)->unique();
-            $table->enum('type', ['c', 'w', 'a']);
+            $table->enum('type', ['c', 'w', 'a', 's']);
         });
 
         DB::table('users')->insert(
@@ -26,7 +26,7 @@ return new class extends Migration
             'username' => 'admin',
             'password' => '$2y$10$WHZWjSrU2pfsjrCouoBJa.UEVDtz9PEHN0j4OGOSIH.dUM6SopxLW',
             'email' => 'admin@email.com',
-            'type' => 'a'
+            'type' => 's'
             )
         );
     }
