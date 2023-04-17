@@ -46,4 +46,15 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/sign-up-static', [PageController::class, 'signup'])->name('sign-up-static'); 
 	Route::get('/{page}', [PageController::class, 'index'])->name('page');
 	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+// SANA
+Route::get('/workshopOwner', [WorkshopOwnerController::class, 'create'])->name('profile');
+Route::post('/profile', [WorkshopOwnerController::class, 'store'])->name('profile.update');
+Route::get('/workshops', [workshopsController::class, 'create'])->name('profile');
+Route::post('/profile', [workshopsController::class, 'store'])->name('profile.update');
+// ROUTE FOR OWNER"S WORKSHOPS
+Route::get('/ownersWorkshops', [workshopsController::class, 'store'])->name('profile.update');
+Route::get('/workshopDashboard', [workshopsController::class, 'store'])->name('profile.update');
+
+
 });

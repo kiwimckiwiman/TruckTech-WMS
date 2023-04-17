@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('time_created')->useCurrent();
             $table->enum('accepted_status', ['pending', 'accepted', 'rejected']);
             $table->timestamp('accepted_time')->nullable();
-            $table->foreign('customer_id')->references('profile_id')->on('profiles');
+            $table->foreign('customer_id')->references('user_id')->on('users');
             $table->foreign('workshop_id')->references('workshop_id')->on('workshops');
         });
     }
