@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('opening_hours');
             $table->string('specialisations');
             $table->integer('phone_no');
-            $table->foreign('workshop_owner_id')->references('profile_id')->on('profiles');
+            $table->foreign('workshop_owner_id')->references('user_id')->on('users');
         });
     }
 
