@@ -29,13 +29,20 @@ class LoginController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => 's'])) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
-        }// change view for below as needed to go to customer's dashboard
-        //elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'c'])) {
-            //$request->session()->regenerate();
+            return redirect()->intended('dashboard_sadmin');// change to super admin dashboard view
+        }elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'c'])) {
+            $request->session()->regenerate();
 
-            //return redirect()->intended('dashboard_customer');
-        //}
+            return redirect()->intended('dashboard_customer');// change to customer dashboard view
+        }elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'w'])) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('dashboard_worker');// change to worker dashboard view
+        }elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => 'a'])) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('dashboard_admin');// change to workshop owner dashboard view
+        }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
