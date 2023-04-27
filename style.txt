@@ -1,0 +1,23 @@
+nav bar links:
+	font size 13
+	color: rgb(136, 136, 136)
+
+active link:
+	color: rgb (26, 188, 156)
+
+fonts:
+	heebo (google fonts)
+
+
+nav bar:
+	rgba(255, 255, 255, 0.5)
+colour scheme:
+	dark blue banner:
+		rgb(31, 53, 107)
+	light blue main text:
+		rgb(105, 204, 233)
+	light grey main text:
+		rgb(140, 140, 140)
+	black main text:
+		rgb(10, 10, 10)
+		rgb(0, 0, 0)
