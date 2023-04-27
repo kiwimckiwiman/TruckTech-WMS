@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('username', 20)->unique();
             $table->string('password');
             $table->string('email', 50)->unique();
-            $table->string('name', 50);
-            $table->date('DOB');
-            $table->string('company', 50);
-            $table->unsignedInteger('phone_no');
+            $table->string('name', 50)->nullable();
+            $table->date('DOB')->nullable();
+            $table->string('company', 50)->nullable();
+            $table->unsignedInteger('phone_no')->nullable();
             $table->enum('type', ['c', 'w', 'a', 's']);
         });
-        
+
         DB::table('users')->insert(
         array(
             'username' => 'admin',
