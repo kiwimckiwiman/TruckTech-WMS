@@ -144,6 +144,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `DOB` date DEFAULT NULL,
+  `gender` varchar(7) NOT NULL,
   `company` varchar(255) DEFAULT NULL,
   `phone_no` int(11) UNSIGNED DEFAULT NULL,
   `type` enum('c','w','a','s') NOT NULL
