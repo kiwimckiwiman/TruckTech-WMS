@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<?php
+  session_start();
+  if(!($_SESSION["type"] == "a")){
+    header("Location: ../../login/login.php");
+  }
+?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Star Admin2 </title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="vendors/feather/feather.css">
-  <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="vendors/typicons/typicons.css">
-  <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
-  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="../../../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="js/select.dataTables.min.css">
+  <link rel="stylesheet" href="../../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="../../../js/select.dataTables.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
 </head>
 <body>
   <div class="container-scroller"> 
@@ -34,11 +39,11 @@
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="index.html">
-            <img src="images/logo.svg" alt="logo" />
+        <a class="navbar-brand brand-logo" href="dashboard.php">
+            <img src="../../../images/logo.svg" alt="logo" />
           </a>
-          <a class="navbar-brand brand-logo-mini" href="index.html">
-            <img src="images/logo-mini.svg" alt="logo" />
+          <a class="navbar-brand brand-logo-mini" href="dashboard.php">
+            <img src="../../../images/logo-mini.svg" alt="logo" />
           </a>
         </div>
       </div>
@@ -46,7 +51,7 @@
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">Admin</span></h1>
-            <h3 class="welcome-sub-text">Your performance summary this week </h3>
+            <h3 class="welcome-sub-text">Your Workshops </h3>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -148,7 +153,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../../images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
@@ -157,7 +162,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../../images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
@@ -166,7 +171,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../../images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
@@ -177,10 +182,10 @@
           </li>
           <li class="nav-item dropdown d-none d-lg-block user-dropdown">
             <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-              <img class="img-xs rounded-circle" src="images/faces/face8.jpg" alt="Profile image"> </a>
+              <img class="img-xs rounded-circle" src="../../../images/faces/face8.jpg" alt="Profile image"> </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
-                <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
+                <img class="img-md rounded-circle" src="../../../images/faces/face8.jpg" alt="Profile image">
                 <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
                 <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
               </div>
@@ -313,7 +318,7 @@
             </div>
             <ul class="chat-list">
               <li class="list active">
-                <div class="profile"><img src="images/faces/face1.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../../images/faces/face1.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Thomas Douglas</p>
                   <p>Available</p>
@@ -321,7 +326,7 @@
                 <small class="text-muted my-auto">19 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face2.jpg" alt="image"><span class="offline"></span></div>
+                <div class="profile"><img src="../../../images/faces/face2.jpg" alt="image"><span class="offline"></span></div>
                 <div class="info">
                   <div class="wrapper d-flex">
                     <p>Catherine</p>
@@ -332,7 +337,7 @@
                 <small class="text-muted my-auto">23 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face3.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../../images/faces/face3.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Daniel Russell</p>
                   <p>Available</p>
@@ -340,7 +345,7 @@
                 <small class="text-muted my-auto">14 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face4.jpg" alt="image"><span class="offline"></span></div>
+                <div class="profile"><img src="../../../images/faces/face4.jpg" alt="image"><span class="offline"></span></div>
                 <div class="info">
                   <p>James Richardson</p>
                   <p>Away</p>
@@ -348,7 +353,7 @@
                 <small class="text-muted my-auto">2 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face5.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../../images/faces/face5.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Madeline Kennedy</p>
                   <p>Available</p>
@@ -356,7 +361,7 @@
                 <small class="text-muted my-auto">5 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face6.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../../images/faces/face6.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Sarah Graves</p>
                   <p>Available</p>
@@ -467,72 +472,50 @@
       <!-- partial -->
       <div class="main-panel">
         
+        <div class="content-wrapper">
+            <div class="row">
+             
+            <?php
+              include '../queries.php';
+                // Assume you have fetched the data and stored it in a variable called $workshops
+                $workshops = getWorkshops($_SESSION['id']);
+                if(empty($workshops)){
+                  echo '<div class="col-md-6 grid-margin stretch-card">';
+                  echo '<div class="card">';
+                  echo '<div class="card-body">';
+                  echo '<h1 class="card-title"> No Workshops Found</h1>';
+                  echo '<p class="card-description">Please Contact Admin to Create new Workshop</p>';
+                  echo '</div>';
+                  echo '</div>';
+                  echo '</div>';
+                }else{
+                foreach ($workshops as $workshop) {
+                  echo '<div class="col-md-6 grid-margin stretch-card">';
+                  echo '<div class="card">';
+                  echo '<div class="card-body">';
+                  echo '<h1 class="card-title">' . $workshop['name'] . '</h1>';
+                  echo '<p class="card-description">Workshop Name: ' . $workshop['name'] . '</p>';
+                  echo '<p class="card-description">Workshop Phone Number: ' . $workshop['phone_no'] . '</p>';
+                  echo '<p class="card-description">Workshop Opening Hours: ' . $workshop['opening_hours'] . '</p>';
+                  echo '<p class="card-description">Workshop Location: ' . $workshop['location'] . '</p>';
+                  echo '<p class="card-description">Workshop Latitude and Longnitude: ' . $workshop['workshop_lng'] .'/ ' . $workshop['workshop_ltd'] .'</p>';
+                  echo '<p class="card-description">Workshop Specifications: ' . $workshop['specialisations'] .'</p>';
 
-        <div class="col-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Create Workshop</h4>
-                <p class="card-description">
-                  Form
-                </p>
-                <form class="forms-sample">
-                  <div class="form-group">
-                    <label for="exampleInputName1">Workshop Name</label>
-                    <input type="text" class="form-control" id="exampleInputName1" placeholder="Workshop Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail3">Workshop Location</label>
-                    <textarea rows="5" cols="175"  placeholder="Jalan Simpang Tiga, 93350 Kuching, Sarawak"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputName1">Workshop Opening Hours</label>
-                    <input type="time" class="form-control"  id="exampleInputName1" >
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputName1">Workshop Closing Hours</label>
-                    <input type="time" class="form-control"  id="exampleInputName1" >
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputName1">Workshop Specialisation</label>
-                    <input type="text" class="form-control" id="exampleInputName1" placeholder="Workshop Specialisation">
-                  </div>
-                    <div class="form-group">
-                        <label for="exampleInputCity1">Phone Number</label>
-                        <input type="tel" class="form-control" id="exampleInputCity1" placeholder="Phone Number">
-                    </div>
+                  echo '<form method="post" action="workshopdashboard.php"><input type="hidden" name="workshopid" value="' . $workshop['workshop_id'] . '">
+                  <button class="btn btn-primary" type="submit" >View</button></form>';
 
-                    <div class="template-demo">
-                   
-                   
-                 
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-secondary">Choose Workshop Owner</button>
-                          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuSplitButton4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuSplitButton4">
-                            <h6 class="dropdown-header">Andy Sejati</h6>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Murtada Rashid</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Hamza IShrat</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Mariny Binti</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Sana Tajmahamad</a>
-                          </div>
-                        </div>
-                        
-                        
-                      </div>
-                  <button type="submit" class="btn btn-primary me-2">Submit</button>
-                  <button class="btn btn-light">Cancel</button>
-                </form>
-              </div>
-            </div>
-          </div>
-         
+                  echo '</div>';
+                  echo '</div>';
+                  echo '</div>';
+                }
+              }
+            ?>
         
+          
+         
+           
+        </div>
+        </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -550,25 +533,24 @@
   <!-- container-scroller -->
 
   <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="../../../vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
-  <script src="vendors/chart.js/Chart.min.js"></script>
-  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="../../../vendors/chart.js/Chart.min.js"></script>
+  <script src="../../../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="../../../vendors/progressbar.js/progressbar.min.js"></script>
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <script src="js/off-canvas.js"></script>
-  <script src="js/hoverable-collapse.js"></script>
-  <script src="js/template.js"></script>
-  <script src="js/settings.js"></script>
-  <script src="js/todolist.js"></script>
+  <script src="../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <script src="js/Chart.roundedBarCharts.js"></script>
-  <!-- End custom js for this page-->
+  <script src="../../../js/dashboard.js"></script>
+  <script src="../../../js/Chart.roundedBarCharts.js"></script>
 </body>
 
 </html>

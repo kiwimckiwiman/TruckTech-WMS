@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<?php
+  session_start();
+  if(!($_SESSION["type"] == "s")){
+    header("Location: ../../login/login.php");
+  }
+?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Star Admin2 </title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="vendors/feather/feather.css">
-  <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="vendors/typicons/typicons.css">
-  <link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
-  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="../../vendors/feather/feather.css">
+  <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="js/select.dataTables.min.css">
+  <link rel="stylesheet" href="../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="../../js/select.dataTables.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
+<?php include 'queries.php'; ?>
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
@@ -35,10 +41,10 @@
         </div>
         <div>
           <a class="navbar-brand brand-logo" href="index.html">
-            <img src="images/logo.svg" alt="logo" />
+            <img src="../../images/logo.svg" alt="logo" />
           </a>
           <a class="navbar-brand brand-logo-mini" href="index.html">
-            <img src="images/logo-mini.svg" alt="logo" />
+            <img src="../../images/logo-mini.svg" alt="logo" />
           </a>
         </div>
       </div>
@@ -148,7 +154,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
@@ -157,7 +163,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
@@ -166,7 +172,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
@@ -177,10 +183,10 @@
           </li>
           <li class="nav-item dropdown d-none d-lg-block user-dropdown">
             <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-              <img class="img-xs rounded-circle" src="images/faces/face8.jpg" alt="Profile image"> </a>
+              <img class="img-xs rounded-circle" src="../../images/faces/face8.jpg" alt="Profile image"> </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
               <div class="dropdown-header text-center">
-                <img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
+                <img class="img-md rounded-circle" src="../../images/faces/face8.jpg" alt="Profile image">
                 <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
                 <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
               </div>
@@ -313,7 +319,7 @@
             </div>
             <ul class="chat-list">
               <li class="list active">
-                <div class="profile"><img src="images/faces/face1.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../images/faces/face1.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Thomas Douglas</p>
                   <p>Available</p>
@@ -321,7 +327,7 @@
                 <small class="text-muted my-auto">19 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face2.jpg" alt="image"><span class="offline"></span></div>
+                <div class="profile"><img src="../../images/faces/face2.jpg" alt="image"><span class="offline"></span></div>
                 <div class="info">
                   <div class="wrapper d-flex">
                     <p>Catherine</p>
@@ -332,7 +338,7 @@
                 <small class="text-muted my-auto">23 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face3.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../images/faces/face3.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Daniel Russell</p>
                   <p>Available</p>
@@ -340,7 +346,7 @@
                 <small class="text-muted my-auto">14 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face4.jpg" alt="image"><span class="offline"></span></div>
+                <div class="profile"><img src="../../images/faces/face4.jpg" alt="image"><span class="offline"></span></div>
                 <div class="info">
                   <p>James Richardson</p>
                   <p>Away</p>
@@ -348,7 +354,7 @@
                 <small class="text-muted my-auto">2 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face5.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../images/faces/face5.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Madeline Kennedy</p>
                   <p>Available</p>
@@ -356,7 +362,7 @@
                 <small class="text-muted my-auto">5 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="images/faces/face6.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="../../images/faces/face6.jpg" alt="image"><span class="online"></span></div>
                 <div class="info">
                   <p>Sarah Graves</p>
                   <p>Available</p>
@@ -467,51 +473,62 @@
       <!-- partial -->
       <div class="main-panel">
         
-        <div class="content-wrapper">
-            <div class="row">
-        <div class="col-md-6 grid-margin stretch-card">
+
+        <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h1 class="card-title">Workshop 01</h1>
-                <p class="card-description">
-                  Workshop Name: Name
-                </p>
-                <p class="card-description">
-                    Workshop Phone Number: Number
-                  </p>
-                  <p class="card-description">
-                    Workshop Opening Hours: 
-                  </p>
-                  <p class="card-description">
-                    Workshop Closing Hours:
-                  </p>
-               
+                <h4 class="card-title">Create Workshop Owner</h4>
+                
+                <form class="forms-sample" method="POST" >
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email"placeholder="Email" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"  required placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmpassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmpassword"  required name="confirmpassword" placeholder="Confirm Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="company">Company Name </label>
+                    <input type="text" class="form-control" id="company"  required name="company" placeholder="Your Company Name">
+                  </div>
+                  <div class="form-group">
+                    <label for="gender">Gender</label>
+                      <select class="form-control" id="gender" name="gender" required>
+                        <option>Male</option>
+                        <option>Female</option>
+                      </select>
+                    </div>
+                  
+                    <div class="form-group">
+                        <label for="DOB">Date of Birth</label>
+                        <input type="date" class="form-control" id="DOB" name="DOB" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="011-2344-4390" required>
+                    </div>
+                  <button type="submit" class="btn btn-primary me-2" action=<?php AddWorkshopOwner()?> >Submit</button>
+                  <button class="btn btn-light" >Cancel</button>
+                </form>
               </div>
             </div>
           </div>
-          <div class="col-md-6 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                  <h1 class="card-title">Workshop 02</h1>
-                  <p class="card-description">
-                    Workshop Name: Name
-                  </p>
-                  <p class="card-description">
-                      Workshop Phone Number: Number
-                    </p>
-                    <p class="card-description">
-                      Workshop Opening Hours: 
-                    </p>
-                    <p class="card-description">
-                      Workshop Closing Hours:
-                    </p>
-                 
-                </div>
-              </div>
-          </div>
-           
-        </div>
-        </div>
+         
+        
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -529,26 +546,110 @@
   <!-- container-scroller -->
 
   <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
-  <script src="vendors/chart.js/Chart.min.js"></script>
-  <script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-  <script src="vendors/progressbar.js/progressbar.min.js"></script>
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <script src="../../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <script src="../../vendors/progressbar.js/progressbar.min.js"></script>
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <script src="js/off-canvas.js"></script>
-  <script src="js/hoverable-collapse.js"></script>
-  <script src="js/template.js"></script>
-  <script src="js/settings.js"></script>
-  <script src="js/todolist.js"></script>
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <script src="js/Chart.roundedBarCharts.js"></script>
+  <script src="../../js/dashboard.js"></script>
+  <script src="../../js/Chart.roundedBarCharts.js"></script>
   <!-- End custom js for this page-->
 </body>
+<script>
+   // Get the form and submit button elements
+var form = document.querySelector('.forms-sample');
+var submitBtn = form.querySelector('button[type="submit"]');
 
+// Add event listener to the submit button
+submitBtn.addEventListener('click', function(event) {
+  // Prevent the form from submitting automatically
+  event.preventDefault();
+
+  // Get the input fields and error message element
+  var nameInput = form.querySelector('#name');
+  var emailInput = form.querySelector('#email');
+  var usernameInput = form.querySelector('#username');
+  var passwordInput = form.querySelector('#password');
+  var confirmPasswordInput = form.querySelector('#confirmpassword');
+  var genderInput = form.querySelector('#gender');
+  var DOBInput = form.querySelector('#DOB');
+  var phoneNumberInput = form.querySelector('#phoneNumber');
+  var CompanyName = form.querySelector('#company');
+
+  var errors = [];
+  if (nameInput.value.trim() === '') {
+    errors.push('Please enter your name.');
+  }
+  if(CompanyName.value.trim() === '') {
+    errors.push('Please enter your company name.');
+  }
+  if (emailInput.value.trim() === '') {
+    errors.push('Please enter your email address.');
+  } else if (!isValidEmail(emailInput.value.trim())) {
+    errors.push('Please enter a valid email address.');
+  }
+  if (usernameInput.value.trim() === '') {
+    errors.push('Please enter a username.');
+  }
+  if (passwordInput.value.trim() === '') {
+  errors.push('Please enter a password.');
+} else if (passwordInput.value.trim().length < 8) {
+  errors.push('Please enter a password that is at least 8 characters long.');
+} else if (!/\d/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one number in your password.');
+} else if (!/[a-z]/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one lowercase letter in your password.');
+} else if (!/[A-Z]/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one uppercase letter in your password.');
+}
+  if (confirmPasswordInput.value.trim() === '') {
+    errors.push('Please confirm your password.');
+  } else if (confirmPasswordInput.value.trim() !== passwordInput.value.trim()) {
+    errors.push('Please make sure your passwords match.');
+  }
+  if (genderInput.value.trim() === '') {
+    errors.push('Please select your gender.');
+  }
+  if (DOBInput.value.trim() === '') {
+    errors.push('Please enter your date of birth.');
+  }
+  if (phoneNumberInput.value.trim() === '') {
+    errors.push('Please enter your phone number.');
+  } else if (!isValidPhoneNumber(phoneNumberInput.value.trim())) {
+    errors.push('Please enter a valid phone number (e.g., 011-2344-4390).');
+  }
+
+  // Display any errors
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+  } else {
+    // If no errors, submit the form
+    form.submit();
+  }
+});
+
+// Helper function to validate email address
+function isValidEmail(email) {
+  var emailRegex = /^\S+@\S+\.\S+$/;
+  return emailRegex.test(email);
+}
+
+// Helper function to validate phone number
+function isValidPhoneNumber(phoneNumber) {
+  var phoneNumberRegex = /^\d{3}-\d{4}-\d{4}$/;
+  return phoneNumberRegex.test(phoneNumber);
+}
+  </script>
 </html>
 
