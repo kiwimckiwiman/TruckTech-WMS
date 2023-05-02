@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 30, 2023 at 07:50 PM
+-- Generation Time: May 02, 2023 at 10:29 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -12,6 +12,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS wms;
 USE wms;
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,20 +26,29 @@ USE wms;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `booking`
+-- Table structure for table `bookings`
 --
 
-CREATE TABLE `booking` (
+CREATE TABLE `bookings` (
   `booking_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED DEFAULT 0,
   `vehicle_plate` varchar(255) NOT NULL,
   `vehicle_make` varchar(255) NOT NULL,
-  `desc` varchar(255) NOT NULL,
+  `customer_lng` decimal(9,6) NOT NULL,
+  `customer_ltd` decimal(8,6) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
   `accepted_status` enum('pending','accepted','rejected') NOT NULL,
   `accepted_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `customer_id`, `workshop_id`, `vehicle_plate`, `vehicle_make`, `customer_lng`, `customer_ltd`, `description`, `time_created`, `accepted_status`, `accepted_time`) VALUES
+(3, 1, 1, 'gh 288 s', 'toy', 0.000000, 0.000000, 'bruh', '2023-05-01 10:24:48', 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -59,10 +69,10 @@ CREATE TABLE `inventory` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `job`
+-- Table structure for table `jobs`
 --
 
-CREATE TABLE `job` (
+CREATE TABLE `jobs` (
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
@@ -86,7 +96,7 @@ CREATE TABLE `job` (
 CREATE TABLE `new_login_table` (
   `token_id` bigint(20) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `token` int(6) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -106,14 +116,17 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `step`
+-- Table structure for table `steps`
 --
 
-CREATE TABLE `step` (
+CREATE TABLE `steps` (
   `step_id` bigint(20) UNSIGNED NOT NULL,
   `job_id` bigint(20) UNSIGNED NOT NULL,
-  `time_created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `desc` varchar(255) NOT NULL,
+  `finish` tinyint(1) NOT NULL DEFAULT 0,
   `worker_id` bigint(20) UNSIGNED NOT NULL,
+  `comment` varchar(255) NOT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
   `worker_fee` decimal(8,2) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -132,7 +145,7 @@ CREATE TABLE `users` (
   `name` varchar(255) DEFAULT NULL,
   `DOB` date DEFAULT NULL,
   `company` varchar(255) DEFAULT NULL,
-  `phone_no` int(10) UNSIGNED DEFAULT NULL,
+  `phone_no` int(11) UNSIGNED DEFAULT NULL,
   `type` enum('c','w','a','s') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -142,15 +155,15 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`) VALUES
 (1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's'),
-(2, 'New User', 'ark61450@zslsz.com', '$2y$10$FhENeZ24RtxglNti1ZK/JeFAtrXJLx/A/t6nmtoGxOiytjV/mqDxW', NULL, NULL, NULL, NULL, 'c');
+(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$Q7/WPj7rsdI/SGyDn.IlFua/SW9IQrbiaK08cTG2jXTz/mB9XwCBq', NULL, NULL, NULL, NULL, 'c');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `worker`
+-- Table structure for table `workers`
 --
 
-CREATE TABLE `worker` (
+CREATE TABLE `workers` (
   `worker_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
   `has_inventory_access` tinyint(1) NOT NULL,
@@ -170,17 +183,26 @@ CREATE TABLE `workshops` (
   `location` varchar(255) NOT NULL,
   `opening_hours` varchar(255) NOT NULL,
   `specialisations` varchar(255) NOT NULL,
-  `phone_no` int(11) NOT NULL
+  `phone_no` int(11) NOT NULL,
+  `workshop_lng` decimal(9,6) NOT NULL,
+  `workshop_ltd` decimal(8,6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `workshops`
+--
+
+INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`, `opening_hours`, `specialisations`, `phone_no`, `workshop_lng`, `workshop_ltd`) VALUES
+(1, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `booking`
+-- Indexes for table `bookings`
 --
-ALTER TABLE `booking`
+ALTER TABLE `bookings`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `booking_customer_id_foreign` (`customer_id`),
   ADD KEY `booking_workshop_id_foreign` (`workshop_id`);
@@ -193,9 +215,9 @@ ALTER TABLE `inventory`
   ADD KEY `inventory_workshop_id_foreign` (`workshop_id`);
 
 --
--- Indexes for table `job`
+-- Indexes for table `jobs`
 --
-ALTER TABLE `job`
+ALTER TABLE `jobs`
   ADD PRIMARY KEY (`job_id`),
   ADD KEY `job_workshop_id_foreign` (`workshop_id`),
   ADD KEY `job_customer_id_foreign` (`customer_id`),
@@ -211,12 +233,12 @@ ALTER TABLE `new_login_table`
 -- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
-  ADD PRIMARY KEY (`email`);
+  ADD PRIMARY KEY (`token_id`);
 
 --
--- Indexes for table `step`
+-- Indexes for table `steps`
 --
-ALTER TABLE `step`
+ALTER TABLE `steps`
   ADD PRIMARY KEY (`step_id`),
   ADD KEY `step_worker_id_foreign` (`worker_id`),
   ADD KEY `step_item_id_foreign` (`item_id`),
@@ -230,9 +252,9 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- Indexes for table `worker`
+-- Indexes for table `workers`
 --
-ALTER TABLE `worker`
+ALTER TABLE `workers`
   ADD PRIMARY KEY (`worker_id`),
   ADD KEY `worker_workshop_id_foreign` (`workshop_id`);
 
@@ -248,10 +270,10 @@ ALTER TABLE `workshops`
 --
 
 --
--- AUTO_INCREMENT for table `booking`
+-- AUTO_INCREMENT for table `bookings`
 --
-ALTER TABLE `booking`
-  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `bookings`
+  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -260,9 +282,9 @@ ALTER TABLE `inventory`
   MODIFY `item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `job`
+-- AUTO_INCREMENT for table `jobs`
 --
-ALTER TABLE `job`
+ALTER TABLE `jobs`
   MODIFY `job_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -272,9 +294,15 @@ ALTER TABLE `new_login_table`
   MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `step`
+-- AUTO_INCREMENT for table `password_reset_tokens`
 --
-ALTER TABLE `step`
+ALTER TABLE `password_reset_tokens`
+  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `steps`
+--
+ALTER TABLE `steps`
   MODIFY `step_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -284,25 +312,25 @@ ALTER TABLE `users`
   MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
--- AUTO_INCREMENT for table `worker`
+-- AUTO_INCREMENT for table `workers`
 --
-ALTER TABLE `worker`
+ALTER TABLE `workers`
   MODIFY `worker_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `workshops`
 --
 ALTER TABLE `workshops`
-  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `booking`
+-- Constraints for table `bookings`
 --
-ALTER TABLE `booking`
+ALTER TABLE `bookings`
   ADD CONSTRAINT `booking_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `booking_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -313,25 +341,25 @@ ALTER TABLE `inventory`
   ADD CONSTRAINT `inventory_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `job`
+-- Constraints for table `jobs`
 --
-ALTER TABLE `job`
+ALTER TABLE `jobs`
   ADD CONSTRAINT `job_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `job_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `worker` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `job_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `job_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `step`
+-- Constraints for table `steps`
 --
-ALTER TABLE `step`
-  ADD CONSTRAINT `step_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`),
+ALTER TABLE `steps`
   ADD CONSTRAINT `step_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `step_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `worker` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `step_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `steps_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`);
 
 --
--- Constraints for table `worker`
+-- Constraints for table `workers`
 --
-ALTER TABLE `worker`
+ALTER TABLE `workers`
   ADD CONSTRAINT `worker_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `worker_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
