@@ -63,7 +63,8 @@ CREATE TABLE `inventory` (
   `desc` varchar(255) NOT NULL,
   `price` decimal(8,2) UNSIGNED NOT NULL,
   `quantity` int(10) UNSIGNED NOT NULL,
-  `min_stock` int(10) UNSIGNED NOT NULL
+  `min_stock` int(10) UNSIGNED NOT NULL,
+  `img_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
