@@ -32,7 +32,7 @@ USE wms;
 CREATE TABLE `bookings` (
   `booking_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `workshop_id` bigint(20) UNSIGNED DEFAULT 0,
+  `workshop_id` bigint(20) UNSIGNED,
   `vehicle_plate` varchar(255) NOT NULL,
   `vehicle_make` varchar(255) NOT NULL,
   `customer_lng` decimal(9,6) NOT NULL,
