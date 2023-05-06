@@ -3,15 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 02, 2023 at 10:29 AM
+-- Generation Time: May 06, 2023 at 10:34 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-CREATE DATABASE IF NOT EXISTS wms;
-USE wms;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -32,7 +30,7 @@ USE wms;
 CREATE TABLE `bookings` (
   `booking_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `workshop_id` bigint(20) UNSIGNED,
+  `workshop_id` bigint(20) UNSIGNED DEFAULT 0,
   `vehicle_plate` varchar(255) NOT NULL,
   `vehicle_make` varchar(255) NOT NULL,
   `customer_lng` decimal(9,6) NOT NULL,
@@ -97,7 +95,7 @@ CREATE TABLE `jobs` (
 CREATE TABLE `new_login_table` (
   `token_id` bigint(20) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `token` int(6) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -145,19 +143,33 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `DOB` date DEFAULT NULL,
-  `gender` varchar(7) NOT NULL,
   `company` varchar(255) DEFAULT NULL,
   `phone_no` int(11) UNSIGNED DEFAULT NULL,
-  `type` enum('c','w','a','s') NOT NULL
+  `type` enum('c','w','a','s') NOT NULL,
+  `gender` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`) VALUES
-(1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's'),
-(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$Q7/WPj7rsdI/SGyDn.IlFua/SW9IQrbiaK08cTG2jXTz/mB9XwCBq', NULL, NULL, NULL, NULL, 'c');
+INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`, `gender`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's', ''),
+(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
+(123, 'MurtadaRashid', 'murtadarashid@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'Rashid', 11, 'a', ''),
+(125, 'MurtadaRashid', 'murtadarashid222@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'asa11112,', 11222244, 'a', ''),
+(126, 'MurtadaRashid', 'murtadarashi22d@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
+(128, 'dfghjk', '102764926@students.swinburne.edu.my', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-30', 'fbebfiw', 11, 'a', ''),
+(129, 'New User', 'abc@abc.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
+(130, 'abcd', 'abcd@abcd.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Abc', '2021-10-29', 'abc', 11, 'a', ''),
+(131, 'murtadha_rashid ', '123@123.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2023-10-30', 'feuifbeiu', 11, 'a', ''),
+(132, 'Mohammed', 'mo@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Mohammed', '2021-09-28', 'Mohammed', 11, 'a', ''),
+(133, 'Ali', 'ali@a.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'ALI', '2019-11-30', 'alicon', 11, 'a', 'Female'),
+(134, 'ff', 'ff@mfmm.com', '$2y$10$ndrXrSR8OfpK1/EOxfqn6umopXiasTng1lqpuHDzifeSjHRQrRNk2', 'ff', '2010-06-16', 'ff', 11, 'a', 'Male'),
+(138, 'test', 'zit40812@omeie.com', '$2y$10$gVkW.IYsY/vnpQc9EB4h4eXY3ZcsVW6pcNXn66mvjD.ZJ.DX580qG', 'dddd', '2023-06-01', 'test', 11, 'a', 'Male'),
+(139, 'root', 'gvu84482@nezid.com', '$2y$10$F8ahH.IE.O71OdElaPGsVOVzsYtRRixnkEHpyMPeqwCQSmmXL/APS', 'dddd', '2023-05-20', 'www', 11, 'a', 'Male'),
+(141, 'root', 'qum82774@nezid.com', '$2y$10$hQuSkAOXT8.ttKryo7OlF.2VbKWzWJYae63bZqb.9ctkbsDqg8B9i', 'sss', '2023-05-10', 'asa111', 11, 'a', 'Male'),
+(142, 'JohnDoe', 'nzq54066@zslsz.com', '$2y$10$Aajnb.CuF2THAlrqC51NsOdK2ZSMnyv6Wi49XXBUVe73egXk/M18G', 'John', '2023-04-06', 'a company', 11, 'a', 'Male');
 
 -- --------------------------------------------------------
 
@@ -195,7 +207,15 @@ CREATE TABLE `workshops` (
 --
 
 INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`, `opening_hours`, `specialisations`, `phone_no`, `workshop_lng`, `workshop_ltd`) VALUES
-(1, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000);
+(1, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000),
+(2, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000),
+(3, 125, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', 110110111, 0.440000, 0.450000),
+(4, 125, 'YEMEN ', 'SNAA', '9:00 to 11:pm ', 'WOTHR ', 89986986, 0.111000, 0.546000),
+(5, 125, 'YEMEN ', 'ADEN', '9:00 to 14:pm ', 'feurfguierf ', 89986986, 0.111000, 0.546000),
+(6, 128, 'ggreg', 'iuguig', 'dededed', 'dwdw', 11, 0.040000, 0.043000),
+(7, 123, 'ggreg', 'efuiwfw', 'dededed', 'wewe', 11, 0.040000, 0.043000),
+(8, 125, 'abcd', 'nfeuofhoeh', 'dededed', 'wewe', 11, 0.040000, 0.043000),
+(9, 132, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', 11, 0.040000, 0.043000);
 
 --
 -- Indexes for dumped tables
@@ -311,7 +331,7 @@ ALTER TABLE `steps`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `workers`
@@ -323,7 +343,7 @@ ALTER TABLE `workers`
 -- AUTO_INCREMENT for table `workshops`
 --
 ALTER TABLE `workshops`
-  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
