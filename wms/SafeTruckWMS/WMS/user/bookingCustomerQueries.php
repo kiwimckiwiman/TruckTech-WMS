@@ -58,18 +58,48 @@
     }
 
     function ViewCustomerBookings($customer_id){
-        $stmt = $GLOBALS['conn']->prepare("SELECT * FROM bookings WHERE customer_id = :customer_id");
-        $stmt->bindParam(':customer_id', $customer_id, PDO::PARAM_INT);
-        $stmt->execute() or die($GLOBALS['conn']->error);
-        $GLOBALS['conn'] = null;
-        return $stmt;
+      $servername = 'localhost';
+      $username = 'root';
+      $password = '';
+      $dbname = 'wms';
+
+      if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+      }
+      try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare("SELECT * FROM bookings WHERE customer_id = :customer_id AND accepted_status = 'pending'");
+        $stmt->bindParam(':customer_id', $customer_id);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+      } catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+      }
     }
 
     function DeleteCustomerBooking($booking_id){
-        $stmt = $GLOBALS['conn']->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
-        $stmt->bindParam(':booking_id', $booking_id, PDO::PARAM_INT);
-        $stmt->execute() or die($GLOBALS['conn']->error);
-        $GLOBALS['conn'] = null;
+      $servername = 'localhost';
+      $username = 'root';
+      $password = '';
+      $dbname = 'wms';
+
+      if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+      }
+      try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
+        $stmt->bindParam(':booking_id', $booking_id);
+        $stmt->execute();
+        echo "New booking deleted successfully.";
+      } catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+      }
     }
 
     function ViewWorkshops(){
