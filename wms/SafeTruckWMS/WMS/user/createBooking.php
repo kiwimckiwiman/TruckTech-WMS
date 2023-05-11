@@ -80,15 +80,15 @@ $customer_id = 1;
                     <form class="forms-sample" method="POST" action="bookingConfirmation.php">
                         <div class="form-group">
                             <label for="vehicle_plate">Vehicle Plate</label>
-                            <input type="text" class="form-control" id="vehicle_plate" name="vehicle_plate" placeholder="Vehicle Plate">
+                            <input type="text" class="form-control" id="vehicle_plate" name="vehicle_plate" placeholder="QW 1234 AS" required>
                         </div>
                         <div class="form-group">
                             <label for="vehicle_make">Vehicle Make</label>
-                            <input type="text" class="form-control" id="vehicle_make" name="vehicle_make" placeholder="Vehicle Make">
+                            <input type="text" class="form-control" id="vehicle_make" name="vehicle_make" placeholder="Toyota" required>
                         </div>
                         <div class="form-group">
-                            <label for="description">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" placeholder="Description">
+                            <label for="description">Problem</label>
+                            <input type="text" class="form-control" id="description" name="description" placeholder="The vehicle can't start" required>
                         </div>
                         <button type="button" onclick="document.getElementById('workshopmodal').style.display='block'" class="btn btn-primary btn-icon-text">
                             <i class="mdi mdi-worker btn-icon-prepend"></i>
@@ -151,10 +151,10 @@ $customer_id = 1;
                         </button>
                         <div class="form-group">      
                             <label for="description">Coordinate</label>
-                            <input type="text" class="form-control" id="customer_lng" name="customer_lng" value="">
+                            <input type="text" class="form-control" id="customer_lng" name="customer_lng" value="" required readonly>
                         </div>
                         <div class="form-group">      
-                            <input type="text" class="form-control" id="customer_ltd" name="customer_ltd" value="">
+                            <input type="text" class="form-control" id="customer_ltd" name="customer_ltd" value="" required readonly>
                         </div>
                         <input type="hidden" class="form-control" id="customer_id " name="customer_id" value="<?php echo $customer_id; ?>">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>
