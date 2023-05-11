@@ -65,7 +65,7 @@ if (isset ($_POST['deletebutton'])){
                                         <td>". $booking['vehicle_plate'] . "</td>
                                         <td>". $booking['time_created'] . "</td>
                                         <td><form method='post' action='viewCustomerBooking.php'>
-                                          <button type='submit' name='deletebutton' value=". $booking['booking_id'] . " class='btn btn-primary'>
+                                          <button type='submit' name='deletebutton' value=". $booking['booking_id'] . " class='btn btn-outline-success btn-icon-text'>
                                           <i class=' mdi mdi-delete-forever btn-icon-prepend'></i> Delete
                                           </button>
                                           </form>
