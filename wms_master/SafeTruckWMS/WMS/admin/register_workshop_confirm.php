@@ -3,7 +3,8 @@
 
   if(isset($_POST['workshop_name'])) {
     $name = $_POST['workshop_name'];
-    $location = $_POST['workshop_location'];
+    $address = $_POST['address'];
+    $location = $_POST['loc'];
     $opening_hours = $_POST['opening_hrs'];
     $closing_hours = $_POST['closing_hrs'];
     $specialisations = $_POST['workshop_special'];
@@ -13,6 +14,7 @@
     $workshop_ltd = 0.043;
 
     echo $name.'</br>';
+    echo $address.'</br>';
     echo $location.'</br>';
     echo date('h:i A', strtotime($opening_hours)).' to '.date('h:i A', strtotime($closing_hours)).'</br>';
     echo $specialisations.'</br>';

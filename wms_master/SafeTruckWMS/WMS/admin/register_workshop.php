@@ -20,10 +20,6 @@
     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
     crossorigin=""></script>
 
-
-    <link rel="stylesheet" href="https://unpkg.com/@ansur/leaflet-control-geocoder@1.15.0/dist/Control.Geocoder.min.css" />
-    <script src="https://unpkg.com/@ansur/leaflet-control-geocoder@1.15.0/dist/Control.Geocoder.min.js"></script>
-
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -66,13 +62,17 @@
                       </div>
                       <div class="form-group">
                         <label for="workshoplocation">Workshop Location</label>
-
-                        <div class='col-12 grid-margin stretch-card'>
-                          <div id='map' style='width:75%;height:500px;'></div>
+                        <div style="display: flex;  align-items: center;">
+                          <button type="button" id="search" class="btn btn-primary btn-sm" style="margin-right:20px;">SEARCH</button>
+                          <input type="text" class="form-control"  id="address" name="address" required placeholder="Address or enter Latitude, Longitude">
                         </div>
-
-
-                      <input type="text" class="form-control"  id="loc" name="loc" required>
+                      </div>
+                      <div class="form-group">
+                        <div class='col-12 grid-margin stretch-card'>
+                          <div id='map' style='width:100%;height:500px;'></div>
+                        </div>
+                        <input type="hidden" id="loc" name="loc" required>
+                      </div>
                       <div class="form-group">
                         <label for="opening_hrs">Workshop Opening Hours</label>
                         <input type="time" class="form-control"  id="opening_hrs" name="opening_hrs" required>
@@ -106,7 +106,7 @@
                             </select>
                         </div>
                       </div>
-                      <button type="submit" class="btn btn-primary me-2">Submit</button>
+                      <button type="submit" class="btn btn-primary me-2">SUBMIT</button>
                     </form>
                   </div>
                   </div>
@@ -127,34 +127,7 @@
 
   <!-- plugins:js -->
   <script src="../../vendors/js/vendor.bundle.base.js"></script>
-  <script>
-  var map = L.map('map');
-  var popup = L.marker();
-
-  navigator.geolocation.getCurrentPosition(function(position) {
-    // Get the user's latitude and longitude
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
-    map.setView([lat, lng], 12);
-    popup.setLatLng([lat, lng]).addTo(map);
-    document.getElementById("loc").value = [lat, lng];
-  });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-        }).addTo(map);
-
-
-function onMapClick(e) {
-    document.getElementById("loc").value = e.latlng;
-
-    popup
-        .setLatLng(e.latlng)
-        .addTo(map);
-}
-
-map.on('click', onMapClick);
-
-  </script>
+  <script src="../../vendors/js/Leaflet.LocationShare.js"></script>
 
 
   <!-- endinject -->

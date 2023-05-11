@@ -4,6 +4,14 @@
 	<meta charset="utf-8" />
 	<title>Leaflet Map with Search Bar using Nominatim</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+	   integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+	   crossorigin=""/>
+
+	 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+	    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+	    crossorigin=""></script>
+
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.3.1/leaflet.css" />
 	<script src="https://cdn.jsdelivr.net/leaflet/1.3.1/leaflet.js"></script>
 	<style>
@@ -17,13 +25,9 @@
 	<script>
 		var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 
-		L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-			maxZoom: 18,
-			id: 'mapbox/streets-v11',
-			tileSize: 512,
-			zoomOffset: -1,
-			accessToken: 'YOUR_ACCESS_TOKEN_HERE'
-		}).addTo(mymap);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+							maxZoom: 19
+					}).addTo(map);
 
 		var searchControl = L.esri.Geocoding.geosearch().addTo(mymap);
 

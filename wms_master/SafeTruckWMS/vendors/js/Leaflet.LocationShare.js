@@ -1,132 +1,59 @@
+var map = L.map('map');
+var popup = L.marker();
 
-L.LocShare = {}
-var LS = L.LocShare
-LS.Send = {}
-LS.Send.Marker = {}
-LS.Send.Popup = L.popup().setContent('<div> <button class="btn-primary" onclick="getLoc()">CONFIRM</button></div>')
-LS.Receive = {}
-LS.Receive.Marker = {}
-LS.Receive.Popup = L.popup()
-
-var sendIcon = L.icon({
-  iconUrl: "https://raw.githubusercontent.com/CliffCloud/Leaflet.LocationShare/master/dist/images/IconMapSend.png",
-  iconSize:     [50, 50], // size of the icon
-  iconAnchor:   [25, 50], // point of the icon which will correspond to marker's location
-  popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
-})
-
-receiveIcon = L.icon({
-  iconUrl: "https://raw.githubusercontent.com/CliffCloud/Leaflet.LocationShare/master/dist/images/IconMapReceive.png",
-  iconSize:     [50, 50], // size of the icon
-  iconAnchor:   [25, 50], // point of the icon which will correspond to marker's location
-  popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
-})
-
-L.Map.addInitHook(function () {
-  this.sharelocationControl = new L.Control.ShareLocation();
-  this.addControl(this.sharelocationControl);
-  this.whenReady( function(){
-    populateMarker(this);
-  })
+navigator.geolocation.getCurrentPosition(function(position) {
+  // Get the user's latitude and longitude
+  var lat = position.coords.latitude;
+  var lng = position.coords.longitude;
+  map.setView([lat, lng], 12);
+  popup.setLatLng([lat, lng]).addTo(map);
+  document.getElementById("loc").value = [lat, lng];
 });
 
-L.Control.ShareLocation = L.Control.extend({
-    options: {
-        position: 'topleft',
-        title: 'share location'
-    },
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      }).addTo(map);
 
-    onAdd: function () {
-        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
-        this.link = L.DomUtil.create('a', 'leaflet-bar-part', container);
-        this.link.title = this.options.title;
-        var userIcon = L.DomUtil.create('img' , 'img-responsive' , this.link);
-        userIcon.src = 'https://raw.githubusercontent.com/CliffCloud/Leaflet.LocationShare/master/dist/images/IconLocShare.png';
-        userIcon.alt = '';
-        userIcon.setAttribute('role', 'presentation');
-        this.link.href = '#';
-        this.link.setAttribute('role', 'button');
-
-        L.DomEvent.on(this.link, 'click', this._click, this);
-
-        return container;
-    },
-
-    _click: function (e) {
-      L.DomEvent.stopPropagation(e);
-      L.DomEvent.preventDefault(e);
-      placeMarker( this._map )
-    },
-});
-
-populateMarker = function (selectedMap) {
-  // replace the line below with the results of any Url parser
-  var intermediate = getJsonFromUrl()
-  if ( isFinite(intermediate.lat) && isFinite(intermediate.lng) ){
-    LS.Receive.message = intermediate.M
-    LS.Receive.lat = + intermediate.lat
-    console.log( intermediate.lat )
-    LS.Receive.lng = + intermediate.lng
-    console.log( intermediate.lng )
-    var text = '<table><tr><td><p>' + LS.Receive.message + '</p></td><td><p>Lat: ' + LS.Receive.lat + '</p><p>Lng: ' + LS.Receive.lng + '</p></td></tr></table>'
-//    LS.Receive.Popup.setContent(LS.Receive.message)
-    LS.Receive.Marker = L.marker( [ LS.Receive.lat , LS.Receive.lng] , {icon:receiveIcon})
-    console.log( LS.Receive.Marker._latlng )
-    LS.Receive.Marker.bindPopup(LS.Receive.message)
-    LS.Receive.Marker.addTo(selectedMap)
-    LS.Receive.Marker.openPopup()
-  }
-}
-
-function getJsonFromUrl () {
-  var params = {}
-  params.query = location.search.substr(1);
-  params.parsed = decodeURIComponent( params.query )
-  params.data = params.parsed.split("&");
-  params.result = {};
-  for(var i=0; i<params.data.length; i++) {
-    var item = params.data[i].split("=");
-    params.result[item[0]] = item[1];
-  }
-  // This will return all of the data in the query parameters in object form
-  // getJsonFromUrl() only splits on ampersand and equals -- jquery can do better
-  // But so could you!! submit a pull request if you've got one!
-  return params.result;
+function onMapClick(e) {
+    document.getElementById("loc").value = e.latlng;
+    document.getElementById("address").value = e.latlng.lat + ', ' + e.latlng.lng;
+    popup
+        .setLatLng(e.latlng)
+        .addTo(map);
 }
 
 
-function getLoc() {
-  document.getElementById("loc").value = 'lat' + '=' + LS.Send.lat + ' & ' +  'lng' + '=' + LS.Send.lng;
-}
+document.getElementById("search").addEventListener("click", function() {
+  var address = document.getElementById("address").value;
+  var url = "https://nominatim.openstreetmap.org/search?q=" + encodeURIComponent(address) + "&format=json";
 
-function placeMarker( selectedMap ){
-//  var test = LS.Send.Marker._latlng
-//  if ( isFinite(test.lat) && isFinite(test.lng) ){
-    if (!LS.Send.Marker._latlng ) {
-      console.log('if (!LS.Send.Marker._latlng ) { passed!  line 95')
-      LS.Send.Marker = L.marker( selectedMap.getCenter() , {draggable: true,icon: sendIcon} );
-      setSendValues( selectedMap.getCenter() )
-      LS.Send.Marker.on('dragend', function(event) {
-        setSendValues( event.target.getLatLng());
-        LS.Send.Marker.openPopup();
-      });
-      LS.Send.Marker.bindPopup(LS.Send.Popup);
-      LS.Send.Marker.addTo(selectedMap);
+  // Make AJAX request
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var result = JSON.parse(xhr.responseText);
+      if (result.length > 0) {
+        var lat = result[0].lat;
+        var lng = result[0].lon;
+        popup
+            .setLatLng([lat, lng])
+            .addTo(map);
+        map.setView([lat, lng], 14);
+        document.getElementById("loc").value = [lat, lng];
+      } else {
+        document.getElementById("address").placeholder = "Location not found";
+        document.getElementById("address").value = null;
+      }
     } else {
-      LS.Send.Marker.setLatLng( selectedMap.getCenter() )
+      document.getElementById("address").placeholder ="Error: " + xhr.status;
+      document.getElementById("address").value = null;
     }
-    //selectedMap.setView( location , 16 )
-    LS.Send.Marker.openPopup();
-//  }
-};
-
-LS.Send.UpdateMessage = function( text ){
-  var encodedForUrl = encodeURIComponent( text.value );
-  LS.Send.Message = encodedForUrl
-}
-
-function setSendValues( result ){
-  LS.Send.lat = result.lat;
-  LS.Send.lng = result.lng;
-}
+  };
+  xhr.send();
+});
+map.on('click', onMapClick);
