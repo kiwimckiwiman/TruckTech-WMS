@@ -1,3 +1,17 @@
+<?php
+/*
+fill form
+choose broadcast or specific ws
+*/
+//session_start();
+//get the workshop_ltd and workshop_lng and store it in session
+//$workshop_lng = $_SESSION['workshop_lng'];
+//$workshop_ltd = $_SESSION['workshop_ltd'];
+//for testing
+$workshop_lng = 110.3;
+$workshop_ltd = 1.5;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -486,7 +500,7 @@
                               ToggleRejectBooking($_POST['rejectbutton']);
                           }
 
-                          $result = ViewAllPendingBookings(10);
+                          $result = ViewAllPendingBookings($workshop_lng, $workshop_ltd);
                       ?>
 
                       <table class="table table-hover">

@@ -16,10 +16,15 @@
 
   //--- BOOKING ADMIN SQL FUNCTIONS ---
 
-  function ViewAllPendingBookings($workshop_id)
+  function ViewAllPendingBookings($workshop_lng, $workshop_ltd)
   {
-    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE accepted_status = 'pending' AND workshop_id = :workshop_id");
-    $stmt->bindParam(":workshop_id", $workshop_id, PDO::PARAM_INT);
+    $stmt = $GLOBALS['conn']->prepare("SELECT *,
+    ( 6371 * acos( cos( radians($workshop_ltd) ) * cos( radians( customer_ltd ) ) * cos( radians( customer_lng ) - radians($workshop_lng) ) + sin( radians($workshop_ltd) ) * sin(radians(customer_ltd)) ) ) AS distance 
+    FROM `bookings` WHERE accepted_status = 'pending' HAVING distance < 50 ORDER BY distance");
+    //$stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE accepted_status = 'pending' AND workshop_id = :workshop_id");
+    //$stmt->bindParam(":workshop_id", $workshop_id, PDO::PARAM_INT);
+    // $stmt->bindParam(":workshop_ltd", $workshop_ltd);
+    // $stmt->bindParam(":workshop_lng", $workshop_lng);
     $stmt->execute() or die($GLOBALS['conn']->error);
     $stmt->setFetchMode(PDO::FETCH_ASSOC);
     $GLOBALS['conn'] = null;
