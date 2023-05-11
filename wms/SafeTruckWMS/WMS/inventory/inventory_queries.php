@@ -1,5 +1,170 @@
 <?php
-    function getAllWorkshopItems($id){
+function addStockPerItem() {
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      // Check if itemChoose is set in POST
+      if(isset($_POST['itemChoose'])) {
+          $item_id = $_POST['itemChoose'];
+          error_log($item_id);
+          $workshop_id= $_POST['workshop_id'];
+          $quantity = $_POST['quantity'];
+            
+          // Update query to include input field values
+          $stmt = $conn->prepare("UPDATE inventory SET quantity = :quantity WHERE item_id = :item_id AND workshop_id = :workshop_id");
+            
+          // Bind parameters
+          $stmt->bindParam(':quantity', $quantity);
+          $stmt->bindParam(':item_id', $item_id);
+          $stmt->bindParam(':workshop_id', $workshop_id);
+            
+          // Execute query
+          $stmt->execute();
+          echo "Item updated successfully.";
+      } else {
+          echo "Error: itemChoose is not set in POST.";
+      }
+  } catch (PDOException $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+
+
+function getWorkshopOwners(){
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $workshop_id = $_SESSION['workshop_id'];
+      $sql = "SELECT * FROM inventory WHERE workshop_id = :workshop_id";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+  } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+
+// CREATING AN ITEM
+// function addStockPerItem() {
+//   $servername = 'localhost';
+//   $username = 'root';
+//   $password = '';
+//   $dbname = 'wms';
+
+//   try {
+//       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+//       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//       // Check if itemChoose is set in POST
+//       if(isset($_POST['itemChoose'])) {
+//           $item_id = $_POST['itemChoose'];
+//           error_log($item_id);
+//           $workshop_id= $_POST['workshop_id'];
+//           $quantity = $_POST['quantity'];
+            
+//           // Update query to include input field values
+//           $stmt = $conn->prepare("UPDATE inventory SET quantity = :quantity WHERE item_id= $item_id AND workshop_id= $workshop_id");
+            
+//           // Bind parameters
+//           $stmt->bindParam(':quantity', $quantity);
+//           $stmt->bindParam(':item_id', $item_id);
+//           $stmt->bindParam(':workshop_id', $workshop_id);
+            
+//           // Execute query
+//           $stmt->execute();
+//           echo "Item updated successfully.";
+//       } else {
+//           echo "Error: itemChoose is not set in POST.";
+//       }
+//   } catch (PDOException $e) {
+//       echo "Error: " . $e->getMessage();
+//   }
+// }
+
+
+// function getWorkshopOwners(){
+//   $servername = 'localhost';
+//   $username = 'root';
+//   $password = '';
+//   $dbname = 'wms';
+
+//   if ( mysqli_connect_errno() ) {
+//       exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+//   }
+//   try {
+//       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+//       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//       $workshop_id = $_SESSION['workshop_id'];
+//       $sql = "SELECT * FROM inventory WHERE workshop_id = $workshop_id ";
+//       $stmt = $conn->prepare($sql);
+//       $stmt->execute();
+//       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//       return $results;
+//   } catch(PDOException $e) {
+//       echo "Error: " . $e->getMessage();
+//   }
+// }
+
+function addItem(){
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  if ( mysqli_connect_errno() ) {
+      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+   
+  }
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      
+      if(isset($_POST['itemName'])){
+      $itemName = $_POST['itemName'];
+      $descr = $_POST['desc'];
+      $price = $_POST['price'];
+      $minStockVal = $_POST['minStockVal'];
+      $myFile =  $_POST['myFile'];
+      $workshop_id = $_SESSION['workshop_id'];
+      $quantity = 0;
+    
+      
+
+      // Prepare the SQL statement for inserting user data into the table
+      $stmt = $conn->prepare("INSERT INTO inventory (workshop_id,`name`, `desc`, price, quantity,min_stock, img_name) 
+                              VALUES (:workshop_id,:itemName, :descr, :price, :quantity , :minStockVal, :myFile )");
+    
+      // Bind the user data values to the prepared statement parameters
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->bindParam(':itemName', $itemName);
+      $stmt->bindParam(':descr', $descr);
+      $stmt->bindParam(':price', $price);
+      $stmt->bindParam(':quantity', $quantity);
+      $stmt->bindParam(':minStockVal', $minStockVal);
+      $stmt->bindParam(':myFile', $myFile);
+      // Execute the prepared statement to insert the user data into the table
+      $stmt->execute();
+
+      echo "New user added successfully.";}
+    } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+    }
+  }
+
+    function getAllWorkshopItems($id){  
         $servername = 'localhost';
         $username = 'root';
         $password = '';

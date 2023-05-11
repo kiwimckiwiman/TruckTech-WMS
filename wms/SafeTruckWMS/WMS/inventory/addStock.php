@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-//   session_start();
+  session_start();
 //   if(!($_SESSION["type"] == "s")){
 //     header("Location: ../../login/login.php");
 //   }
@@ -474,7 +474,7 @@
         
         <?php
         //this will be inventory queries
-        // include "queries.php";
+        include "inventory_queries.php";
         ?>
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
@@ -484,40 +484,31 @@
                   
                 </p>
                 <form class="forms-sample" method="POST">
-                <div class="template-demo">
-                    <div class="form-group">
-                        <label for="itemChoose">Choose Item:</label>
-                        <select class="form-control" id="itemChoose" name="itemChoose">
-                        <?php
-                        // need to add 2 more input fields for longitudinal and latitude locations
-                        
-                        // $workshopOwners = getWorkshopOwners();
-                       // echo '<option value="Select">Select</option>';
-                       // foreach ($workshopOwners as $owner) {
-                       //     echo '<option value="'.$owner['user_id'].'">'.$owner['username'].' - Company:'.$owner['company'].'</option>';
-                        //}
-                        ?>
-                        <option value="Select">Tire</option>
-                        <option value="Select">wipers</option>
-                        <option value="Select">lights</option>
-                        <option value="Select">gear box</option>
-                        </select>
-                    </div>
-                    <label for="quantity">Quantity:</label>
-                    <div class="form-group">
-                    <button type="button" class="btn btn-decrease">-</button>
-                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="100">
-                    <button type="button" class="btn btn-increase">+</button>
-                    </div>
-
-
-
-                    
-                  <button type="submit" class="btn btn-primary me-2" 
-                 
-                  >Submit</button>
-                  <button class="btn btn-light">Cancel</button>
-                </form>
+    <div class="template-demo">
+        <div class="form-group">
+            <label for="itemChoose">Choose Item:</label>
+            <select class="form-control" id="itemChoose" name="itemChoose">
+            <?php
+            // need to add 2 more input fields for longitudinal and latitude locations
+            
+             $workshopOwners = getWorkshopOwners();
+            echo '<option value="Select">Select</option>';
+            foreach ($workshopOwners as $owner) {
+                echo '<option value="'.$owner['item_id'].'">'.$owner['name'].' </option>';
+            }
+            ?>
+            </select>
+        </div>
+        <label for="quantity">Quantity:</label>
+        <div class="form-group">
+        <button type="button" class="btn btn-decrease">-</button>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" max="1000">
+        <button type="button" class="btn btn-increase">+</button>
+        </div>
+        <button type="submit" class="btn btn-primary me-2" onclick=  <?php addStockPerItem(); ?>>Submit</button>
+        <button class="btn btn-light">Cancel</button>
+    </div>
+</form>
               </div>
             </div>
           </div>
@@ -539,6 +530,8 @@
   </div>
   <!-- container-scroller -->
   <script>
+
+
 var decreaseButton = document.querySelector(".btn-decrease");
 var increaseButton = document.querySelector(".btn-increase");
 var quantityInput = document.querySelector("#quantity");
@@ -567,39 +560,7 @@ submitBtn.addEventListener('click', function(event) {
   // Prevent the form from submitting automatically
   event.preventDefault();
 
-  // Get the input fields and error message element
-var workshopNameInput = form.querySelector('#workshopname');
-var workshopLocationInput = form.querySelector('#workshoplocation');
-var openingHrsInput = form.querySelector('#opening_hrs');
-var closingHrsInput = form.querySelector('#closing_hrs');
-var workshopSpecialInput = form.querySelector('#workshop_special');
-var phoneNoInput = form.querySelector('#phone_no');
-var workshopOwnerInput = form.querySelector('#workshop-owner');
-
-var errors = [];
-if (workshopNameInput.value.trim() === '') {
-  errors.push('Please enter the workshop name.');
-}
-if (workshopLocationInput.value.trim() === '') {
-  errors.push('Please enter the workshop location.');
-}
-if (openingHrsInput.value.trim() === '') {
-  errors.push('Please enter the workshop opening hours.');
-}
-if (closingHrsInput.value.trim() === '') {
-  errors.push('Please enter the workshop closing hours.');
-}
-if (workshopSpecialInput.value.trim() === '') {
-  errors.push('Please enter the workshop specialisation.');
-}
-if (phoneNoInput.value.trim() === '') {
-  errors.push('Please enter the phone number.');
-} else if (!isValidPhoneNumber(phoneNoInput.value.trim())) {
-  errors.push('Please enter a valid phone number (e.g., 011-2344-4390).');
-}
-if (workshopOwnerInput.value.trim() === 'Select') {
-  errors.push('Please choose a workshop owner.');
-}
+  
 
 // Display any errors
 if (errors.length > 0) {

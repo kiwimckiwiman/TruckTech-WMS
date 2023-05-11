@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-//   session_start();
+   session_start();
 //   if(!($_SESSION["type"] == "s")){
 //     header("Location: ../../login/login.php");
 //   }
@@ -28,6 +28,10 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
+<?php
+        // this will be inventory queries
+        include "inventory_queries.php";
+        ?>
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
@@ -472,10 +476,7 @@
       <!-- partial -->
       <div class="main-panel">
         
-        <?php
-        //this will be inventory queries
-        // include "queries.php";
-        ?>
+    
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
@@ -483,7 +484,7 @@
                 <p class="card-description">
                   
                 </p>
-                <form class="forms-sample" method="POST">
+                <form class="forms-sample" method="POST"  >
                   <div class="form-group">
                     <label for="itemName">Item Name</label>
                     <input type="text" class="form-control" id="itemName" name="itemName"  required placeholder="Item Name">
@@ -495,7 +496,7 @@
                   <div class="form-group">
                     <label for="price">Item Price</label>
                     
-                    <input type="number" class="form-control"   id="price" name="price" required>
+                    <input type="text" class="form-control"   id="price" name="price" required>
                   </div>
                   <div class="form-group">
                     <label for="minStockVal">Minimum Stock Value</label>
@@ -503,9 +504,9 @@
                   </div>
                   
                   <div class="form-group">
-                                    <label for="minStockVal">Upload Item Image</label>
-                              <br/>  <input type="file" id="myFile" name="filename">
-                                </div>
+                                    <label for="myFile">Upload Item Image</label>
+                              <br/>  <input type="file" id="myFile" name="myFile">
+                  </div>
 
                   <?php
                         // need to add 2 more input fields for longitudinal and latitude locations
@@ -516,11 +517,10 @@
                         //     echo '<option value="'.$owner['user_id'].'">'.$owner['username'].' - Company:'.$owner['company'].'</option>';
                         // }
                         ?>
-                        </select>
                   
 
                   <button type="submit" class="btn btn-primary me-2" 
-                 
+                  onclick=<?php addItem();?>
                   >Submit</button>
                   <button class="btn btn-light">Cancel</button>
                 </form>
@@ -545,8 +545,8 @@
   </div>
   <!-- container-scroller -->
   <script>
-  var form = document.querySelector('.forms-sample');
-  var submitBtn = form.querySelector('button[type="submit"]');
+    var form = document.querySelector('.forms-sample');
+var submitBtn = form.querySelector('button[type="submit"]');
 
 // Add event listener to the submit button
 submitBtn.addEventListener('click', function(event) {
@@ -554,52 +554,64 @@ submitBtn.addEventListener('click', function(event) {
   event.preventDefault();
 
   // Get the input fields and error message element
-var workshopNameInput = form.querySelector('#workshopname');
-var workshopLocationInput = form.querySelector('#workshoplocation');
-var openingHrsInput = form.querySelector('#opening_hrs');
-var closingHrsInput = form.querySelector('#closing_hrs');
-var workshopSpecialInput = form.querySelector('#workshop_special');
-var phoneNoInput = form.querySelector('#phone_no');
-var workshopOwnerInput = form.querySelector('#workshop-owner');
+  var itemName = form.querySelector('#itemName');
+  var desc = form.querySelector('#desc');
+  var price = form.querySelector('#price');
+  var minStockVal = form.querySelector('#minStockVal');
+  const imageInput = document.getElementById('myFile');
 
-var errors = [];
-if (workshopNameInput.value.trim() === '') {
-  errors.push('Please enter the workshop name.');
-}
-if (workshopLocationInput.value.trim() === '') {
-  errors.push('Please enter the workshop location.');
-}
-if (openingHrsInput.value.trim() === '') {
-  errors.push('Please enter the workshop opening hours.');
-}
-if (closingHrsInput.value.trim() === '') {
-  errors.push('Please enter the workshop closing hours.');
-}
-if (workshopSpecialInput.value.trim() === '') {
-  errors.push('Please enter the workshop specialisation.');
-}
-if (phoneNoInput.value.trim() === '') {
-  errors.push('Please enter the phone number.');
-} else if (!isValidPhoneNumber(phoneNoInput.value.trim())) {
-  errors.push('Please enter a valid phone number (e.g., 011-2344-4390).');
-}
-if (workshopOwnerInput.value.trim() === 'Select') {
-  errors.push('Please choose a workshop owner.');
-}
+  var errors = [];
+  if (itemName.value.trim() === '') {
+    errors.push('Please enter the Item name.');
+  } else if (!/^[a-zA-Z\s]*$/.test(itemName.value)) {
+      errors.push('Item name should only contain characters.');
+    }
+  if (desc.value.trim() === '') {
+    errors.push('Please enter the Item Description.');
+  }else if (desc.value.length > 255) {
+      errors.push('Item description should not be more than 255 characters.');
+    }
+  //PRICEE
+  if (price.value.trim() === '') {
+    errors.push('Please enter the price.');
+  } else if (isNaN(parseFloat(price.value))) {
+    errors.push('Price should be a valid number.');
+  } else if (!/^\d+(.\d{1,2})?$/.test(price.value)) {
+    errors.push('Price should be a valid number with at most 2 decimal places.');
+  }
 
-// Display any errors
-if (errors.length > 0) {
-  alert(errors.join('\n'));
+  if (minStockVal.value <= 0) {
+    errors.push('The minimum stock should not be 0. It should always be greater than 0.');
+  }
+
+  if (imageInput.value.trim() !== '') {
+  const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+  const maxFileSize = 500 * 1024; // 500KB
+
+  const fileExtension = imageInput.value.match(allowedExtensions);
+  const fileSize = imageInput.files[0].size;
+
+  if (!fileExtension) {
+    errors.push('Invalid file type. Only JPG, JPEG and PNG images are allowed.');
+  }
+
+  if (fileSize > maxFileSize) {
+    errors.push('File size exceeds 500KB limit.');
+  }
 } else {
-  // If no errors, submit the form
-  form.submit();
+  errors.push('Please select an image.');
 }
 
-// Helper function to validate phone number
-function isValidPhoneNumber(phoneNumber) {
-  var phoneNumberRegex = /^\d{3}-\d{4}-\d{4}$/;
-  return phoneNumberRegex.test(phoneNumber);
-}});
+
+  // Display any errors
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+  } else {
+    // If no errors, submit the form
+    form.submit();
+  }
+});
+
 </script>                     
   <!-- plugins:js -->
   <script src="../../vendors/js/vendor.bundle.base.js"></script>
