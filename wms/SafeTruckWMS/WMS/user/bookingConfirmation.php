@@ -54,6 +54,10 @@ CreateBooking($customer_id, $workshop_id, $vehicle_plate, $vehicle_make, $custom
 //add redirect to booking list page here
 ?>
 <body>
-
-
+<p>You will be redirected in 3 seconds</p>
+    <script>
+        var timer = setTimeout(function() {
+            window.location='viewCustomerBooking.php'
+        }, 3000);
+    </script>
 </body>
