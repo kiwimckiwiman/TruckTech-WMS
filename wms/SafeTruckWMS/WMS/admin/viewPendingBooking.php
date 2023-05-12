@@ -11,6 +11,8 @@ choose broadcast or specific ws
 $workshop_lng = 110.3;
 $workshop_ltd = 1.5;
 $workshop_id = 1;
+//header('refresh:10; url=viewPendingBooking.php');
+include("bookingAdminQueries.php");
 ?>
 
 <!DOCTYPE html>
@@ -491,7 +493,7 @@ $workshop_id = 1;
                       <div class="table-responsive">
 
                       <?php
-                          include("bookingAdminQueries.php");
+                          
 
                           if(isset ($_POST['acceptbutton'])){
                               ToggleAcceptBooking($_POST['acceptbutton']);
@@ -507,7 +509,7 @@ $workshop_id = 1;
                       <table class="table table-hover">
                           <thead>
                           <tr>
-                              <th>Booking ID</th>
+                              <th>Car Plate</th>
                               <th></th>
                               <th>Action</th>
                               <th></th>
@@ -524,7 +526,7 @@ $workshop_id = 1;
                               <td>
 
                               <details>
-                              <summary>".$row['booking_id']."</summary>
+                              <summary>".$row['vehicle_plate']." ".$row['time_created']."</summary>
 
                               <table>
                               <tr>
@@ -548,8 +550,8 @@ $workshop_id = 1;
                               </tr>
 
                               <tr>
-                                <th>Time Accepted</th>
-                                <td>".$row['accepted_time']."</td>
+                                <th>Distance</th>
+                                <td>".$row['distance']." KM</td>
                               </tr>
 
                               </table>
@@ -565,12 +567,7 @@ $workshop_id = 1;
                                   
                               </form>
                               </td>
-
-                              <td>
-                              <form action='viewPendingBooking.php' method='post' onsubmit='return confirm('Do you want to reject?')'>
-                                  <button type='submit' class='btn btn-danger btn-rounded btn-fw' name='rejectbutton' value=$booking_id onclick='return rejectAlert()'>Reject</button>
-                              </form>
-                              </td>
+                              
                               </td>";
                           }
                           ?>
@@ -591,13 +588,13 @@ $workshop_id = 1;
                       <?php
                           //include("bookingAdminQueries.php");
 
-                          if(isset ($_POST['acceptbutton'])){
-                              ToggleAcceptBooking($_POST['acceptbutton']);
-                          }
+                          // if(isset ($_POST['acceptbutton'])){
+                          //     ToggleAcceptBooking($_POST['acceptbutton']);
+                          // }
                           
-                          if(isset ($_POST['rejectbutton'])){
-                              ToggleRejectBooking($_POST['rejectbutton']);
-                          }
+                          // if(isset ($_POST['rejectbutton'])){
+                          //     ToggleRejectBooking($_POST['rejectbutton']);
+                          // }
 
                           $result = ViewAllPendingBookingsByID($workshop_id);
                       ?>
@@ -605,7 +602,7 @@ $workshop_id = 1;
                       <table class="table table-hover">
                           <thead>
                           <tr>
-                              <th>Booking ID</th>
+                              <th>Vehical Plate</th>
                               <th></th>
                               <th>Action</th>
                               <th></th>
@@ -622,7 +619,7 @@ $workshop_id = 1;
                               <td>
 
                               <details>
-                              <summary>".$row['booking_id']."</summary>
+                              <summary>".$row['vehicle_plate']." ".$row['time_created']."</summary>
 
                               <table>
                               <tr>
@@ -645,11 +642,6 @@ $workshop_id = 1;
                                 <td>".$row['time_created']."</td>
                               </tr>
 
-                              <tr>
-                                <th>Time Accepted</th>
-                                <td>".$row['accepted_time']."</td>
-                              </tr>
-
                               </table>
                               </details>
 
@@ -665,10 +657,12 @@ $workshop_id = 1;
                               </td>
 
                               <td>
-                              <form action='viewPendingBooking.php' method='post' onsubmit='return confirm('Do you want to reject?')'>
-                                  <button type='submit' class='btn btn-danger btn-rounded btn-fw' name='rejectbutton' value=$booking_id onclick='return rejectAlert()'>Reject</button>
+                              <form action='viewPendingBooking.php' method='post'>
+                                  <button type='submit' class='btn btn-success btn-rounded btn-fw' name='rejectbutton' value=$booking_id onclick='rejectAlert()'>Reject</button>
+                                  
                               </form>
                               </td>
+
                               </td>";
                           }
                           ?>

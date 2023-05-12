@@ -20,7 +20,7 @@
   {
     $stmt = $GLOBALS['conn']->prepare("SELECT *,
     ( 6371 * acos( cos( radians($workshop_ltd) ) * cos( radians( customer_ltd ) ) * cos( radians( customer_lng ) - radians($workshop_lng) ) + sin( radians($workshop_ltd) ) * sin(radians(customer_ltd)) ) ) AS distance 
-    FROM `bookings` WHERE accepted_status = 'pending' HAVING distance < 50 ORDER BY distance");
+    FROM `bookings` WHERE accepted_status = 'pending' HAVING distance < 50 ORDER BY time_created DESC");
     //$stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE accepted_status = 'pending' AND workshop_id = :workshop_id");
     //$stmt->bindParam(":workshop_id", $workshop_id, PDO::PARAM_INT);
     // $stmt->bindParam(":workshop_ltd", $workshop_ltd);
@@ -67,43 +67,41 @@
 
   function ToggleAcceptBooking($booking_id)
   {
-    $stmt = $GLOBALS['conn']->prepare("SELECT accepted_status FROM Bookings WHERE booking_id = :booking_id");
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE booking_id = :booking_id");
     $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
     $stmt->execute() or die($GLOBALS['conn']->error);
     $result = $stmt->fetch();
-    $accepted_status = $result[0];
+    try{
+      if (gettype($result) == 'boolean'){
+        throw new Exception("This booking is no longer available");
+      }else{
+        //add code to add booking to job table
 
-    if(($accepted_status == 'pending')){
-      $stmt = $GLOBALS['conn']->prepare("UPDATE Bookings SET accepted_status = 'accepted' WHERE booking_id = :booking_id");
-      $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
-      $stmt->execute() or die($GLOBALS['conn']->error);
-
-      $stmt = $GLOBALS['conn']->prepare("SELECT booking_id FROM Bookings WHERE booking_id = :booking_id");
-      $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
-      $stmt->execute() or die($GLOBALS['conn']->error);
-      $result = $stmt->fetch();
-      $booking_id = $result[0];
+        $stmt = $GLOBALS['conn']->prepare("DELETE FROM Bookings WHERE booking_id = :booking_id");
+        $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
+        $stmt->execute() or die($GLOBALS['conn']->error);
+      }
+    }catch(Exception $e) {
+      echo 'Message: ' .$e->getMessage();
     }
   }
 
   function ToggleRejectBooking($booking_id)
   {
-    $stmt = $GLOBALS['conn']->prepare("SELECT accepted_status FROM Bookings WHERE booking_id = :booking_id");
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE booking_id = :booking_id");
     $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
     $stmt->execute() or die($GLOBALS['conn']->error);
     $result = $stmt->fetch();
-    $accepted_status = $result[0];
-
-    if(($accepted_status == 'pending')){
-      $stmt = $GLOBALS['conn']->prepare("UPDATE Bookings SET accepted_status = 'rejected' WHERE booking_id = :booking_id");
-      $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
-      $stmt->execute() or die($GLOBALS['conn']->error);
-
-      $stmt = $GLOBALS['conn']->prepare("SELECT booking_id FROM Bookings WHERE booking_id = :booking_id");
-      $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
-      $stmt->execute() or die($GLOBALS['conn']->error);
-      $result = $stmt->fetch();
-      $booking_id = $result[0];
+    try{
+      if (gettype($result) == 'boolean'){
+        throw new Exception("This booking is no longer available");
+      }else{
+        $stmt = $GLOBALS['conn']->prepare("DELETE FROM Bookings WHERE booking_id = :booking_id");
+        $stmt->bindParam(":booking_id", $booking_id, PDO::PARAM_INT);
+        $stmt->execute() or die($GLOBALS['conn']->error);
+      }
+    }catch(Exception $e) {
+      echo 'Message: ' .$e->getMessage();
     }
   }
 
