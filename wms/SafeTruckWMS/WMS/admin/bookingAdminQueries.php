@@ -31,6 +31,30 @@
     return $stmt;
   }
 
+  function ViewAllPendingBookingsByID($workshop_id)
+  {
+    $servername = 'localhost';
+ $username = 'root';
+ $password = '';
+ $dbname = 'wms';
+ if ( mysqli_connect_errno() ) {
+    exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+ }
+
+ try{
+    $GLOBALS['conn'] = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $GLOBALS['conn']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  } catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  }
+    $stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE accepted_status = 'pending' AND workshop_id = :workshop_id");
+    $stmt->bindParam(":workshop_id", $workshop_id, PDO::PARAM_INT);
+    $stmt->execute() or die($GLOBALS['conn']->error);
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $GLOBALS['conn'] = null;
+    return $stmt;
+  }
+
   function ViewAllAcceptedBookings($workshop_id)
   {
     $stmt = $GLOBALS['conn']->prepare("SELECT * FROM Bookings WHERE accepted_status = 'accepted' AND workshop_id = :workshop_id");

@@ -10,6 +10,7 @@ choose broadcast or specific ws
 //for testing
 $workshop_lng = 110.3;
 $workshop_ltd = 1.5;
+$workshop_id = 1;
 ?>
 
 <!DOCTYPE html>
@@ -485,7 +486,7 @@ $workshop_ltd = 1.5;
             <div class="col-lg-20 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Pending Booking</h4>
+                  <h4 class="card-title">Pending Booking In The Area</h4>
                       
                       <div class="table-responsive">
 
@@ -501,6 +502,104 @@ $workshop_ltd = 1.5;
                           }
 
                           $result = ViewAllPendingBookings($workshop_lng, $workshop_ltd);
+                      ?>
+
+                      <table class="table table-hover">
+                          <thead>
+                          <tr>
+                              <th>Booking ID</th>
+                              <th></th>
+                              <th>Action</th>
+                              <th></th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          
+                          <?php
+                          while($row = $result->fetch()){
+                              $booking_id = $row['booking_id'];
+
+                              echo"<tr>
+
+                              <td>
+
+                              <details>
+                              <summary>".$row['booking_id']."</summary>
+
+                              <table>
+                              <tr>
+                                <th>Vehical Plate</th>
+                                <td>".$row['vehicle_plate']."</td>
+                              </tr>
+
+                              <tr>
+                                <th>Vehical Make</th>
+                                <td>".$row['vehicle_make']."</td>
+                              </tr>
+
+                              <tr>
+                                <th>Description</th>
+                                <td>".$row['description']."</td>
+                              </tr>
+
+                              <tr>
+                                <th>Time Created</th>
+                                <td>".$row['time_created']."</td>
+                              </tr>
+
+                              <tr>
+                                <th>Time Accepted</th>
+                                <td>".$row['accepted_time']."</td>
+                              </tr>
+
+                              </table>
+                              </details>
+
+                              </td>";
+
+                              echo "
+                              <td>
+                              <td>
+                              <form action='viewPendingBooking.php' method='post'>
+                                  <button type='submit' class='btn btn-success btn-rounded btn-fw' name='acceptbutton' value=$booking_id onclick='successAlert()'>Accept</button>
+                                  
+                              </form>
+                              </td>
+
+                              <td>
+                              <form action='viewPendingBooking.php' method='post' onsubmit='return confirm('Do you want to reject?')'>
+                                  <button type='submit' class='btn btn-danger btn-rounded btn-fw' name='rejectbutton' value=$booking_id onclick='return rejectAlert()'>Reject</button>
+                              </form>
+                              </td>
+                              </td>";
+                          }
+                          ?>
+
+                          </tbody>
+                      </table>    
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-20 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Pending Booking Special Request</h4>
+                      
+                      <div class="table-responsive">
+
+                      <?php
+                          //include("bookingAdminQueries.php");
+
+                          if(isset ($_POST['acceptbutton'])){
+                              ToggleAcceptBooking($_POST['acceptbutton']);
+                          }
+                          
+                          if(isset ($_POST['rejectbutton'])){
+                              ToggleRejectBooking($_POST['rejectbutton']);
+                          }
+
+                          $result = ViewAllPendingBookingsByID($workshop_id);
                       ?>
 
                       <table class="table table-hover">
