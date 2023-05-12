@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <?php
 /*
 fill form
@@ -37,7 +40,9 @@ if (isset ($_POST['deletebutton'])){
 }
 ?>
 
-<div class="main-panel">
+<body>
+
+      <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
               <div class="card">
@@ -78,6 +83,9 @@ if (isset ($_POST['deletebutton'])){
                   </div>
                 </div>
               </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
+
+</body>
+</html>
