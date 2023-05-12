@@ -39,18 +39,13 @@ if (isset ($_POST['deletebutton'])){
   DeleteCustomerBooking($_POST['deletebutton']);
 }
 ?>
-
 <body>
-
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Basic Table</h4>
-                  <p class="card-description">
-                    Add class <code>.table</code>
-                  </p>
+                  <h4 class="card-title">Booking Table</h4>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -86,6 +81,5 @@ if (isset ($_POST['deletebutton'])){
           </div>
         </div>
       </div>
-
 </body>
 </html>
