@@ -80,6 +80,28 @@
       }
     }
 
+    // function DeleteCustomerBooking($booking_id){
+    //   $servername = 'localhost';
+    //   $username = 'root';
+    //   $password = '';
+    //   $dbname = 'wms';
+
+    //   if ( mysqli_connect_errno() ) {
+    //     exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+    //   }
+    //   try {
+    //     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    //     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    //     $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
+    //     $stmt->bindParam(':booking_id', $booking_id);
+    //     $stmt->execute();
+    //     echo "New booking deleted successfully.";
+    //   } catch(PDOException $e) {
+    //     echo "Error: " . $e->getMessage();
+    //   }
+    // }
+
     function DeleteCustomerBooking($booking_id){
       $servername = 'localhost';
       $username = 'root';
@@ -93,10 +115,23 @@
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
+        $stmt = $conn->prepare("SELECT * FROM Bookings WHERE booking_id = :booking_id");
         $stmt->bindParam(':booking_id', $booking_id);
         $stmt->execute();
-        echo "New booking deleted successfully.";
+        $result = $stmt->fetch();
+
+        try{
+          if (gettype($result) == 'boolean'){
+            throw new Exception("This booking is no longer available");
+          }else{
+            $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
+            $stmt->bindParam(':booking_id', $booking_id);
+            $stmt->execute();
+            echo "New booking deleted successfully.";
+          }
+        }catch(Exception $e) {
+          echo 'Message: ' .$e->getMessage();
+        }
       } catch(PDOException $e) {
         echo "Error: " . $e->getMessage();
       }
