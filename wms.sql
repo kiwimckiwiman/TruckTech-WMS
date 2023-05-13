@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2023 at 10:34 AM
+-- Generation Time: May 13, 2023 at 11:43 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -40,13 +40,6 @@ CREATE TABLE `bookings` (
   `accepted_status` enum('pending','accepted','rejected') NOT NULL,
   `accepted_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `customer_id`, `workshop_id`, `vehicle_plate`, `vehicle_make`, `customer_lng`, `customer_ltd`, `description`, `time_created`, `accepted_status`, `accepted_time`) VALUES
-(3, 1, 1, 'gh 288 s', 'toy', 0.000000, 0.000000, 'bruh', '2023-05-01 10:24:48', 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -115,6 +108,23 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `purchase_details`
+--
+
+CREATE TABLE `purchase_details` (
+  `purchase_id` bigint(20) UNSIGNED NOT NULL,
+  `workshop_id` bigint(20) UNSIGNED NOT NULL,
+  `purchaser_id` bigint(20) UNSIGNED NOT NULL,
+  `item_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(5) NOT NULL,
+  `price` decimal(7,2) NOT NULL,
+  `date_purchased` timestamp NOT NULL DEFAULT current_timestamp(),
+  `supplier` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `steps`
 --
 
@@ -155,9 +165,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`, `gender`) VALUES
 (1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's', ''),
-(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
+(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$ooCSCBGdHaiaV8/SbPANM.cmnL/BsZVIn1lHkmHiuyxBT9wWNx3AC', NULL, NULL, NULL, NULL, 'a', ''),
 (123, 'MurtadaRashid', 'murtadarashid@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'Rashid', 11, 'a', ''),
-(125, 'MurtadaRashid', 'murtadarashid222@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'asa11112,', 11222244, 'a', ''),
 (126, 'MurtadaRashid', 'murtadarashi22d@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
 (128, 'dfghjk', '102764926@students.swinburne.edu.my', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-30', 'fbebfiw', 11, 'a', ''),
 (129, 'New User', 'abc@abc.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
@@ -169,7 +178,14 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, 
 (138, 'test', 'zit40812@omeie.com', '$2y$10$gVkW.IYsY/vnpQc9EB4h4eXY3ZcsVW6pcNXn66mvjD.ZJ.DX580qG', 'dddd', '2023-06-01', 'test', 11, 'a', 'Male'),
 (139, 'root', 'gvu84482@nezid.com', '$2y$10$F8ahH.IE.O71OdElaPGsVOVzsYtRRixnkEHpyMPeqwCQSmmXL/APS', 'dddd', '2023-05-20', 'www', 11, 'a', 'Male'),
 (141, 'root', 'qum82774@nezid.com', '$2y$10$hQuSkAOXT8.ttKryo7OlF.2VbKWzWJYae63bZqb.9ctkbsDqg8B9i', 'sss', '2023-05-10', 'asa111', 11, 'a', 'Male'),
-(142, 'JohnDoe', 'nzq54066@zslsz.com', '$2y$10$Aajnb.CuF2THAlrqC51NsOdK2ZSMnyv6Wi49XXBUVe73egXk/M18G', 'John', '2023-04-06', 'a company', 11, 'a', 'Male');
+(142, 'JohnDoe', 'nzq54066@zslsz.com', '$2y$10$Aajnb.CuF2THAlrqC51NsOdK2ZSMnyv6Wi49XXBUVe73egXk/M18G', 'John', '2023-04-06', 'a company', 11, 'a', 'Male'),
+(143, 'New User', 'uyc85098@zslsz.com', '$2y$10$oz3Ln/BI4qlTzc8XFV/kQOTn/cuxAfUbtL9w1b0KkmoUpxF1voUEG', NULL, NULL, NULL, NULL, 'c', ''),
+(149, 'test_worker', 'test_worker@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test_worker', NULL, 'company', NULL, 'w', 'm'),
+(150, 'test_worker2', 'test_worker2@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test_worker', NULL, 'company', NULL, 'w', 'm'),
+(151, 'ttt', 'tttt@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'ttt', NULL, 'dasdas', NULL, 's', 'm'),
+(152, 'test_worker3', 'test_worker3@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test_worker', NULL, 'company', NULL, 'w', 'm'),
+(153, 'test', 'test_worker56@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test', NULL, 'company', NULL, 'w', ''),
+(154, 'admin', 'wdwd@gmaiol.com', '$2y$10$a3CuYLAUhWQFjetrkmxzAeWtQd45d8I/.O3wPBKI9tmDA2wBZeJFW', 'Murtada', '4234-03-11', 'asawww', 11, 'a', 'Male');
 
 -- --------------------------------------------------------
 
@@ -197,7 +213,7 @@ CREATE TABLE `workshops` (
   `location` varchar(255) NOT NULL,
   `opening_hours` varchar(255) NOT NULL,
   `specialisations` varchar(255) NOT NULL,
-  `phone_no` int(11) NOT NULL,
+  `phone_no` varchar(14) NOT NULL,
   `workshop_lng` decimal(9,6) NOT NULL,
   `workshop_ltd` decimal(8,6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -207,15 +223,12 @@ CREATE TABLE `workshops` (
 --
 
 INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`, `opening_hours`, `specialisations`, `phone_no`, `workshop_lng`, `workshop_ltd`) VALUES
-(1, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000),
-(2, 2, 'name', 'there', '9:00 am to 9:01am', 'cars', 22292, 0.000000, 0.000000),
-(3, 125, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', 110110111, 0.440000, 0.450000),
-(4, 125, 'YEMEN ', 'SNAA', '9:00 to 11:pm ', 'WOTHR ', 89986986, 0.111000, 0.546000),
-(5, 125, 'YEMEN ', 'ADEN', '9:00 to 14:pm ', 'feurfguierf ', 89986986, 0.111000, 0.546000),
-(6, 128, 'ggreg', 'iuguig', 'dededed', 'dwdw', 11, 0.040000, 0.043000),
-(7, 123, 'ggreg', 'efuiwfw', 'dededed', 'wewe', 11, 0.040000, 0.043000),
-(8, 125, 'abcd', 'nfeuofhoeh', 'dededed', 'wewe', 11, 0.040000, 0.043000),
-(9, 132, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', 11, 0.040000, 0.043000);
+(2, 130, 'name', 'there', '9:00 am to 9:01am', 'cars', '22292', 0.000000, 0.000000),
+(3, 2, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', '110110111', 0.440000, 0.450000),
+(6, 128, 'ggreg', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
+(7, 134, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 0.040000, 0.043000),
+(9, 132, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
+(30, 142, 'dd', '1.5382337115198432, 110.3137185559898', '02:47 PM to 02:48 PM', 'delete', '011-2202-2938', 110.313719, 1.538234);
 
 --
 -- Indexes for dumped tables
@@ -256,6 +269,15 @@ ALTER TABLE `new_login_table`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`token_id`);
+
+--
+-- Indexes for table `purchase_details`
+--
+ALTER TABLE `purchase_details`
+  ADD PRIMARY KEY (`purchase_id`),
+  ADD KEY `workshop_id` (`workshop_id`),
+  ADD KEY `purchaser_id` (`purchaser_id`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `steps`
@@ -313,13 +335,19 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `new_login_table`
 --
 ALTER TABLE `new_login_table`
-  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
-  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `purchase_details`
+--
+ALTER TABLE `purchase_details`
+  MODIFY `purchase_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `steps`
@@ -331,19 +359,19 @@ ALTER TABLE `steps`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT for table `workers`
 --
 ALTER TABLE `workers`
-  MODIFY `worker_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `worker_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT for table `workshops`
 --
 ALTER TABLE `workshops`
-  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables
@@ -369,6 +397,14 @@ ALTER TABLE `jobs`
   ADD CONSTRAINT `job_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `job_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `job_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `purchase_details`
+--
+ALTER TABLE `purchase_details`
+  ADD CONSTRAINT `purchase_details_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`),
+  ADD CONSTRAINT `purchase_details_ibfk_2` FOREIGN KEY (`purchaser_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `purchase_details_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`);
 
 --
 -- Constraints for table `steps`
