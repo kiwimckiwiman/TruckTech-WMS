@@ -1,4 +1,95 @@
 <?php
+function getItemPurchases($workshop_id, $item_id) {
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+ 
+  if ( mysqli_connect_errno() ) {
+      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+  }
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $sql = "SELECT * FROM purchase_details WHERE workshop_id = :workshop_id AND item_id = :item_id";
+      $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->bindParam(':item_id', $item_id);
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+  } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+function addPurchaseDetails(){
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  if ( mysqli_connect_errno() ) {
+      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+  }
+
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      if(isset($_POST['item_id'])){
+          $supplier = $_POST['supplier'];
+          $brandName = $_POST['brandName'];
+          $price = $_POST['price'];
+          $dPurchased = $_POST['dPurchased'];
+          $quantity =  $_POST['quantity'];
+          $item_id = $_POST['item_id'];
+          $workshop_id= $_SESSION['workshop_id'];
+
+          // Begin transaction
+          $conn->beginTransaction();
+
+          // Prepare the SQL statement for inserting purchase details
+          $stmt = $conn->prepare("INSERT INTO purchase_details (workshop_id, brand, item_id, quantity, price, date_purchased, supplier) 
+              VALUES (:workshop_id, :brandName, :item_id, :quantity, :price, :dPurchased, :supplier)");
+
+          // Bind the purchase details to the prepared statement parameters
+          $stmt->bindParam(':workshop_id', $workshop_id);
+          $stmt->bindParam(':brandName', $brandName);
+          $stmt->bindParam(':item_id', $item_id);
+          $stmt->bindParam(':quantity', $quantity);
+          $stmt->bindParam(':price', $price);
+          $stmt->bindParam(':dPurchased', $dPurchased);
+          $stmt->bindParam(':supplier', $supplier);
+
+          // Execute the prepared statement to insert the purchase details
+          $stmt->execute();
+
+          // Prepare the SQL statement for updating inventory
+          $stmt = $conn->prepare("UPDATE inventory
+              SET quantity = quantity + :quantity
+              WHERE item_id = :item_id
+              AND workshop_id = :workshop_id");
+
+          // Bind the inventory data to the prepared statement parameters
+          $stmt->bindParam(':quantity', $quantity);
+          $stmt->bindParam(':item_id', $item_id);
+          $stmt->bindParam(':workshop_id', $workshop_id);
+
+          // Execute the prepared statement to update the inventory
+          $stmt->execute();
+
+          // Commit the transaction
+          $conn->commit();
+
+          echo "New data added successfully.";
+      }
+  } catch(PDOException $e) {
+      // Roll back the transaction if there's an error
+      $conn->rollback();
+      echo "Error: " . $e->getMessage();
+  }
+}
+
 function addStockPerItem($workshop,$item,$quantity) {
   $servername = 'localhost';
   $username = 'root';
@@ -132,12 +223,12 @@ function addItem(){
       $myFile =  $_POST['myFile'];
       $workshop_id = $_SESSION['workshop_id'];
       $quantity = 0;
-    
+      $itemType = strtolower($_POST['itemType']);
       
 
       // Prepare the SQL statement for inserting user data into the table
-      $stmt = $conn->prepare("INSERT INTO inventory (workshop_id,`name`, `desc`, price, quantity,min_stock, img_name) 
-                              VALUES (:workshop_id,:itemName, :descr, :price, :quantity , :minStockVal, :myFile )");
+      $stmt = $conn->prepare("INSERT INTO inventory (workshop_id,`name`, `desc`, price, quantity,min_stock, img_name, item_type) 
+                              VALUES (:workshop_id,:itemName, :descr, :price, :quantity , :minStockVal, :myFile, :itemType )");
     
       // Bind the user data values to the prepared statement parameters
       $stmt->bindParam(':workshop_id', $workshop_id);
@@ -147,6 +238,7 @@ function addItem(){
       $stmt->bindParam(':quantity', $quantity);
       $stmt->bindParam(':minStockVal', $minStockVal);
       $stmt->bindParam(':myFile', $myFile);
+      $stmt->bindParam(':itemType', $itemType);
       // Execute the prepared statement to insert the user data into the table
       $stmt->execute();
 

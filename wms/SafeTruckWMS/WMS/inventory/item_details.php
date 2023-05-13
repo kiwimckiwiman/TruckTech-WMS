@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-   session_start();
-//   if(!($_SESSION["type"] == "s")){
-//     header("Location: ../../login/login.php");
-//   }
+  session_start();
+  $item = $_GET['id'];
+  include "inventory_queries.php";
+  $workshop_details= getWorkshopDetails($_SESSION["workshop_id"]);
+  $items = getItem($_SESSION["workshop_id"],$item);
+  $purchases = getItemPurchases($_SESSION["workshop_id"],$item);
+  
 ?>
 <head>
   <!-- Required meta tags -->
@@ -28,10 +31,6 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
-<?php
-        // this will be inventory queries
-        include "inventory_queries.php";
-        ?>
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
@@ -43,10 +42,10 @@
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="index.html">
+          <a class="navbar-brand brand-logo" href="dashboard.php">
             <img src="../../images/logo.svg" alt="logo" />
           </a>
-          <a class="navbar-brand brand-logo-mini" href="index.html">
+          <a class="navbar-brand brand-logo-mini" href="dashboard.php">
             <img src="../../images/logo-mini.svg" alt="logo" />
           </a>
         </div>
@@ -54,8 +53,9 @@
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">Admin</span></h1>
-            <h3 class="welcome-sub-text">Your performance summary this week </h3>
+            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">John Doe</span></h1>
+            <h3 class="welcome-sub-text">Your Workshop Dashboard : <?php echo($_SESSION['workshop_id']);?> </h3>
+            <h3 class="welcome-sub-text">Just pulling the id and then will run a query when everything dashboard is done</h3>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -175,7 +175,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="../../images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
@@ -475,66 +475,154 @@
       </nav>
       <!-- partial -->
       <div class="main-panel">
-        
-    
-        <div class="col-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Create Item</h4>
-                <p class="card-description">
-                  
-                </p>
-                <form class="forms-sample" method="POST"  >
-                  <div class="form-group">
-                    <label for="itemName">Item Name</label>
-                    <input type="text" class="form-control" id="itemName" name="itemName"  required placeholder="Item Name">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="itemType">Item Type</label>
-                    <input type="text" class="form-control" id="itemType" name="itemType"  required placeholder="Item Type">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="desc">Item Description</label>
-                    <textarea rows="5" cols="175"  id="desc" name="desc" required placeholder="Description of the Item Name"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <label for="price">Item Price</label>
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="home-tab">
+              <div class="d-sm-flex align-items-center justify-content-between border-bottom">
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                    <?php
+                      echo "<h2 style='font-weight: bold; text-align: center; margin-top: 20px;'>Item Details: " . $items['name'] . "</h2>";
+                    ?>
+                   </li>
+                  </ul>
+                  <div>
+                   
                     
-                    <input type="text" class="form-control"   id="price" name="price" required>
                   </div>
-                  <div class="form-group">
-                    <label for="minStockVal">Minimum Stock Value</label>
-                    <input type="number" class="form-control"  id="minStockVal" name="minStockVal" required >
-                  </div>
-                  
-                  <div class="form-group">
-                                    <label for="myFile">Upload Item Image</label>
-                              <br/>  <input type="file" id="myFile" name="myFile">
-                  </div>
-
-                  <?php
-                        // need to add 2 more input fields for longitudinal and latitude locations
+                </div>
+                <div class="tab-content tab-content-basic">
+                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="statistics-details d-flex align-items-center justify-content-between">
+                          <div class="d-none d-md-block">
+                          <p class="statistics-title">Item Image</p>
+                          <!-- <h3 class="rate-percentage"><?php #echo $items['img_name'];?></h3> -->
+                          <img src="https://dummyimage.com/200x200/000/fff&text=Dummy+Image" alt="Item Image">
+                        </div>
+                        <div>
+                            <p class="statistics-title">Item Name</p>
+                            <h3 class="rate-percentage"><?php echo $items['name'];?></h3>
+                          </div>
+                          <div>
+                            <p class="statistics-title">Item Category</p>
+                            <h3 class="rate-percentage"><?php  echo $items['item_type'];?></h3>
+                            <!-- <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p> -->
+                          </div>
+                          <div>
+                            <p class="statistics-title">Item Price</p>
+                            <h3 class="rate-percentage">$ <?php echo $items['price'];?></h3>
+                          </div>
+                          <div>
+                            <p class="statistics-title">Minimum Stock</p>
+                            <h3 class="rate-percentage"><?php  echo $items['min_stock'];?></h3>
+                          </div>
+                          <div>
+                          <p class="statistics-title">Current Stock</p>
+                          <?php if ($items['quantity'] < $items['min_stock']) { ?>
+                            <h3 class="rate-percentage text-danger"><?php echo $items['quantity']; ?></h3>
+                          <?php } else { ?>
+                            <h3 class="rate-percentage"><?php echo $items['quantity']; ?></h3>
+                          <?php } ?>
+                          <p class="<?php echo ($items['quantity'] < $items['min_stock']) ? 'text-danger' : 'text-success'; ?> d-flex"><i class="mdi <?php echo ($items['quantity'] < $items['min_stock']) ? 'mdi-menu-down' : 'mdi-menu-up'; ?>"></i><span><?php echo ($items['quantity'] < $items['min_stock']) ? ($items['min_stock'] - $items['quantity']) . ' Below minimum' : 'Above minimum'; ?></span></p>
+                        </div>
+                      
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="statistics-details d-flex align-items-center justify-content-between">
+                          
+                          
+                        <div>
+                            <p class="statistics-title">Item Description</p>
+                            <h3 class="rate-percentage"><?php echo $items['desc'];?></h3>
+                          </div>
                         
-                        // $workshopOwners = getWorkshopOwners();
-                        // echo '<option value="Select">Select</option>';
-                        // foreach ($workshopOwners as $owner) {
-                        //     echo '<option value="'.$owner['user_id'].'">'.$owner['username'].' - Company:'.$owner['company'].'</option>';
-                        // }
-                        ?>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <div class="row ">
+                    <div class="col-lg d-flex flex-column">
+                      <div class="row flex-grow">
+                        <div class="col-12 grid-margin stretch-card">
+                          <div class="card card-rounded">
+                            <div class="card-body">
+                              <div class="d-sm-flex justify-content-between align-items-start">
+                                <div>
+                                  <h4 class="card-title card-title-dash"> Purchases History</h4>
+                                  <h4 class="card-title card-title-dash"> This Item has <?php echo count($purchases) ;?> Purchases </h4>
+                                </div>
+                                <!-- <div>
+                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
+                                </div> -->
+                              </div>
+                              <div class="table-responsive  mt-1">
+                              <table class="table select-table">
+                                <thead>
+                                  <tr>
+                                    <th>Date Purchased</th>
+                                    <th>Supplier</th>
+                                    <th>Brand</th>
+                                    <th>Item Cost</th>
+                                    <th>Quantity Purchased</th>
+                                    <th>Total Cost</th>
+                                    </tr>
+                                </thead>
+                              <tbody>
+                              
+                                <?php
+                                  $count = count($purchases);
+                                  if($count == 0){ ?>
+                                    <tr>
+                                  <td colspan="5" class="text-center"><h6>Zero Purchases Done on this Item </h6></td>
+                                </tr>
+                                  <?php } else {
+                                    foreach($purchases as $purchase) {
+                                  ?>
+                                    <tr>
+                                    <td>
+                                      
+                                        <h6><?php echo $purchase['date_purchased']; ?></h6>
+                                      
+                                    </td>
+                                      <td>
+                                      <h6><?php echo $purchase['supplier']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo $purchase['brand']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo ($purchase['price']/$purchase['quantity']); ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $purchase['quantity']; ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $purchase['price']; ?></h6>
+                                      </td>
+                                    </tr>
+                                  <?php }} ?>
+                                </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                  </div>
                   
-
-                  <button type="submit" class="btn btn-primary me-2" 
-                  onclick=<?php addItem();?>
-                  >Submit</button>
-                  <button class="btn btn-light">Cancel</button>
-                </form>
+                </div>
               </div>
             </div>
           </div>
-         
-        
+        </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -550,83 +638,8 @@
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-  <script>
-    var form = document.querySelector('.forms-sample');
-var submitBtn = form.querySelector('button[type="submit"]');
-
-// Add event listener to the submit button
-submitBtn.addEventListener('click', function(event) {
-  // Prevent the form from submitting automatically
-  event.preventDefault();
-
-  // Get the input fields and error message element
-  var itemName = form.querySelector('#itemName');
-  var desc = form.querySelector('#desc');
-  var price = form.querySelector('#price');
-  var minStockVal = form.querySelector('#minStockVal');
-  const imageInput = document.getElementById('myFile');
 
 
-  // ITEM TYPE
-  var itemTypeInput = document.getElementById("itemType");
-
-  var errors = [];
-  if (itemTypeInput.value == "") {
-  alert("Please enter an item type");
-
-}
-  if (itemName.value.trim() === '') {
-    errors.push('Please enter the Item name.');
-  } else if (!/^[a-zA-Z\s]*$/.test(itemName.value)) {
-      errors.push('Item name should only contain characters.');
-    }
-  if (desc.value.trim() === '') {
-    errors.push('Please enter the Item Description.');
-  }else if (desc.value.length > 255) {
-      errors.push('Item description should not be more than 255 characters.');
-    }
-  //PRICEE
-  if (price.value.trim() === '') {
-    errors.push('Please enter the price.');
-  } else if (isNaN(parseFloat(price.value))) {
-    errors.push('Price should be a valid number.');
-  } else if (!/^\d+(.\d{1,2})?$/.test(price.value)) {
-    errors.push('Price should be a valid number with at most 2 decimal places.');
-  }
-
-  if (minStockVal.value <= 0) {
-    errors.push('The minimum stock should not be 0. It should always be greater than 0.');
-  }
-
-  if (imageInput.value.trim() !== '') {
-  const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-  const maxFileSize = 500 * 1024; // 500KB
-
-  const fileExtension = imageInput.value.match(allowedExtensions);
-  const fileSize = imageInput.files[0].size;
-
-  if (!fileExtension) {
-    errors.push('Invalid file type. Only JPG, JPEG and PNG images are allowed.');
-  }
-
-  if (fileSize > maxFileSize) {
-    errors.push('File size exceeds 500KB limit.');
-  }
-} else {
-  errors.push('Please select an image.');
-}
-
-
-  // Display any errors
-  if (errors.length > 0) {
-    alert(errors.join('\n'));
-  } else {
-    // If no errors, submit the form
-    form.submit();
-  }
-});
-
-</script>                     
   <!-- plugins:js -->
   <script src="../../vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
@@ -646,7 +659,8 @@ submitBtn.addEventListener('click', function(event) {
   <!-- Custom js for this page-->
   <script src="../../js/dashboard.js"></script>
   <script src="../../js/Chart.roundedBarCharts.js"></script>
-  <!-- End custom js for this page-->
+  
 </body>
+
 </html>
 

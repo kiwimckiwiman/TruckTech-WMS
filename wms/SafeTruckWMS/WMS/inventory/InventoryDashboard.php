@@ -495,7 +495,6 @@
                   <div>
                     <div class="btn-wrapper">
                       <a href="createItem.php" class="btn btn-otline-dark align-items-center"><i class="icon-pencil"></i> Create Item</a>
-                      <a href="addStock.php" class="btn btn-primary text-white me-0"><i class="icon-plus"></i> Add Stock</a>
                     </div>
                     
                   </div>
@@ -523,6 +522,7 @@
                                   <tr>
                                     <th>Name</th>
                                     <th>Description</th>
+                                    <th>Item Type</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Options</th>
@@ -550,6 +550,9 @@
                                 function editItem(itemId) {
                                   window.location.href = "edititem.php?id=" + itemId;
                                 }
+                                function purchaseDetails(itemId) {
+                                  window.location.href = "purchasedetails.php?id=" + itemId;
+                                }
                               </script>
                                 <?php
                                   $count = count($items);
@@ -561,11 +564,16 @@
                                     foreach($items as $item) {
                                   ?>
                                     <tr>
-                                      <td >
+                                    <td>
+                                      <a href="item_details.php?id=<?php echo $item['item_id']; ?>" style="text-decoration: none;">
                                         <h6 <?php if ($item['quantity'] < $item['min_stock']) { ?> style="color: red;" <?php } ?>><?php echo $item['name']; ?></h6>
-                                      </td>
+                                      </a>
+                                    </td>
                                       <td>
                                         <p><?php echo $item['desc']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $item['item_type']; ?></p>
                                       </td>
                                       <td>
                                         <p>RM <?php echo $item['price']; ?></p>
@@ -574,8 +582,10 @@
                                         <p><?php echo $item['quantity']; ?></p>
                                       </td>
                                       <td>
-                                        <button class="btn btn-primary" value="<?php echo $item['item_id'];?>" onclick="editItem(<?php echo $item['item_id'];?>)"><i class="icon-pencil"></i></button>
-                                        <button class="btn btn-danger" value="<?php echo $item['item_id'];?>" onclick="deleteItem(<?php echo $item['item_id'];?>)"><i class="icon-trash"></i></button>     
+                                      <button class="btn btn-secondary" value="<?php echo $item['item_id'];?>" onclick="purchaseDetails(<?php echo $item['item_id'];?>)"><i class="icon-refresh"></i></button>   
+                                      <button class="btn btn-secondary" value="<?php echo $item['item_id'];?>" onclick="editItem(<?php echo $item['item_id'];?>)"><i class="icon-pencil"></i></button>
+                                      <button class="btn btn-danger" value="<?php echo $item['item_id'];?>" onclick="deleteItem(<?php echo $item['item_id'];?>)"><i class="icon-trash"></i></button>     
+                                        
                                       </td>
                                     </tr>
                                   <?php }} ?>

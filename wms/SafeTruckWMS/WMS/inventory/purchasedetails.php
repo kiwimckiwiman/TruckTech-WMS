@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-   session_start();
-//   if(!($_SESSION["type"] == "s")){
-//     header("Location: ../../login/login.php");
-//   }
+ include "inventory_queries.php";
+ session_start();
+ $item_id = $_GET['id'];
+ $workshop_id = $_SESSION['workshop_id'];
+
 ?>
 <head>
   <!-- Required meta tags -->
@@ -28,10 +29,7 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
-<?php
-        // this will be inventory queries
-        include "inventory_queries.php";
-        ?>
+
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
@@ -480,53 +478,41 @@
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Create Item</h4>
+                <h4 class="card-title">Add Item Purchase Details</h4>
                 <p class="card-description">
                   
                 </p>
                 <form class="forms-sample" method="POST"  >
-                  <div class="form-group">
-                    <label for="itemName">Item Name</label>
-                    <input type="text" class="form-control" id="itemName" name="itemName"  required placeholder="Item Name">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="itemType">Item Type</label>
-                    <input type="text" class="form-control" id="itemType" name="itemType"  required placeholder="Item Type">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="desc">Item Description</label>
-                    <textarea rows="5" cols="175"  id="desc" name="desc" required placeholder="Description of the Item Name"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <label for="price">Item Price</label>
+                <div class="form-group">
+                    <label for="supplier">Supplier Name</label>
                     
-                    <input type="text" class="form-control"   id="price" name="price" required>
+                    <input type="text" class="form-control"   id="supplier" name="supplier" required>
+                  </div>
+                <div class="form-group">
+                    <label for="brandName">Brand name</label>
+                    
+                    <input type="text" class="form-control"   id="brandName" name="brandName" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="dPurchased">Date purchased</label>
+                    <input type="date" class="form-control" id="dPurchased" name="dPurchased"  required placeholder="Item Name">
                   </div>
                   <div class="form-group">
-                    <label for="minStockVal">Minimum Stock Value</label>
-                    <input type="number" class="form-control"  id="minStockVal" name="minStockVal" required >
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control"   id="quantity" name="quantity" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control"   id="price" name="price" required>
                   </div>
                   
-                  <div class="form-group">
-                                    <label for="myFile">Upload Item Image</label>
-                              <br/>  <input type="file" id="myFile" name="myFile">
-                  </div>
-
-                  <?php
-                        // need to add 2 more input fields for longitudinal and latitude locations
-                        
-                        // $workshopOwners = getWorkshopOwners();
-                        // echo '<option value="Select">Select</option>';
-                        // foreach ($workshopOwners as $owner) {
-                        //     echo '<option value="'.$owner['user_id'].'">'.$owner['username'].' - Company:'.$owner['company'].'</option>';
-                        // }
-                        ?>
+                  <input type="hidden" name="item_id" value="<?php echo $item_id ?>">
+             
                   
 
                   <button type="submit" class="btn btn-primary me-2" 
-                  onclick=<?php addItem();?>
+                  onclick=<?php addPurchaseDetails();?>
                   >Submit</button>
                   <button class="btn btn-light">Cancel</button>
                 </form>
@@ -551,80 +537,36 @@
   </div>
   <!-- container-scroller -->
   <script>
-    var form = document.querySelector('.forms-sample');
+   var form = document.querySelector('.forms-sample');
 var submitBtn = form.querySelector('button[type="submit"]');
 
 // Add event listener to the submit button
 submitBtn.addEventListener('click', function(event) {
-  // Prevent the form from submitting automatically
+  // Prevent the default form submission
   event.preventDefault();
 
-  // Get the input fields and error message element
-  var itemName = form.querySelector('#itemName');
-  var desc = form.querySelector('#desc');
-  var price = form.querySelector('#price');
-  var minStockVal = form.querySelector('#minStockVal');
-  const imageInput = document.getElementById('myFile');
+  // Get the form input values
+  var supplier = form.querySelector('#supplier').value.trim();
+  var brandName = form.querySelector('#brandName').value.trim();
+  var dPurchased = form.querySelector('#dPurchased').value.trim();
+  var quantity = parseInt(form.querySelector('#quantity').value.trim());
+  var price = parseInt(form.querySelector('#price').value.trim());
 
-
-  // ITEM TYPE
-  var itemTypeInput = document.getElementById("itemType");
-
-  var errors = [];
-  if (itemTypeInput.value == "") {
-  alert("Please enter an item type");
-
-}
-  if (itemName.value.trim() === '') {
-    errors.push('Please enter the Item name.');
-  } else if (!/^[a-zA-Z\s]*$/.test(itemName.value)) {
-      errors.push('Item name should only contain characters.');
-    }
-  if (desc.value.trim() === '') {
-    errors.push('Please enter the Item Description.');
-  }else if (desc.value.length > 255) {
-      errors.push('Item description should not be more than 255 characters.');
-    }
-  //PRICEE
-  if (price.value.trim() === '') {
-    errors.push('Please enter the price.');
-  } else if (isNaN(parseFloat(price.value))) {
-    errors.push('Price should be a valid number.');
-  } else if (!/^\d+(.\d{1,2})?$/.test(price.value)) {
-    errors.push('Price should be a valid number with at most 2 decimal places.');
+  // Validate the input values
+  if (supplier === '' || brandName === '' || dPurchased === '' || isNaN(quantity) || isNaN(price)) {
+    alert('All fields are required');
+    return;
   }
 
-  if (minStockVal.value <= 0) {
-    errors.push('The minimum stock should not be 0. It should always be greater than 0.');
+  if (quantity <= 0 || price <= 0) {
+    alert('Quantity and price must be positive numbers');
+    return;
   }
 
-  if (imageInput.value.trim() !== '') {
-  const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-  const maxFileSize = 500 * 1024; // 500KB
-
-  const fileExtension = imageInput.value.match(allowedExtensions);
-  const fileSize = imageInput.files[0].size;
-
-  if (!fileExtension) {
-    errors.push('Invalid file type. Only JPG, JPEG and PNG images are allowed.');
-  }
-
-  if (fileSize > maxFileSize) {
-    errors.push('File size exceeds 500KB limit.');
-  }
-} else {
-  errors.push('Please select an image.');
-}
-
-
-  // Display any errors
-  if (errors.length > 0) {
-    alert(errors.join('\n'));
-  } else {
-    // If no errors, submit the form
-    form.submit();
-  }
+  // Submit the form if all validation passes
+  form.submit();
 });
+
 
 </script>                     
   <!-- plugins:js -->
