@@ -401,8 +401,8 @@ ALTER TABLE `jobs`
 -- Constraints for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  ADD CONSTRAINT `purchase_details_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`),
-  ADD CONSTRAINT `purchase_details_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`);
+  ADD CONSTRAINT `purchase_details_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `purchase_details_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `steps`
