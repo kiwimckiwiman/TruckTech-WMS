@@ -114,7 +114,7 @@ CREATE TABLE `password_reset_tokens` (
 CREATE TABLE `purchase_details` (
   `purchase_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
-  `purchaser_id` bigint(20) UNSIGNED NOT NULL,
+  `brand` varchar(255) NOT NULL,
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `quantity` int(5) NOT NULL,
   `price` decimal(7,2) NOT NULL,
@@ -276,7 +276,6 @@ ALTER TABLE `password_reset_tokens`
 ALTER TABLE `purchase_details`
   ADD PRIMARY KEY (`purchase_id`),
   ADD KEY `workshop_id` (`workshop_id`),
-  ADD KEY `purchaser_id` (`purchaser_id`),
   ADD KEY `item_id` (`item_id`);
 
 --
@@ -403,7 +402,6 @@ ALTER TABLE `jobs`
 --
 ALTER TABLE `purchase_details`
   ADD CONSTRAINT `purchase_details_ibfk_1` FOREIGN KEY (`workshop_id`) REFERENCES `workshops` (`workshop_id`),
-  ADD CONSTRAINT `purchase_details_ibfk_2` FOREIGN KEY (`purchaser_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `purchase_details_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`);
 
 --
