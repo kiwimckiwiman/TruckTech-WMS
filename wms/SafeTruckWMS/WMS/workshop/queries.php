@@ -1,4 +1,33 @@
 <?php
+
+function deleteWorker($workerID, $workshopId) {
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Prepare and execute the SQL query to delete the item
+    $sql = "DELETE FROM users WHERE user_id = :workerId";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':workerId', $workerID);
+    $stmt->execute();
+    
+    // Check if any rows were affected by the delete query
+    $rowCount = $stmt->rowCount();
+    if ($rowCount > 0) {
+      return true; // Return true if the item was successfully deleted
+    } else {
+      return false; // Return false if the item was not found or could not be deleted
+    }
+  } catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+    return false; // Return false if there was an error with the database connection or query
+  }
+}
   function AddWorkshopOwner(){
     $servername = 'localhost';
     $username = 'root';
@@ -107,11 +136,11 @@
           try {
             $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $result = $stmt->fetchAll();
-            $id = $result[0]['id'];
+            $id = $result[0]['user_id'];
             return $id;
             } catch(PDOException $e) {
               echo "Error: " . $e->getMessage();

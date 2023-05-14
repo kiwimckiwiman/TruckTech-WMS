@@ -489,8 +489,8 @@
                   </ul>
                   <div>
                     <div class="btn-wrapper">
+                    <a href="addWorker.php" class="btn btn-otline-dark align-items-center"><i class="icon-plus"></i> Create New Worker</a>
                     </div>
-                    
                   </div>
                 </div>
                 <div class="tab-content tab-content-basic">
@@ -556,8 +556,8 @@
                                         } ?></button>
                                       </td>
                                       <td>
-                                        <button class="btn btn-primary" value="<?php echo $worker['worker_id'];?>" onclick="editWorker(<?php echo $worker['worker_id'];?>)"><i class="icon-pencil"></i></button>
-                                        <button class="btn btn-danger" value="<?php echo $worker['worker_id'];?>" onclick="deleteItem(<?php echo $worker['worker_id'];?>)"><i class="icon-trash"></i></button>     
+                                        <!-- <button class="btn btn-primary" value="<?#php echo $worker['worker_id'];?>" onclick="editWorker(<?php #echo $worker['worker_id'];?>)"><i class="icon-pencil"></i></button> -->
+                                        <button class="btn btn-danger" value="<?php echo $worker['worker_id'];?>" onclick="deleteWorker(<?php echo $worker['worker_id'];?>)"><i class="icon-trash"></i></button>     
                                         
                                      </td>
                                     </tr>
@@ -609,27 +609,26 @@
                                     }
                                   });
                                 }
-                                function deleteWorker(itemId) {
+                                function deleteWorker(workerId) {
                                   // Here, you can write the code to delete the item with the specified ID using AJAX or any other method
                                   // For example:
                                   $.ajax({
-                                    url: "deleteItem.php",
+                                    url: "deleteWorker.php",
                                     type: "POST",
-                                    data: {itemId: itemId},
+                                    data: {workerId: workerId},
                                     success: function(response) {
-                                      alert("Item has been deleted successfully");
+                                      alert("Worker has been deleted successfully");
                                       location.reload();
-
                                     },
                                     error: function(xhr, status, error) {
                                       // Do something when there's an error deleting the item
                                     }
                                   });
                                 }
-                                function editWorker(workerId) {
-                                  alert(workerId);
-                                  window.location.href = "editworker.php?id=" + workerId;
-                                }
+                                // function editWorker(workerId) {
+                                //   alert(workerId);
+                                //   window.location.href = "editworker.php?id=" + workerId;
+                                // }
 
                               </script>
 
