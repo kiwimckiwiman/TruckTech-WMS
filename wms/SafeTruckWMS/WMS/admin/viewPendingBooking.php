@@ -496,11 +496,18 @@ include("bookingAdminQueries.php");
                           
 
                           if(isset ($_POST['acceptbutton'])){
-                              ToggleAcceptBooking($_POST['acceptbutton']);
+                            $booking_id=$_POST['acceptbutton'];
+                            ToggleAcceptBooking($booking_id, $workshop_id);
+                          }
+
+                          if(isset ($_POST['acceptbuttonbyid'])){
+                            $booking_id=$_POST['acceptbuttonbyid'];
+                            ToggleAcceptBookingByID($booking_id);
                           }
                           
                           if(isset ($_POST['rejectbutton'])){
-                              ToggleRejectBooking($_POST['rejectbutton']);
+                            $booking_id=$_POST['rejectbutton'];
+                              ToggleRejectBooking($booking_id);
                           }
 
                           $result = ViewAllPendingBookings($workshop_lng, $workshop_ltd);
@@ -651,7 +658,7 @@ include("bookingAdminQueries.php");
                               <td>
                               <td>
                               <form action='viewPendingBooking.php' method='post'>
-                                  <button type='submit' class='btn btn-success btn-rounded btn-fw' name='acceptbutton' value=$booking_id onclick='successAlert()'>Accept</button>
+                                  <button type='submit' class='btn btn-success btn-rounded btn-fw' name='acceptbuttonbyid' value=$booking_id onclick='successAlert()'>Accept</button>
                                   
                               </form>
                               </td>
