@@ -68,15 +68,15 @@ CREATE TABLE `jobs` (
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `worker_id` bigint(20) UNSIGNED NOT NULL,
+  `worker_id` bigint(20) UNSIGNED,
   `vehicle_plate` varchar(255) NOT NULL,
   `vehicle_make` varchar(255) NOT NULL,
   `desc` varchar(255) NOT NULL,
   `start_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `finish_time` timestamp NULL DEFAULT NULL,
-  `comment` varchar(255) NOT NULL,
-  `invoice_link` varchar(255) NOT NULL,
-  `feedback` varchar(255) NOT NULL
+  `comment` varchar(255),
+  `invoice_link` varchar(255),
+  `feedback` varchar(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
