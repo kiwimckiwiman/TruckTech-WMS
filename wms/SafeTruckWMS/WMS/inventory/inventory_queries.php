@@ -214,13 +214,36 @@ function addItem(){
   try {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      
+      if(isset($_FILES["myFile"])) {
+        $allowedTypes = array("image/jpeg", "image/png", "image/gif");
+        $allowedExtensions = array("jpeg", "jpg", "png", "gif");
+        $maxFileSize = 5 * 1024 * 1024; // 5MB
+        $fileType = $_FILES["myFile"]["type"];
+        $fileSize = $_FILES["myFile"]["size"];
+        $fileName = basename($_FILES["myFile"]["name"]);
+        $fileTmp = $_FILES["myFile"]["tmp_name"];
+        $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    
+        // Check if the file type and extension are allowed
+        if(in_array($fileType, $allowedTypes) && in_array($fileExt, $allowedExtensions)) {
+            // Check if the file size is less than the maximum allowed
+            if($fileSize <= $maxFileSize) {
+              $myFile = uniqid() . "." . $fileExt;
+                // Set the destination folder for the uploaded file
+                $uploadPath = "images/" . $myFile;
+                if(move_uploaded_file($fileTmp, $uploadPath)) {
+                    // The file was successfully uploaded and saved
+                    // You can now use the $newFileName variable to store the filename in the database
+                } 
+            }
+        }
+        }
       if(isset($_POST['itemName'])){
       $itemName = $_POST['itemName'];
       $descr = $_POST['desc'];
       $price = $_POST['price'];
       $minStockVal = $_POST['minStockVal'];
-      $myFile =  $_POST['myFile'];
+      //$myFile =  $_POST['myFile'];
       $workshop_id = $_SESSION['workshop_id'];
       $quantity = 0;
       $itemType = strtolower($_POST['itemType']);
@@ -242,8 +265,12 @@ function addItem(){
       // Execute the prepared statement to insert the user data into the table
       $stmt->execute();
 
-      echo "New user added successfully.";}
-    } catch(PDOException $e) {
+      echo "New user added successfully.";
+
+      
+      }
+    }
+     catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
   }
@@ -368,8 +395,30 @@ function UpdateItem() {
         $price = $_POST['price'];
         $min_stock = $_POST['min_stock'];
         $quantity = $_POST['quantity'];
-        $img = "sswswsw";
-          
+        $img = $_POST['img_name'];
+        if(isset($_FILES["myFile"])) {
+          $allowedTypes = array("image/jpeg", "image/png", "image/gif");
+          $allowedExtensions = array("jpeg", "jpg", "png", "gif");
+          $maxFileSize = 5 * 1024 * 1024; // 5MB
+          $fileType = $_FILES["myFile"]["type"];
+          $fileSize = $_FILES["myFile"]["size"];
+          $fileName = basename($_FILES["myFile"]["name"]);
+          $fileTmp = $_FILES["myFile"]["tmp_name"];
+          $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+      
+          // Check if the file type and extension are allowed
+          if(in_array($fileType, $allowedTypes) && in_array($fileExt, $allowedExtensions)) {
+              // Check if the file size is less than the maximum allowed
+              if($fileSize <= $maxFileSize) {
+                $myFile = uniqid() . "." . $fileExt;
+                  // Set the destination folder for the uploaded file
+                  $uploadPath = "images/" . $myFile;
+                  if(move_uploaded_file($fileTmp, $uploadPath)) {
+                      $img = $myFile;
+                } 
+              }
+          }
+          }
         // Update query to include input field values
         $stmt = $conn->prepare("UPDATE inventory SET name = :item_name, `desc` = :desc, price = :price, min_stock = :min_stock, quantity = :quantity, img_name = :img WHERE item_id = :item_id AND workshop_id = :workshop_id");
           

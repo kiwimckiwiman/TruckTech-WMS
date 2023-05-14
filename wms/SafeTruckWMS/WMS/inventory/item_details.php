@@ -500,7 +500,7 @@
                           <div class="d-none d-md-block">
                           <p class="statistics-title">Item Image</p>
                           <!-- <h3 class="rate-percentage"><?php #echo $items['img_name'];?></h3> -->
-                          <img src="https://dummyimage.com/200x200/000/fff&text=Dummy+Image" alt="Item Image">
+                          <img src="images/<?php echo $items['img_name']; ?>" alt="Item Image" style="width: 200px; height: 200px;">
                         </div>
                         <div>
                             <p class="statistics-title">Item Name</p>

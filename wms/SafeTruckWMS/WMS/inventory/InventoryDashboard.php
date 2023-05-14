@@ -495,7 +495,7 @@
                   <div>
                     <div class="btn-wrapper">
                       <a href="createItem.php" class="btn btn-otline-dark align-items-center"><i class="icon-pencil"></i> Create Item</a>
-                    </div>
+                  </div>
                     
                   </div>
                 </div>

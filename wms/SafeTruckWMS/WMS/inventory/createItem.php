@@ -484,7 +484,7 @@
                 <p class="card-description">
                   
                 </p>
-                <form class="forms-sample" method="POST"  >
+                <form class="forms-sample" method="POST" enctype="multipart/form-data" >
                   <div class="form-group">
                     <label for="itemName">Item Name</label>
                     <input type="text" class="form-control" id="itemName" name="itemName"  required placeholder="Item Name">
@@ -496,8 +496,9 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="desc">Item Description</label>
-                    <textarea rows="5" cols="175"  id="desc" name="desc" required placeholder="Description of the Item Name"></textarea>
+                    <label for="desc">Item Description</label><br/>
+                    <input type="text" style="width: 100%; height: 100px;" placeholder="Description of the Product"id="desc" name="desc" required >
+
                   </div>
                   <div class="form-group">
                     <label for="price">Item Price</label>
@@ -551,7 +552,7 @@
   </div>
   <!-- container-scroller -->
   <script>
-    var form = document.querySelector('.forms-sample');
+var form = document.querySelector('.forms-sample');
 var submitBtn = form.querySelector('button[type="submit"]');
 
 // Add event listener to the submit button

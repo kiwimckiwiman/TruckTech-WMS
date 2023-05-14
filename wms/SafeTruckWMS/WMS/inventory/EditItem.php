@@ -480,38 +480,83 @@
               <div class="card-body">
                 <h4 class="card-title">Edit Item Details : <?php echo $item_details['name'];?></h4>
                 
-                <form class="forms-sample" method="POST">
+                <form class="forms-sample" method="POST" enctype="multipart/form-data">
                   <div class="form-group">
                     <label for="itemname">Item Name</label>
-                    <input type="text" class="form-control" id="itemname" name="itemname"  required  placeholder="<?php echo $item_details['name'] ?>">
+                    <input type="text" class="form-control" id="itemname" name="itemname"  required  value="<?php echo $item_details['name'] ?>">
                   </div>
                   <div class="form-group">
                     <label for="itemdescription">Item Description</label>
-                    <textarea rows="5" cols="175"  id="itemdescription" name="itemdescription" required  placeholder="<?php echo $item_details['desc'] ?>"></textarea>
+                    <input type="text" style="width: 100%; height: 100px;" id="itemdescription" name="itemdescription" required value="<?php echo $item_details['desc'] ?>">
                   </div>
                   <div class="form-group">
                     <label for="price">Item Price</label>
-                    <input type="text" class="form-control"  id="price" name="price" required placeholder="<?php echo $item_details['price'] ?>">
+                    <input type="text" class="form-control"  id="price" name="price" required value="<?php echo $item_details['price'] ?>">
                   </div>
                   <div class="form-group">
                     <label for="min_stock">Item Minimum Stock</label>
-                    <input type="text" class="form-control"  id="min_stock" name="min_stock" required placeholder="<?php echo $item_details['min_stock'] ?>">
-                  </div>    
+                    <input type="text" class="form-control"  id="min_stock" name="min_stock" required value="<?php echo $item_details['min_stock'] ?>">
+                  </div>
+                  <div class="form-group">
+                  <img src="images/<?php echo $item_details['img_name']; ?>" alt="Item Image" style="width: 200px; height: 200px;">
+
+                  </div> 
+                  <div class="form-group">
+                  <label for="myFile">Change Item Image</label>
+                  <br>
+                  <input type="file" id="myFile" name="myFile">
+                  </div>     
                   <input type="hidden" name="quantity" value="<?php echo $item_details['quantity'] ?>">
                   <input type="hidden" name="item_id" value="<?php echo $item_details['item_id'] ?>">
-                  <input type="hidden" name="workshop_id" value="<?php echo $item_details['workshop_id'] ?>">                                                          
+                  <input type="hidden" name="workshop_id" value="<?php echo $item_details['workshop_id'] ?>"> 
+                  <input type="hidden" name="img_name" value="<?php echo $item_details['img_name'] ?>">
                   <button type="submit" class="btn btn-primary me-2" onclick=<?php UpdateItem()?>>Submit</button>
                   <button class="btn btn-light">Cancel</button>
                 </form> 
               </div>
             </div>
           </div>
-<?php
-// Need to validte the inputs 
-// add image destination and add image link uplaod it 
-// update the item into the database , create the queries 
+          <script>
+var form = document.querySelector('.forms-sample');
+var submitBtn = form.querySelector('button[type="submit"]');
 
-?>
+// Add event listener to the submit button
+submitBtn.addEventListener('click', function(event) {
+  // Prevent the form from submitting automatically
+  event.preventDefault();
+  const imageInput = document.getElementById('myFile');
+
+
+  
+
+  var errors = [];
+  if (imageInput.value.trim() !== '') {
+  const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+  const maxFileSize = 500 * 1024; // 500KB
+
+  const fileExtension = imageInput.value.match(allowedExtensions);
+  const fileSize = imageInput.files[0].size;
+
+  if (!fileExtension) {
+    errors.push('Invalid file type. Only JPG, JPEG and PNG images are allowed.');
+  }
+
+  if (fileSize > maxFileSize) {
+    errors.push('File size exceeds 500KB limit.');
+  }
+}
+
+
+  // Display any errors
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+  } else {
+    // If no errors, submit the form
+    form.submit();
+  }
+});
+
+</script>
         
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
