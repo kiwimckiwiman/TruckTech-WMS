@@ -7,7 +7,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
   var lng = position.coords.longitude;
   map.setView([lat, lng], 12);
   popup.setLatLng([lat, lng]).addTo(map);
-  document.getElementById("loc").value = [lat, lng];
+  document.getElementById("loc").value = [lat,lng];
 });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -19,7 +19,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 function onMapClick(e) {
-    document.getElementById("loc").value = e.latlng;
+    document.getElementById("loc").value = e.latlng.lat + ',' + e.latlng.lng;
     document.getElementById("address").value = e.latlng.lat + ', ' + e.latlng.lng;
     popup
         .setLatLng(e.latlng)
@@ -44,7 +44,7 @@ document.getElementById("search").addEventListener("click", function() {
             .setLatLng([lat, lng])
             .addTo(map);
         map.setView([lat, lng], 14);
-        document.getElementById("loc").value = [lat, lng];
+        document.getElementById("loc").value = [lat,lng];
       } else {
         document.getElementById("address").placeholder = "Location not found";
         document.getElementById("address").value = null;

@@ -1,5 +1,5 @@
 <?php
-  function AddWorkshopOwner($name, $email, $user, $gender, $DOB, $phone_no, $company){
+  function AddWorkshopOwner($name, $email, $gender, $DOB, $phone_no, $company){
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -32,19 +32,18 @@
 
 
           // Prepare the SQL statement for inserting user data into the table
-          $stmt = $conn->prepare("INSERT INTO users (name, email, username, password, DOB, phone_no, company, type, gender)
-                                  VALUES (:name, :email, :username, :password, :DOB, :phone_no, :company,:type, :gender)");
+          $stmt = $conn->prepare("INSERT INTO users (name, email, password, DOB, phone_no, company, type, gender)
+                                  VALUES (:name, :email, :password, :DOB, :phone_no, :company,:type, :gender)");
 
           // Bind the user data values to the prepared statement parameters
-          $stmt->bindParam(':name', $name);
-          $stmt->bindParam(':email', $email);
-          $stmt->bindParam(':username', $user);
-          $stmt->bindParam(':password', $password_hashed);
-          $stmt->bindParam(':type', $type);
+          $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+          $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+          $stmt->bindParam(':password', $password_hashed, PDO::PARAM_STR);
+          $stmt->bindParam(':type', $type, PDO::PARAM_STR);
           $stmt->bindParam(':DOB', $DOB);
-          $stmt->bindParam(':phone_no', $phone_no);
-          $stmt->bindParam(':company', $company);
-          $stmt->bindParam(':gender', $gender);
+          $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_STR);
+          $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+          $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);
           // Execute the prepared statement to insert the user data into the table
           $stmt->execute();
 
@@ -136,7 +135,7 @@
         }
         $conn = null;
 
-        return $results;
+        return $results[0];
     }
 
     function GetWorkshopAndOwner($id){
@@ -164,7 +163,7 @@
       }
       $conn = null;
 
-      return $results;
+      return $results[0];
     }
 
     function GetAllWorkshops($page_no){
@@ -180,7 +179,7 @@
       try {
           $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
           $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $stmt = $conn->prepare("SELECT * FROM workshops LIMIT :start, :fin");
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id LIMIT :start, :fin");
           $start = ($page_no-1)*$lim;
           $stmt->bindParam(':start', $start, PDO::PARAM_INT);
           $stmt->bindParam(':fin', $lim, PDO::PARAM_INT);
@@ -221,40 +220,40 @@
     }
 
   function AddWorkshop($name, $location, $opening_hrs, $specialisations, $phone_no, $workshop_owner_id, $workshop_ltd, $workshop_lng){
-  $servername = 'localhost';
-  $username = 'root';
-  $password = '';
-  $dbname = 'wms';
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'wms';
 
-  if ( mysqli_connect_errno() ) {
-      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
-  }
-  try {
+    if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+    }
+    try {
 
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare("INSERT INTO workshops (name, location, opening_hours, specialisations, phone_no, workshop_owner_id, workshop_lng, workshop_ltd)
-                            VALUES (:name, :location, :opening_hours, :specialisations, :phone_no, :workshop_owner_id, :workshop_lng,:workshop_ltd)");
+      $stmt = $conn->prepare("INSERT INTO workshops (name, location, opening_hours, specialisations, phone_no, workshop_owner_id, workshop_lng, workshop_ltd)
+                              VALUES (:name, :location, :opening_hours, :specialisations, :phone_no, :workshop_owner_id, :workshop_lng, :workshop_ltd)");
 
-    // Bind the workshop data values to the prepared statement parameters
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':location', $location);
-    $stmt->bindParam(':opening_hours', $opening_hours);
-    $stmt->bindParam(':specialisations', $specialisations);
-    $stmt->bindParam(':phone_no', $phone_no);
-    $stmt->bindParam(':workshop_owner_id', $workshop_owner_id);
-    $stmt->bindParam(':workshop_ltd', $workshop_ltd);
-    $stmt->bindParam(':workshop_lng', $workshop_lng);
+      // Bind the workshop data values to the prepared statement parameters
+      $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+      $stmt->bindParam(':location', $location, PDO::PARAM_STR);
+      $stmt->bindParam(':opening_hours', $opening_hrs, PDO::PARAM_STR);
+      $stmt->bindParam(':specialisations', $specialisations, PDO::PARAM_STR);
+      $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_STR);
+      $stmt->bindParam(':workshop_owner_id', $workshop_owner_id, PDO::PARAM_INT);
+      $stmt->bindParam(':workshop_ltd', $workshop_ltd, PDO::PARAM_STR);
+      $stmt->bindParam(':workshop_lng', $workshop_lng, PDO::PARAM_STR);
 
-    // Execute the prepared statement to insert the workshop data into the table
-    $stmt->execute();
-    // Prepare the SQL statement for inserting workshop data into the table
-
-  } catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-  }
-  $conn = null;
+      // Execute the prepared statement to insert the workshop data into the table
+      $stmt->execute();
+      // Prepare the SQL statement for inserting workshop data into the table
+      $conn = null;
+      return "Workshop registered";
+    } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+    }
 }
 
   function GetAllOwners($page_no){
@@ -307,10 +306,10 @@
     }
     $conn = null;
 
-    return $results;
+    return $results[0];
   }
 
-  function GetOwnerSearch($search){
+  function GetOwnerSearch($search, $field){
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -322,7 +321,11 @@
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT user_id, name, company, email, phone_no, DOB, gender FROM users WHERE name LIKE :search");
+        if($field == "name"){
+          $stmt = $conn->prepare("SELECT user_id, name, company, email, phone_no, DOB, gender FROM users WHERE name LIKE :search");
+        }else{
+          $stmt = $conn->prepare("SELECT user_id, name, company, email, phone_no, DOB, gender FROM users WHERE company LIKE :search");
+        }
         $stmt->bindParam(':search', $search, PDO::PARAM_STR);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -335,7 +338,7 @@
     return $results;
   }
 
-  function GetWorkshopSearch($search){
+  function GetWorkshopSearch($search, $field){
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -347,7 +350,11 @@
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT * FROM workshops WHERE name LIKE :search");
+        if($field == "name"){
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE a.name LIKE :search");
+        }else{
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE b.name LIKE :search");
+        }
         $stmt->bindParam(':search', $search, PDO::PARAM_STR);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -371,8 +378,10 @@
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("DELETE FROM workshops WHERE workshop_id = :id");
+        $stmt = $conn->prepare("DELETE FROM users WHERE user_id IN (SELECT worker_id FROM workers WHERE workshop_id = :wid);
+                                DELETE FROM workshops WHERE workshop_id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':wid', $id, PDO::PARAM_INT);
         $stmt->execute();
 
     } catch(PDOException $e) {
@@ -381,7 +390,8 @@
     $conn = null;
   }
 
-  function DeleteOwner($id){
+  function ReassignWorkshop($workshop){
+    $owner = $_POST["workshop_owner"];
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -392,8 +402,9 @@
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt = $conn->prepare("UPDATE workshops SET workshop_owner_id = :owner WHERE workshop_id = :workshop");
+        $stmt->bindParam(':owner', $owner, PDO::PARAM_INT);
+        $stmt->bindParam(':workshop', $workshop, PDO::PARAM_INT);
         $stmt->execute();
 
     } catch(PDOException $e) {

@@ -18,7 +18,7 @@
     $token = $_POST['token'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $username = "New User";
+    $name = "New User";
     $type = "c";
 
     $stmt = $conn->prepare("SELECT DISTINCT 1 FROM new_login_table WHERE email = :email AND token = :token");
@@ -29,8 +29,8 @@
     $chk = $stmt->fetch();
 
     if ($chk == true) {
-      $stmt = $conn->prepare("INSERT INTO users (username, email, password, type) VALUES (:username, :email, :password, :type)");
-      $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+      $stmt = $conn->prepare("INSERT INTO users (name, email, password, type) VALUES (:name, :email, :password, :type)");
+      $stmt->bindParam(':name', $name, PDO::PARAM_STR);
       $stmt->bindParam(':email', $email, PDO::PARAM_STR);
       $stmt->bindParam(':password', $password);
       $stmt->bindParam(':type', $type, PDO::PARAM_STR);

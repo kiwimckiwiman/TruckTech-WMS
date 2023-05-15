@@ -33,16 +33,16 @@
         $_SESSION['email'] = $account["email"];
         switch($_SESSION['type']){
           case "c":
-            header('Location: ../user/dashboard.php');
+            header('Location: ../user/home/dashboard.php');
             break;
           case "a":
-            header('Location: ../workshop/admin/dashboard.php');
+            header('Location: ../workshop/admin/home/dashboard.php');
             break;
           case "s":
-            header('Location: ../admin/dashboard.php');
+            header('Location: ../admin/home/dashboard.php');
             break;
           case "w":
-            header('Location: ../workshop/user/dashboard.php');
+            header('Location: ../workshop/user/home/dashboard.php');
             break;
         }
     	} else {

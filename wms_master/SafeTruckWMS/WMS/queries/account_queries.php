@@ -167,7 +167,7 @@
       return $results[0];
   }
 
-  function UpdateAccount($name, $email, $wusername, $phone_no, $company, $id){
+  function UpdateAdminAccount($name, $email, $phone_no, $company, $id){
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -181,13 +181,12 @@
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Prepare the SQL statement for inserting user data into the table
-        $stmt = $conn->prepare("UPDATE users SET name = :name, email = :email, username = :username, phone_no = :phone_no, company = :company WHERE user_id = :id");
+        $stmt = $conn->prepare("UPDATE users SET name = :name, email = :email, phone_no = :phone_no, company = :company WHERE user_id = :id");
 
         // Bind the user data values to the prepared statement parameters
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':username', $wusername, PDO::PARAM_STR);
-        $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_INT);
+        $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_STR);
         $stmt->bindParam(':company', $company, PDO::PARAM_STR);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         // Execute the prepared statement to insert the user data into the table
@@ -198,6 +197,37 @@
       }
       $conn = null;
     }
+
+    function UpdateOwnerAccount($name, $email, $phone_no, $company, $id){
+      $servername = 'localhost';
+      $username = 'root';
+      $password = '';
+      $dbname = 'wms';
+
+      if ( mysqli_connect_errno() ) {
+          exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+      }
+      try {
+          $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+          $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+          // Prepare the SQL statement for inserting user data into the table
+          $stmt = $conn->prepare("UPDATE users SET name = :name, email = :email, phone_no = :phone_no, company = :company WHERE user_id = :id");
+
+          // Bind the user data values to the prepared statement parameters
+          $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+          $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+          $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_STR);
+          $stmt->bindParam(':company', $company, PDO::PARAM_STR);
+          $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+          // Execute the prepared statement to insert the user data into the table
+          $stmt->execute();
+
+        } catch(PDOException $e) {
+          echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
+      }
 
     function UpdatePassword($id, $pass){
       $servername = 'localhost';
@@ -226,7 +256,7 @@
       $conn = null;
     }
 
-    function EmailOwner($email, $header, $content){
+    function EmailAccount($email, $header, $content){
         $content = "<!DOCTYPE html>
                       <html>
                       <head>
@@ -236,7 +266,8 @@
                       <div>
                               <p>".$content."</p>
                               </br>
-                              <p>SafeTruck Workshop Management System</p>
+                              <p>Sent via SafeTruck Workshop Management System</p>
+                              <p>Do not reply to this email</p>
                       </div>
                       </body>
                       </html>";
@@ -244,5 +275,26 @@
           $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
           mail($email, $header, $content, $headers);
           return "Email sent";
+      }
+
+      function DeleteAccount($id){
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'wms';
+        if ( mysqli_connect_errno() ) {
+            exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+        }
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
       }
 ?>
