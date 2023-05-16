@@ -39,13 +39,13 @@ function ViewCustomerJob($job_id){
         $stmt->bindParam(':job_id', $job_id);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $results;
+        return $results[0];
     } catch(PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
 }
 
-function UpdateCustomerJobFeedback($job_id, $feedback){
+function UpdateCustomerJobFeedbackRating($job_id, $feedback, $rating){
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -65,10 +65,11 @@ function UpdateCustomerJobFeedback($job_id, $feedback){
         $result = $stmt->fetch();
 
         try{
-          if (is_null($result['feedback']) == true &&  is_null($result['finish_time']) == false){
-            $stmt = $conn->prepare("UPDATE Jobs SET feedback = :feedback WHERE job_id = :job_id");
+          if (is_null($result['feedback']) == true && is_null($result['finish_time']) == false){
+            $stmt = $conn->prepare("UPDATE Jobs SET feedback = :feedback,rating = :rating WHERE job_id = :job_id");
             $stmt->bindParam(':job_id', $job_id);
             $stmt->bindParam(':feedback', $feedback);
+            $stmt->bindParam(':rating', $rating);
             $stmt->execute();
             echo "Thank you for your feedback.";
           }else{
@@ -81,4 +82,27 @@ function UpdateCustomerJobFeedback($job_id, $feedback){
     echo "Error: " . $e->getMessage();
     }
 }
+
+function getCustomerDetails($id){
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'wms';
+    
+    if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+    }
+    
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM users WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$id]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    } catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+  }
 ?>
