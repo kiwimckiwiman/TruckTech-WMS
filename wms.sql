@@ -75,8 +75,11 @@ CREATE TABLE `jobs` (
   `start_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `finish_time` timestamp NULL DEFAULT NULL,
   `comment` varchar(255),
+  `service_fee` decimal(8,2),
+  `total_price` decimal(8,2),
   `invoice_link` varchar(255),
-  `feedback` varchar(255)
+  `feedback` varchar(255),
+  `rating` decimal(2,1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
