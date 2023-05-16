@@ -1,4 +1,6 @@
 <?php
+require('fpdf185/fpdf.php');
+
 function ViewWorkshopJobs($workshop_id){
     $servername = 'localhost';
     $username = 'root';
@@ -118,12 +120,16 @@ function FinishWorkshopJob($job_id,$service_fee){
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //calculate 'steps' here for 'total_price'
-
     $stmt = $conn->prepare("UPDATE Jobs SET service_fee = :service_fee, finish_time = CURRENT_TIMESTAMP() WHERE job_id = :job_id");
     $stmt->bindParam(':job_id', $job_id);
     $stmt->bindParam(':service_fee', $service_fee);
     $stmt->execute();
+
+    //calculate 'steps' here for 'total_price'
+    //genereate PDF script
+    //store in folder
+    //store the link in job table
+
     echo "A job finished successfully.";
   } catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
