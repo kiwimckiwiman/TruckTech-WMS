@@ -130,17 +130,17 @@ CREATE TABLE `purchase_details` (
 --
 -- Table structure for table `steps`
 --
-
 CREATE TABLE `steps` (
   `step_id` bigint(20) UNSIGNED NOT NULL,
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `desc` varchar(255) NOT NULL,
-  `finish` tinyint(1) NOT NULL DEFAULT 0,
+  `descr` varchar(255) NOT NULL,
   `worker_id` bigint(20) UNSIGNED NOT NULL,
   `comment` varchar(255) NOT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `worker_fee` decimal(8,2) UNSIGNED NOT NULL
+  `quantity` int(11) UNSIGNED DEFAULT NULL,
+  `total_item_price` int(11) UNSIGNED DEFAULT NULL,
+  `finish` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -413,7 +413,7 @@ ALTER TABLE `purchase_details`
 ALTER TABLE `steps`
   ADD CONSTRAINT `step_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `step_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `steps_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`);
+  ADD CONSTRAINT `step_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`) ON DELETE CASCADE ON UPDATE CASCADE,
 
 --
 -- Constraints for table `workers`

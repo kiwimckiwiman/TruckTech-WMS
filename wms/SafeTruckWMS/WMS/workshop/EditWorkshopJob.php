@@ -4,7 +4,6 @@
   session_start();
   include "jobWorkshopQueries.php";
   $jobID = $_POST['job_id'];
-  $comment = $_POST['jobcomment'];
   $job_details = ViewWorkshopJob($jobID);
 ?>
 <head>
@@ -475,12 +474,6 @@
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <?php
-                  if(isset($_POST['job_id']) && isset($_POST['jobcomment'])){
-                    EditWorkshopJobComment($_POST['job_id'],$_POST['jobcomment']);
-                  }
-                ?>
-
                 <h4 class="card-title">Edit Job Details : <?php echo $job_details['vehicle_plate'];?></h4>
                 <p><?php echo $job_details['start_time'];?></p>
                 
@@ -490,6 +483,13 @@
                     <input type="text" class="form-control" id="jobcomment" name="jobcomment" required value="<?php echo $job_details['comment'] ?>">
                   </div>  
                   <input type="hidden" id="job_id" name="job_id" value="<?php echo $job_details['job_id'] ?>"></input>
+                  <p style="color: green;">
+                    <?php
+                      if(isset($_POST['job_id']) && isset($_POST['jobcomment'])){
+                        EditWorkshopJobComment($_POST['job_id'],$_POST['jobcomment']);
+                      }
+                    ?>
+                  </p>
                   <button type="submit" class="btn btn-primary me-2">Submit</button>
                   <button type="button" class="btn btn-light" onclick="location.href='viewWorkshopJobs.php';">Cancel</button>
                 </form> 

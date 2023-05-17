@@ -2,7 +2,7 @@
 <html lang="en">
 <?php
   session_start();
-  $_SESSION["workshop_id"] = 1;
+  $_SESSION["workshop_id"] = 32;
   include "jobWorkshopQueries.php";
   $workshop_details= getWorkshopDetails($_SESSION["workshop_id"]);
   $jobs = ViewWorkshopJobs($_SESSION["workshop_id"]);
@@ -530,20 +530,20 @@
                                 </thead>
                               <tbody>
                               <script>
-                                function deleteItem(jobId) {
-                                  // Here, you can write the code to delete the item with the specified ID using AJAX or any other method
-                                  // For example:
+                                function deleteJob(jobId) {
+                                  // Send AJAX request to deleteJob.php
                                   $.ajax({
                                     url: "deleteJob.php",
                                     type: "POST",
-                                    data: {jobId: jobId},
+                                    data: { jobId: jobId },
                                     success: function(response) {
+                                      // Display success message
                                       alert("Job has been cancelled successfully");
-                                      location.reload();
-
+                                      location.reload(); // Refresh the page
                                     },
                                     error: function(xhr, status, error) {
-                                      // Do something when there's an error deleting the item
+                                      // Display error message
+                                      alert("An error occurred while deleting the job");
                                     }
                                   });
                                 }
@@ -573,13 +573,21 @@
                                         <p><?php echo $job['start_time']; ?></p>
                                       </td>
                                       <td>
-                                      <form action='EditWorkshopJob.php' method='post'>
-                                        <button type='submit' class="btn btn-secondary" id="edit_job" name='job_id' value="<?php echo $job['job_id'];?>"><i class="icon-pencil"></i></button>
-                                      </form>
-                                      <form action='FinishJob.php' method='post'>
-                                        <button type='submit' class="btn btn-secondary" id="finish_job" name='job_id' value="<?php echo $job['job_id'];?>"><i class="mdi mdi-check"></i></button>
-                                      </form>
-                                      <button class="btn btn-danger" value="<?php echo $job['job_id'];?>" onclick="deleteJob(<?php echo $job['job_id'];?>)"><i class="icon-trash"></i></button>     
+                                        <div style="display: flex; gap: 5px;">
+                                          <form action='EditWorkshopJob.php' method='post'>
+                                            <button type='submit' class="btn btn-secondary" id="edit_job" name='job_id' value="<?php echo $job['job_id'];?>" style="display: flex; align-items: center;">
+                                              <i class="icon-pencil"></i>
+                                            </button>
+                                          </form>
+                                          <form action='FinishJob.php' method='post'>
+                                            <button type='submit' class="btn btn-secondary" id="finish_job" name='job_id' value="<?php echo $job['job_id'];?>" style="display: flex; align-items: center;">
+                                              <i class="mdi mdi-check"></i>
+                                            </button>
+                                          </form>
+                                          <button class="btn btn-danger" value="<?php echo $job['job_id']; ?>" onclick="deleteJob('<?php echo $job['job_id']; ?>')" style="display: flex; align-items: center;">
+                                            <i class="icon-trash"></i>
+                                          </button>
+                                        </div>
                                       </td>
                                       <td>
                                         <p><?php echo $job['invoice_link']; ?></p>

@@ -3,12 +3,9 @@
 <?php
   session_start();
   include "jobWorkshopQueries.php";
-  $jobID = $_POST['job_id'];
-  $_SESSION['job_id'] = $jobID;
-  $workshop_details= getWorkshopDetails($_SESSION["workshop_id"]);
-  $job_details = ViewWorkshopJob($jobID);
-  $steps = GetAllSteps($jobID);
-  $completedSteps = GetAllCompletedSteps($jobID);
+  //if(!($_SESSION["type"] == "s")){
+    //header("Location: ../../login/login.php");
+  //}
 ?>
 <head>
   <!-- Required meta tags -->
@@ -32,6 +29,7 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
+<?php include 'queries.php'; ?>
 <body>
   <div class="container-scroller"> 
     <!-- partial:partials/_navbar.html -->
@@ -43,10 +41,10 @@
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="dashboard.php">
+          <a class="navbar-brand brand-logo" href="index.html">
             <img src="../../images/logo.svg" alt="logo" />
           </a>
-          <a class="navbar-brand brand-logo-mini" href="dashboard.php">
+          <a class="navbar-brand brand-logo-mini" href="index.html">
             <img src="../../images/logo-mini.svg" alt="logo" />
           </a>
         </div>
@@ -54,9 +52,8 @@
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">John Doe</span></h1>
-            <h3 class="welcome-sub-text">Your Workshop Dashboard : <?php echo($_SESSION['workshop_id']);?> </h3>
-            <h3 class="welcome-sub-text">Just pulling the id and then will run a query when everything dashboard is done</h3>
+            <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">Admin</span></h1>
+            <h3 class="welcome-sub-text">Your performance summary this week </h3>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -176,7 +173,7 @@
               </a>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
-                  <img src="../../images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+                  <img src="../../images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
                 </div>
                 <div class="preview-item-content flex-grow py-2">
                   <p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
@@ -476,204 +473,46 @@
       </nav>
       <!-- partial -->
       <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="home-tab">
-              <div class="d-sm-flex align-items-center justify-content-between border-bottom">
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                    <?php
-                      echo "<h2 style='font-weight: bold; text-align: center; margin-top: 20px;'>Job Details: " . $job_details['vehicle_plate'] . "</h2>";
-                    ?>
-                   </li>
-                  </ul>
-                  <div class="btn-wrapper">
-                    <a href="addStep.php" class="btn btn-otline-dark align-items-center"><i class="icon-plus"></i> Create New Step</a>
-                   
-                    
+        
+
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Create New Step</h4>
+                
+                <form class="forms-sample" method="POST" >
+                  <div class="form-group">
+                    <label for="name">Step Description</label>
+                    <input type="text" class="form-control" id="stepDescr" name="stepDescr" placeholder="Description" required>
                   </div>
-                </div>
-                <div class="tab-content tab-content-basic">
-                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview"> 
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <div class="statistics-details d-flex align-items-center justify-content-between">
-                          <div>
-                            <p class="statistics-title">Vehicle Plate</p>
-                            <h3 class="rate-percentage"><?php echo $job_details['vehicle_plate'];?></h3>
-                          </div>
-                          <div>
-                            <p class="statistics-title">Vehicle Make</p>
-                            <h3 class="rate-percentage"><?php  echo $job_details['vehicle_make'];?></h3>
-                            <!-- <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p> -->
-                          </div>
-                          <div>
-                            <p class="statistics-title">Started On</p>
-                            <h3 class="rate-percentage"><?php  echo $job_details['start_time'];?></h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <div class="statistics-details d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="statistics-title">Job Description</p>
-                            <h3 class="rate-percentage"><?php echo $job_details['descr'];?></h3>
-                        </div>
-                        <div>
-                            <p class="statistics-title">Ended on</p>
-                            <h3 class="rate-percentage"><?php echo $job_details['finish_time'];?></h3>
-                        </div>
-                        </div>
-                      </div>
-                    </div>
-                  <div class="row ">
-                    <div class="col-lg d-flex flex-column">
-                      <div class="row flex-grow">
-                        <div class="col-12 grid-margin stretch-card">
-                          <div class="card card-rounded">
-                            <div class="card-body">
-                              <div class="d-sm-flex justify-content-between align-items-start">
-                                <div>
-                                  <h4 class="card-title card-title-dash">Steps</h4>
-                                  <h4 class="card-title card-title-dash"> Current Steps : <?php echo count($steps) ;?> </h4>
-                                </div>
-                                <!-- <div>
-                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
-                                </div> -->
-                              </div>
-                               <div class="table-responsive  mt-1">
-                              <table class="table select-table">
-                                <thead>
-                                  <tr>
-                                    <th>Time Created</th>
-                                    <th>Description</th>
-                                    <th>Item Name</th>
-                                    <th>Item Price</th>
-                                    <th>Quantity Consumed</th>
-                                    <th>Total Inventory Cost</th>
-                                    <th>Options</th>
-                                    </tr>
-                                </thead>
-                              <tbody>
-                              
-                                <?php
-                                  $count = count($steps);
-                                  if($count == 0){ ?>
-                                    <tr>
-                                  <td colspan="5" class="text-center"><h6>Zero Steps on this Job </h6></td>
-                                </tr>
-                                  <?php } else {
-                                    foreach($steps as $step) {
-                                      $item_details =  getItem($_SESSION["workshop_id"],$step['item_id'])
-                                  ?>
-                                    <tr>
-                                    <td>
-                                        <h6><?php echo $step['time_created']; ?></h6>
-                                    </td>
-                                      <td>
-                                      <h6><?php echo $step['descr']; ?></h6>
-                                      </td>
-                                      <td>
-                                      <h6><?php echo $item_details['name']; ?></h6>
-                                      </td>
-                                      <td>
-                                      <h6><?php echo ($item_details['price']); ?></h6>
-                                      </td>
-                                      <td>
-                                        <h6><?php echo $step['quantity']; ?></h6>
-                                      </td>
-                                      <td>
-                                        <h6><?php echo $step['total_item_price']; ?></h6>
-                                      </td>
-                                      <td>
-                                        <div style="display: flex; gap: 5px;">
-                                          
-                                          <button class="btn btn-secondary" value="<?php echo $step['step_id'];?>" onclick="FinishStep(<?php echo $step['step_id'];?>)"><i class="mdi mdi-check"></i></button>
-                                          </button>
-                                          <button class="btn btn-danger" value="<?php echo $step['step_id'];?>" onclick="deleteStep(<?php echo $step['step_id'];?>,<?php echo $step['quantity']; ?>,<?php echo $item_details['item_id'];?>,<?php echo $item_details['quantity'];?>)" class="icon-trash" style="display: flex; align-items: center;">
-                                            <i class="icon-trash"></i>
-                                          </button>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  <?php }} ?>
-                                </tbody>
-                                </table>
-                              </div>
-                            </div>
-                            <div class="card-body">
-                              <div class="d-sm-flex justify-content-between align-items-start">
-                                <div>
-                                  <h4 class="card-title card-title-dash">Completed steps :  <?php echo count($completedSteps) ;?></h4>
-                                </div>
-                                <!-- <div>
-                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
-                                </div> -->
-                              </div>
-                               <div class="table-responsive  mt-1">
-                              <table class="table select-table">
-                                <thead>
-                                  <tr>
-                                    <th>Time Created</th>
-                                    <th>Description</th>
-                                    <th>Item Name</th>
-                                    <th>Item Price</th>
-                                    <th>Quantity Consumed</th>
-                                    <th>Total Inventory Cost</th>
-                                    </tr>
-                                </thead>
-                              <tbody>
-                              
-                                <?php
-                                  $count = count($completedSteps);
-                                  if($count == 0){ ?>
-                                    <tr>
-                                  <td colspan="5" class="text-center"><h6>Zero Completed Steps on this Job </h6></td>
-                                </tr>
-                                  <?php } else {
-                                    foreach($completedSteps as $cstep) {
-                                      $item_details =  getItem($_SESSION["workshop_id"],$cstep['item_id'])
-                                  ?>
-                                    <tr style="background-color: #f2f2f2;">
-                                    <td>
-                                        <h6><?php echo $cstep['time_created']; ?></h6>
-                                    </td>
-                                      <td>
-                                      <h6><?php echo $cstep['descr']; ?></h6>
-                                      </td>
-                                      <td>
-                                      <h6><?php echo $item_details['name']; ?></h6>
-                                      </td>
-                                      <td>
-                                      <h6><?php echo ($item_details['price']); ?></h6>
-                                      </td>
-                                      <td>
-                                        <h6><?php echo $cstep['quantity']; ?></h6>
-                                      </td>
-                                      <td>
-                                        <h6><?php echo $cstep['total_item_price']; ?></h6>
-                                      </td>
-                                      
-                                    </tr>
-                                  <?php }} ?>
-                                </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
+                  <div class="form-group">
+                        <label for="workshop-owner">Choose Inventory Item:</label>
+                        <select class="form-control" id="inventory_item" name="inventory_item">
+                        <?php
+                        // need to add 2 more input fields for longitudinal and latitude locations
+                        $items = getAllWorkshopItems($_SESSION['workshop_id']);
+                        echo '<option value="Select">Select</option>';
+                        foreach ($items as $item) {
+                            echo '<option value="'.$item['item_id'].'">'.$item['name'].'</option>';
+                        }
+                        ?>
+                        </select>
+                  <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required >
                   </div>
-                  
-                </div>
+                  <div class="form-group">
+                    <label for="comment">Comment </label>
+                    <input type="text" class="form-control" id="comment"  required name="comment" placeholder="Your Comment">
+                  </div>
+                  <button type="submit" class="btn btn-primary me-2" action=<?php AddStep()?> >Submit</button>
+                  <button class="btn btn-light" >Cancel</button>
+                </form>
               </div>
             </div>
           </div>
-        </div>
+         
+        
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -690,41 +529,6 @@
   </div>
   <!-- container-scroller -->
 
-   <script>
-    function deleteStep(stepId, stepQty, itemId, itemQty) {
-      // Here, you can write the code to delete the item with the specified ID using AJAX or any other method
-      // For example:
-      
-      $.ajax({
-        url: "deleteStep.php",
-        type: "POST",
-        data: { stepId: stepId, stepQty: stepQty, itemId: itemId, itemQty: itemQty },
-        success: function(response) {
-          alert("Step has been deleted successfully");
-          location.reload();
-        },
-        error: function(xhr, status, error) {
-          // Do something when there's an error deleting the item
-        }
-      });
-    }
-    function FinishStep(stepId) {
-      // Here, you can write the code to delete the item with the specified ID using AJAX or any other method
-      // For example:
-        $.ajax({
-        url: "FinishStep.php",
-        type: "POST",
-        data: { stepId: stepId },
-        success: function(response) {
-          alert("Step has completed successfully");
-          location.reload();
-        },
-        error: function(xhr, status, error) {
-          // Do something when there's an error deleting the item
-        }
-      });
-    }
-    </script>
   <!-- plugins:js -->
   <script src="../../vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
@@ -744,8 +548,92 @@
   <!-- Custom js for this page-->
   <script src="../../js/dashboard.js"></script>
   <script src="../../js/Chart.roundedBarCharts.js"></script>
-  
+  <!-- End custom js for this page-->
 </body>
+<!-- <script>
+   // Get the form and submit button elements
+var form = document.querySelector('.forms-sample');
+var submitBtn = form.querySelector('button[type="submit"]');
 
+// Add event listener to the submit button
+submitBtn.addEventListener('click', function(event) {
+  // Prevent the form from submitting automatically
+  event.preventDefault();
+
+  // Get the input fields and error message element
+  var nameInput = form.querySelector('#name');
+  var emailInput = form.querySelector('#email');
+  var usernameInput = form.querySelector('#username');
+  var passwordInput = form.querySelector('#password');
+  var confirmPasswordInput = form.querySelector('#confirmpassword');
+  var genderInput = form.querySelector('#gender');
+  var DOBInput = form.querySelector('#DOB');
+  var phoneNumberInput = form.querySelector('#phoneNumber');
+  var CompanyName = form.querySelector('#company');
+
+  var errors = [];
+  if (nameInput.value.trim() === '') {
+    errors.push('Please enter your name.');
+  }
+  if(CompanyName.value.trim() === '') {
+    errors.push('Please enter your company name.');
+  }
+  if (emailInput.value.trim() === '') {
+    errors.push('Please enter your email address.');
+  } else if (!isValidEmail(emailInput.value.trim())) {
+    errors.push('Please enter a valid email address.');
+  }
+  if (usernameInput.value.trim() === '') {
+    errors.push('Please enter a username.');
+  }
+  if (passwordInput.value.trim() === '') {
+  errors.push('Please enter a password.');
+} else if (passwordInput.value.trim().length < 8) {
+  errors.push('Please enter a password that is at least 8 characters long.');
+} else if (!/\d/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one number in your password.');
+} else if (!/[a-z]/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one lowercase letter in your password.');
+} else if (!/[A-Z]/.test(passwordInput.value.trim())) {
+  errors.push('Please include at least one uppercase letter in your password.');
+}
+  if (confirmPasswordInput.value.trim() === '') {
+    errors.push('Please confirm your password.');
+  } else if (confirmPasswordInput.value.trim() !== passwordInput.value.trim()) {
+    errors.push('Please make sure your passwords match.');
+  }
+  if (genderInput.value.trim() === '') {
+    errors.push('Please select your gender.');
+  }
+  if (DOBInput.value.trim() === '') {
+    errors.push('Please enter your date of birth.');
+  }
+  if (phoneNumberInput.value.trim() === '') {
+    errors.push('Please enter your phone number.');
+  } else if (!isValidPhoneNumber(phoneNumberInput.value.trim())) {
+    errors.push('Please enter a valid phone number (e.g., 011-2344-4390).');
+  }
+
+  // Display any errors
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+  } else {
+    // If no errors, submit the form
+    form.submit();
+  }
+});
+
+// Helper function to validate email address
+function isValidEmail(email) {
+  var emailRegex = /^\S+@\S+\.\S+$/;
+  return emailRegex.test(email);
+}
+
+// Helper function to validate phone number
+function isValidPhoneNumber(phoneNumber) {
+  var phoneNumberRegex = /^\d{3}-\d{4}-\d{4}$/;
+  return phoneNumberRegex.test(phoneNumber);
+}
+  </script> -->
 </html>
 
