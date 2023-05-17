@@ -360,9 +360,229 @@ function FinishWorkshopJob($job_id,$service_fee){
     $stmt->bindParam(':service_fee', $service_fee);
     $stmt->execute();
 
-    //calculate 'steps' here for 'total_price'
-    //genereate PDF script
-    //store in folder
+    $stmt = $conn->prepare("SELECT SUM(total_item_price) FROM steps WHERE job_id = :job_id");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+    $total_item_price = $stmt->fetch();
+
+    $total_price = $total_item_price[0] + $service_fee;
+
+    $stmt = $conn->prepare("UPDATE Jobs SET total_price = :total_price WHERE job_id = :job_id");
+    $stmt->bindParam(':total_price', $total_price);
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+
+    $stmt = $conn->prepare("SELECT * FROM Jobs WHERE job_id = :job_id");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+    $job_details = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("SELECT * FROM workshops WHERE workshop_id = :workshop_id");
+    $stmt->bindParam(':workshop_id', $job_details['workshop_id']);
+    $stmt->execute();
+    $workshop_details = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = :customer_id");
+    $stmt->bindParam(':customer_id', $job_details['customer_id']);
+    $stmt->execute();
+    $customer_details = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $stmt = $conn->prepare("SELECT inventory.name, steps.quantity, steps.total_item_price 
+    FROM steps 
+    INNER JOIN inventory 
+    ON steps.item_id=inventory.item_id AND steps.job_id = :job_id");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+    $steps_details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $invoice_id_string = strval($job_id);
+    $file_type = ".html";
+    $invoicehtml = $invoice_id_string . $file_type;
+
+    $invoice = fopen("../invoice/" . $invoicehtml, "w") or die("Unable to open file!");
+    $txt = 
+    "<!DOCTYPE html>
+    <html>
+    <head>
+      <title>Invoice</title>
+      <link rel='stylesheet' type='text/css' href='invoiceStyles.css'>
+      <link rel='shortcut icon' href='../../images/favicon.png' />
+      <style>
+        :root {
+        --bg-clr: #dfdfdf;
+        --white: #fff;
+        --invoice-bg: #69cce9;
+        --primary-clr: #2f2929;
+        --secondary-clr: #20315b;
+      }
+      </style>
+    </head>
+    
+    <body>
+    
+    <section>
+      <div class='invoice'>
+        <div class='invoice_info'>
+          <div class='i_row'>
+            <div class='i_logo'>
+              <img src='Safe-Truck-logo_2017.png' height='100' width='100'>
+            </div>
+            <div class='title'>
+              <h1>INVOICE</h1>
+            </div>
+          </div>
+          <div class='i_row'>
+    
+            <div class='i_from'>
+              <div class='main_title'>
+                <p>From</p>
+              </div>
+              <div class='p_title'>
+                <p>" . $workshop_details['name'] . "</p>
+                <p>" . $workshop_details['location'] . "</p>
+              </div>
+              </div>
+              <div class='i_to text_right'>
+                <div class='main_title'>
+                  <p>To</p>
+                </div>
+                <div class='p_title'>
+                  <p>" . $customer_details['username'] . "</p>
+                  <p>" . $customer_details['phone_no'] . "</p>
+                  <p>" . $customer_details['email'] . "</p>
+                </div>
+              </div>
+            </div>
+            <div class='i_row'>
+              <div class='i_servicedetails'>
+                <div class='main_title'>
+                  <p>Service Details</p>
+                </div>
+                <div class='p_title'>
+                  <p>Vehicle Plate:</p>
+                  <span>" . $job_details['vehicle_plate'] . "</span>
+                </div>
+                <div class='p_title'>
+                  <p>Vehicle Make:</p>
+                  <span>" . $job_details['vehicle_make'] . "</span>
+                </div>
+                
+                <div class='p_title'>
+                  <p>Started On:</p>
+                  <span>" . $job_details['start_time'] . "</span>
+                </div>
+                <div class='p_title'>
+                  <p>Finish On:</p>
+                  <span>" . $job_details['finish_time'] . "</span>
+                </div>
+              </div>
+              <div class='i_details text_right'>
+                <div class='main_title'>
+                  <p>Invoice Details</p>
+                </div>
+                <div class='p_title'>
+                  <p>Job ID:</p>
+                  <span>" . $job_id . "</span>
+                </div>
+                <div class='p_title'>
+                  <p>Date of Issue:</p>
+                  <span>" . date("Y-m-d",time()) . "</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class='invoice_table'>
+            <div class='i_table'>
+              <div class='i_table_head'>
+                <div class='i_row'>
+                  <div class='i_col w_55'>
+                    <p class='p_title'>Item/Service Charge</p>
+                  </div>
+                  <div class='i_col w_15 text_center'>
+                    <p class='p_title'>Qty</p>
+                  </div>
+                  <div class='i_col w_15 text_center'>
+                    <p class='p_title'>PRICE (RM)</p>
+                  </div>
+                  <div class='i_col w_15 text_right'>
+                    <p class='p_title'>AMOUNT (RM)</p>
+                  </div>
+                </div>
+              </div>";
+
+foreach ($steps_details as $step_details) {
+  $txt .=
+              "<div class='i_table_body'>
+                <div class='i_row'>
+                  <div class='i_col w_55'>
+                    <p>" . $step_details['name'] . "</p>
+                  </div>
+                  <div class='i_col w_15 text_center'>
+                    <p>" . $step_details['quantity'] . "</p>
+                  </div>
+                  <div class='i_col w_15 text_center'>
+                    <p>" . $step_details['total_item_price']/$step_details['quantity'] . "</p>
+                  </div>
+                  <div class='i_col w_15 text_right'>
+                    <p>" . $step_details['total_item_price'] . "</p>
+                  </div>
+                </div>";
+  }
+
+  $txt .= 
+              "<div class='i_row'>
+                <div class='i_col w_55'>
+                  <p>Service Fee</p>
+                </div>
+                <div class='i_col w_15 text_center'>
+                  <p>-</p>
+                </div>
+                <div class='i_col w_15 text_center'>
+                  <p>-</p>
+                </div>
+                <div class='i_col w_15 text_right'>
+                  <p>" . $job_details['service_fee'] . "</p>
+                </div>
+              </div>
+            </div>
+            <div class='i_table_foot'>
+              <div class='i_row'>
+              </div>
+              <div class='i_row grand_total_wrap'>
+                <div class='i_col w_50'>
+                  <p>GRAND TOTAL (RM):</p>
+                </div>
+                <div class='i_col w_50 text_right'>
+                  <p>" . $job_details['total_price'] . "</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='invoice_notes'>
+          <div class='main_title'>
+            <p>Notes</p>
+          </div>
+          <p>" . $job_details['comment'] . "</p>
+        </div>
+      </div>
+    </section>
+
+    </body>
+    </html>";
+
+    fwrite($invoice, $txt);
+    fclose($invoice);
+
+    $stmt = $conn->prepare("UPDATE Jobs SET invoice_link = :invoice_link WHERE job_id = :job_id");
+    $stmt->bindParam(':job_id', $job_id);
+    $invoicelink = 'http://localhost/SafeTruckWMS/WMS/invoice/' . $invoicehtml;
+    $stmt->bindParam(':invoice_link', $invoicelink);
+    $stmt->execute();
+
+    //[done] calculate 'steps' here for 'total_price'
+    //[done] genereate PDF script
+    //[done] store in invoice folder
     //store the link in job table
 
     //echo "A job finished successfully.";
