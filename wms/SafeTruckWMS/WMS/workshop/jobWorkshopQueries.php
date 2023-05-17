@@ -393,4 +393,54 @@ function getWorkshopDetails($id){
       echo "Error: " . $e->getMessage();
   }
 }
+
+function ViewAllOngoingJobs($workshop_id)
+{
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  if ( mysqli_connect_errno() ) {
+      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+  }
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      $stmt = $conn->prepare("SELECT * FROM jobs WHERE finish_time IS NULL AND workshop_id = :workshop_id");
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+  } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+
+function ViewAllFinishedJobs($workshop_id)
+{
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
+
+  if ( mysqli_connect_errno() ) {
+      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+  }
+  try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      $stmt = $conn->prepare("SELECT * FROM jobs WHERE finish_time IS NOT NULL AND workshop_id = :workshop_id");
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->execute();
+      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+  } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+
+
 ?>

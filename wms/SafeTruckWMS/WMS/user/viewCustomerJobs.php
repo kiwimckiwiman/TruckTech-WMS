@@ -5,7 +5,8 @@
   $_SESSION["user_id"] = 1;
   include "jobCustomerQueries.php";
   $customer_details= getCustomerDetails($_SESSION["user_id"]);
-  $jobs = ViewCustomerJobs($_SESSION["user_id"]);
+  $jobs = ViewCustomerOngoingJobs($_SESSION["user_id"]);
+  $jobsFin = ViewCustomerFinishedJobs($_SESSION["user_id"]);
 
   //if(!($_SESSION["type"] == " ")){
     //header("Location: ../../login/login.php");
@@ -58,7 +59,7 @@
         <ul class="navbar-nav">
           <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
             <h1 class="welcome-text">Good Morning, <span class="text-black fw-bold">John Doe</span></h1>
-            <h3 class="welcome-sub-text">Your Dashboard : <?php echo($_SESSION['customer_id']);?> </h3>
+            <h3 class="welcome-sub-text">Your Dashboard : <?php echo($_SESSION['user_id']);?> </h3>
             <h3 class="welcome-sub-text">Just pulling the id and then will run a query when everything dashboard is done</h3>
           </li>
         </ul>
@@ -494,8 +495,8 @@
                    </li>
                   </ul>
                 </div>
+                <!-- ongoing jobs start -->
                 <div class="tab-content tab-content-basic">
-                 
                   <div class="row ">
                     <div class="col-lg d-flex flex-column">
                       <div class="row flex-grow">
@@ -504,8 +505,8 @@
                             <div class="card-body">
                               <div class="d-sm-flex justify-content-between align-items-start">
                                 <div>
-                                  <h4 class="card-title card-title-dash">Jobs</h4>
-                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobs))?> Job(s) being worked on.</p>
+                                  <h4 class="card-title card-title-dash">Ongoing Jobs</h4>
+                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobs))?> Job(s) currently being worked on.</p>
                                 </div>
                                 <!-- <div>
                                   <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
@@ -519,8 +520,8 @@
                                     <th>Vehicle Make</th>
                                     <th>Comment</th>
                                     <th>Start Time</th>
-                                    <th>Invoice</th>
-                                    <th>Write Feedback</th>
+                                    <!-- <th>Invoice</th> -->
+                                    <!-- <th>Write Feedback</th> -->
                                   </tr>
                                 </thead>
                               <tbody>
@@ -548,6 +549,87 @@
                                       <td>
                                         <p><?php echo $job['start_time']; ?></p>
                                       </td>
+                                      
+                                      <!-- <td>
+                                        <p><?php //echo $job['invoice_link']; ?></p>
+                                      </td> -->
+                                      <!-- <td>
+                                        <form action='RateCustomerJob.php' method='post'>
+                                          <button type='submit' class="btn btn-secondary" id="rate_job" name='job_id' value="<?php echo $job['job_id'];?>"><i class="mdi mdi-star"></i>Rate</button>
+                                        </form>
+                                      </td> -->
+                                    </tr>
+                                  <?php }} ?>
+                                </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                  </div>
+                  
+                </div>
+                <!-- ongoing job ends -->
+                <!-- finished job start -->
+                <div class="tab-content tab-content-basic">
+                  <div class="row ">
+                    <div class="col-lg d-flex flex-column">
+                      <div class="row flex-grow">
+                        <div class="col-12 grid-margin stretch-card">
+                          <div class="card card-rounded">
+                            <div class="card-body">
+                              <div class="d-sm-flex justify-content-between align-items-start">
+                                <div>
+                                  <h4 class="card-title card-title-dash">Finished Jobs</h4>
+                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobsFin))?> Job(s) that has finished being worked on.</p>
+                                </div>
+                                <!-- <div>
+                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
+                                </div> -->
+                              </div>
+                              <div class="table-responsive  mt-1">
+                              <table class="table select-table">
+                                <thead>
+                                  <tr>
+                                    <th>Vehicle Plate</th>
+                                    <th>Vehicle Make</th>
+                                    <th>Comment</th>
+                                    <th>Start Time</th>
+                                    <th>Finish Time</th>
+                                    <th>Invoice</th>
+                                    <th>Write Feedback</th>
+                                  </tr>
+                                </thead>
+                              <tbody>
+                                <?php
+                                  $count = count($jobsFin);
+                                  if($count == 0){ ?>
+                                    <tr>
+                                  <td colspan="5" class="text-center"><h6>No job currently</h6></td>
+                                </tr>
+                                  <?php } else {
+                                    foreach($jobsFin as $job) {
+                                  ?>
+                                    <tr>
+                                    <td>
+                                      <form action='ViewCustomerJob.php' method='post'>
+                                        <button type='submit' class="btn btn-secondary" id="job_id" name='job_id' value="<?php echo $job['job_id'];?>"><?php echo $job['vehicle_plate']; ?></button>
+                                      </form>
+                                    </td>
+                                      <td>
+                                        <p><?php echo $job['vehicle_make']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['comment']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['start_time']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['finish_time']; ?></p>
+                                      </td>
                                       <td>
                                         <p><?php echo $job['invoice_link']; ?></p>
                                       </td>
@@ -569,6 +651,7 @@
                   </div>
                   
                 </div>
+                <!-- finished job ends -->
               </div>
             </div>
           </div>

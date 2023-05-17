@@ -497,6 +497,7 @@
                   <div class="form-group">
                     <label for="rating">Rate out of 5:</label>
                       <select class="form-control" id="rating" name="rating">
+                        <option value="select">Select Rating</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -511,7 +512,7 @@
               </div>
             </div>
           </div>
-        
+        <div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">

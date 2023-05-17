@@ -2,10 +2,11 @@
 <html lang="en">
 <?php
   session_start();
-  $_SESSION["workshop_id"] = 32;
+  $_SESSION["workshop_id"] = 1;
   include "jobWorkshopQueries.php";
   $workshop_details= getWorkshopDetails($_SESSION["workshop_id"]);
-  $jobs = ViewWorkshopJobs($_SESSION["workshop_id"]);
+  $jobs = ViewAllOngoingJobs($_SESSION["workshop_id"]);
+  $jobsFin = ViewAllFinishedJobs($_SESSION["workshop_id"]);
 
   //if(!($_SESSION["type"] == " ")){
     //header("Location: ../../login/login.php");
@@ -494,8 +495,8 @@
                    </li>
                   </ul>
                 </div>
+                <!-- ongoing job starts -->
                 <div class="tab-content tab-content-basic">
-                 
                   <div class="row ">
                     <div class="col-lg d-flex flex-column">
                       <div class="row flex-grow">
@@ -508,9 +509,10 @@
                                   FinishWorkshopJob($_POST['job_id'],$_POST['service_fee']);
                                 }
                               ?>
+                              
                                 <div>
-                                  <h4 class="card-title card-title-dash">Jobs</h4>
-                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobs))?> Jobs</p>
+                                  <h4 class="card-title card-title-dash">Ongoing Jobs</h4>
+                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobs))?> Ongoing Job(s)</p>
                                 </div>
                                 <!-- <div>
                                   <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
@@ -525,7 +527,7 @@
                                     <th>Description</th>
                                     <th>Start Time</th>
                                     <th>Options</th>
-                                    <th>Invoice</th>
+                                    <!-- <th>Invoice</th> -->
                                   </tr>
                                 </thead>
                               <tbody>
@@ -589,9 +591,9 @@
                                           </button>
                                         </div>
                                       </td>
-                                      <td>
-                                        <p><?php echo $job['invoice_link']; ?></p>
-                                      </td>
+                                      <!-- <td>
+                                        <p><?php //echo $job['invoice_link']; ?></p>
+                                      </td> -->
                                     </tr>
                                   <?php }} ?>
                                 </tbody>
@@ -605,6 +607,122 @@
                   </div>
                   
                 </div>
+                <!-- ongoing job ends -->
+                <!-- finished job start -->
+                <div class="tab-content tab-content-basic">
+                 
+                  <div class="row ">
+                    <div class="col-lg d-flex flex-column">
+                      <div class="row flex-grow">
+                        <div class="col-12 grid-margin stretch-card">
+                          <div class="card card-rounded">
+                            <div class="card-body">
+                              <div class="d-sm-flex justify-content-between align-items-start">
+                              <?php
+                                if(isset($_POST['job_id']) && isset($_POST['service_fee'])){
+                                  FinishWorkshopJob($_POST['job_id'],$_POST['service_fee']);
+                                }
+                              ?>
+                              
+                                <div>
+                                  <h4 class="card-title card-title-dash">Finished Jobs</h4>
+                                 <p class="card-subtitle card-subtitle-dash">You have <?php echo(count($jobsFin))?> Finished Job(s)</p>
+                                </div>
+                                <!-- <div>
+                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
+                                </div> -->
+                              </div>
+                              <div class="table-responsive  mt-1">
+                              <table class="table select-table">
+                                <thead>
+                                  <tr>
+                                    <th>Vehicle Plate</th>
+                                    <th>Vehicle Make</th>
+                                    <th>Description</th>
+                                    <th>Start Time</th>
+                                    <th>Finish Time</th>
+                                    <th>Invoice</th>
+                                  </tr>
+                                </thead>
+                              <tbody>
+                              <script>
+                                function deleteJob(jobId) {
+                                  // Send AJAX request to deleteJob.php
+                                  $.ajax({
+                                    url: "deleteJob.php",
+                                    type: "POST",
+                                    data: { jobId: jobId },
+                                    success: function(response) {
+                                      // Display success message
+                                      alert("Job has been cancelled successfully");
+                                      location.reload(); // Refresh the page
+                                    },
+                                    error: function(xhr, status, error) {
+                                      // Display error message
+                                      alert("An error occurred while deleting the job");
+                                    }
+                                  });
+                                }
+                              </script>
+                                <?php
+                                  $count = count($jobsFin);
+                                  if($count == 0){ ?>
+                                    <tr>
+                                  <td colspan="5" class="text-center"><h6>No job currently</h6></td>
+                                </tr>
+                                  <?php } else {
+                                    foreach($jobsFin as $job) {
+                                  ?>
+                                    <tr>
+                                    <td>
+                                      <form action='ViewWorkshopJob.php' method='post'>
+                                        <button type='submit' class="btn btn-secondary" id="edit_job" name='job_id' value="<?php echo $job['job_id'];?>"><?php echo $job['vehicle_plate']; ?></button>
+                                      </form>
+                                    </td>
+                                      <td>
+                                        <p><?php echo $job['vehicle_make']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['descr']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['start_time']; ?></p>
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['finish_time']; ?></p>
+                                      </td>
+                                      <td>
+                                        <!-- <div style="display: flex; gap: 5px;">
+                                          <form action='EditWorkshopJob.php' method='post'>
+                                            <button type='submit' class="btn btn-secondary" id="edit_job" name='job_id' value="<?php echo $job['job_id'];?>" style="display: flex; align-items: center;">
+                                              <i class="icon-pencil"></i>
+                                            </button>
+                                          </form>
+                                          <form action='FinishJob.php' method='post'>
+                                            <button type='submit' class="btn btn-secondary" id="finish_job" name='job_id' value="<?php echo $job['job_id'];?>" style="display: flex; align-items: center;">
+                                              <i class="mdi mdi-check"></i>
+                                            </button>
+                                          </form>
+                                          <button class="btn btn-danger" value="<?php echo $job['job_id']; ?>" onclick="deleteJob('<?php echo $job['job_id']; ?>')" style="display: flex; align-items: center;">
+                                            <i class="icon-trash"></i>
+                                          </button>
+                                        </div> -->
+                                      </td>
+                                      <td>
+                                        <p><?php echo $job['invoice_link']; ?></p>
+                                      </td>
+                                    </tr>
+                                  <?php }} ?>
+                                </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- finished job ends -->
               </div>
             </div>
           </div>
