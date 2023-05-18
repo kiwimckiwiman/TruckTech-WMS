@@ -37,7 +37,7 @@ CREATE TABLE `bookings` (
   `customer_ltd` decimal(8,6) NOT NULL,
   `description` varchar(255) NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `accepted_status` enum('pending','accepted','rejected') NOT NULL,
+  `accepted_status` enum('Pending','Accepted','Rejected') NOT NULL,
   `accepted_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -168,7 +168,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`, `gender`) VALUES
 (1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's', ''),
-(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$ooCSCBGdHaiaV8/SbPANM.cmnL/BsZVIn1lHkmHiuyxBT9wWNx3AC', NULL, NULL, NULL, NULL, 'a', ''),
+(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'a', ''),
 (123, 'MurtadaRashid', 'murtadarashid@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'Rashid', 11, 'a', ''),
 (126, 'MurtadaRashid', 'murtadarashi22d@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
 (128, 'dfghjk', '102764926@students.swinburne.edu.my', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-30', 'fbebfiw', 11, 'a', ''),
@@ -228,9 +228,9 @@ CREATE TABLE `workshops` (
 INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`, `opening_hours`, `specialisations`, `phone_no`, `workshop_lng`, `workshop_ltd`) VALUES
 (2, 130, 'name', 'there', '9:00 am to 9:01am', 'cars', '22292', 0.000000, 0.000000),
 (3, 2, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', '110110111', 0.440000, 0.450000),
-(6, 128, 'ggreg', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
-(7, 134, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 0.040000, 0.043000),
-(9, 132, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
+(6, 126, 'ggreg', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
+(7, 126, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 0.040000, 0.043000),
+(9, 126, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
 (30, 142, 'dd', '1.5382337115198432, 110.3137185559898', '02:47 PM to 02:48 PM', 'delete', '011-2202-2938', 110.313719, 1.538234);
 
 --

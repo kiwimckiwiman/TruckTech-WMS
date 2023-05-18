@@ -30806,4 +30806,28 @@ div.tagsinput span.tag a {
 .breadcrumbs{
   margin-left:20px;
 }
+
+.select-type-row{
+  height: 50%;
+}
+
+.select-type{
+  height: 100%;
+}
+
+.select-choice{
+  background-color: rgb(31,59,179);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-choice .card-body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */

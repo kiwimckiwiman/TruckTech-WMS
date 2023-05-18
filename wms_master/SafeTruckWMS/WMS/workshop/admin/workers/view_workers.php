@@ -10,7 +10,7 @@
   include '../../../modules/wadmin_nav_top.php';
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
-  $workshop = GetWorkshop($_SESSION["workshop_id"]);
+  $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   if(isset($_GET["pages"])){
     $pages = $_GET["pages"];
     $workers = GetAllWorkers($_SESSION["workshop_id"], intval($pages));
@@ -190,7 +190,8 @@
                   </div>
                   </br>
                     <a href="view_workers.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
-                    <a href="view_workers.php?pages=<?php if($count < 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                    <a href="view_workers.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                    <a href="register_worker.php" class="btn btn-success me-2">+ REGISTER WORKER</a>
                   </div>
                   </div>
                 </div>

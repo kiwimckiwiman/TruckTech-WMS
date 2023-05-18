@@ -2,29 +2,33 @@
 <html lang="en">
 <?php
   session_start();
-  if(!($_SESSION["loggedin"]) && ($_SESSION["type"] != "s")){
-    header("Location: ../login/login.php");
+  if(!($_SESSION["loggedin"]) && ($_SESSION["type"] != "c")){
+    header("Location: ../../login/login.php");
   }
-  include '../../modules/sadmin_nav_top.php';
+  include '../../modules/cust_nav_top.php';
   include '../../modules/footer.php';
-  include '../../queries/workshop_queries.php';
+  include '../../queries/booking_queries_customer.php';
+  if (isset ($_POST['deletebutton'])){
+    DeleteCustomerBooking($_POST['deletebutton']);
+  }
   if(isset($_GET["pages"])){
     $pages = $_GET["pages"];
-    $results = GetAllOwners(intval($pages));
+    $bookings = ViewCustomerBookings($_SESSION["id"], $pages);
   }else{
-    header("Location:view_owners.php?pages=1");
+    header("Location:view_bookings.php?pages=1");
   }
+
 ?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>View Owners</title>
+  <title>View Workshops</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
   <!-- endinject -->
-  <!-- Plugin css for this page -->
 
+  <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
   <!-- endinject -->
@@ -39,59 +43,44 @@
       <!-- partial:partials/_settings-panel.html -->
       <!-- partial -->
       <!-- partial:partials/_sidebar.html -->
-      <?php include '../../modules/sadmin_nav.php'; ?>
+      <?php include '../../modules/cust_nav.php'; ?>
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-              <?php include '../../modules/breadcrumbs_admin.php'; ?>
-            </div>
               <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">All owners</h4>
-                    <form method=POST action="view_owners_search.php" class="search-form">
-                      <table style="width:100%;">
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" name="query" placeholder="Enter your search query"></input>
-                          </td>
-                          <td style="width:10%;padding-left:20px;">
-                            Search criteria:
-                          </td>
-                          <td>
-                            <select class="form-control" name="query_type" required>
-                              <option value="name">Name</option>
-                              <option value="company">Company</option>
-                            </select>
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
+                    <h4 class="card-title">View Bookings</h4>
                   </br>
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <thead>
                         <tr>
                           <th>
-                            Name
+                            Booking ID
                           </th>
                           <th>
-                            Email
+                            Vehicle plate
                           </th>
                           <th>
-                            Phone number
+                            Time Created
                           </th>
                           <th>
-                            Company
+                            Workshop
+                          </th>
+                          <th>
+                            Status
+                          </th>
+                          <th>
+
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                       <?php
                       $count = 0;
-                        if(empty($results)){
+                        if(empty($bookings)){
                           echo '<tr>
                                   <td>
                                     No data
@@ -105,21 +94,36 @@
                                   <td>
                                     No data
                                   </td>
+                                  <td>
+                                    No data
+                                  </td>
+                                  <td>
+                                  </td>
                                 </tr>';
                         }else{
-                          foreach($results as $owner){
-                            echo '<tr onclick = "location.href=\'view_owner.php?id='.$owner["user_id"].'\';" style="cursor:pointer;">
+                          foreach($bookings as $booking){
+                            echo '<tr>
                                     <td>
-                                      '.$owner["name"].'
+                                      '.$booking["booking_id"].'
                                     </td>
                                     <td>
-                                      '.$owner["email"].'
+                                      '.$booking["vehicle_plate"].'
                                     </td>
                                     <td>
-                                      '.$owner["phone_no"].'
+                                      '.$booking["time_created"].'
                                     </td>
                                     <td>
-                                      '.$owner["company"].'
+                                      '.$booking["name"].'
+                                    </td>
+                                    <td>
+                                      '.$booking["accepted_status"].'
+                                    </td>
+                                    <td>
+                                      <form method=post action=\'view_bookings.php?pages=1\'>
+                                        <button type=\'submit\' name=\'deletebutton\' value="'. $booking["booking_id"] . '" class=\'btn btn-outline-danger btn-icon-text\'>
+                                        <i class=\' mdi mdi-delete-forever btn-icon-prepend\'></i> Delete
+                                        </button>
+                                      </form>
                                     </td>
                                   </tr>';
                                   $count = $count + 1;
@@ -141,6 +145,9 @@
                                       <td>
                                         &#8203
                                       </td>
+                                      <td>
+                                        &#8203
+                                      </td>
                                     </tr>';
                             }
                           }
@@ -149,8 +156,8 @@
                     </table>
                   </div>
                   </br>
-                    <a href="view_owners.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
-                    <a href="view_owners.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                    <a href="view_bookings.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
+                    <a href="view_bookings.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
                   </div>
                   </div>
                 </div>
@@ -168,6 +175,10 @@
 
   <!-- plugins:js -->
   <script src="../../../vendors/js/vendor.bundle.base.js"></script>
+  <script>
+
+
+  </script>
   <!-- endinject -->
   <!-- End custom js for this page-->
 </body>

@@ -10,7 +10,7 @@
   include '../../../modules/wadmin_nav_top.php';
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
-  $workshop = GetWorkshop($_SESSION["workshop_id"]);
+  $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   if(isset($_GET["id"])){
     $id = $_GET["id"];
     $worker = GetWorker($id);

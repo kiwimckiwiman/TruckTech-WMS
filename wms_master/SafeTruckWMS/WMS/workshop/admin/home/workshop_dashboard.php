@@ -9,8 +9,15 @@
   include '../../../modules/wadmin_nav_top.php';
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
-  $_SESSION["workshop_id"]=$_GET["workshop"];
-  $workshop = GetWorkshop($_SESSION["workshop_id"]);
+  if(isset($_GET["workshop"])){
+    $_SESSION["workshop_id"]=$_GET["workshop"];
+    $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
+    if(empty($workshop)){
+      header("Location:dashboard.php");
+    }
+  }else{
+    header("Location:dashboard.php");
+  }
 ?>
 <head>
   <!-- Required meta tags -->
