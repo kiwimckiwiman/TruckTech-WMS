@@ -485,7 +485,8 @@
                     UpdateCustomerJobFeedbackRating($_POST['job_id'],$_POST['feedback'],$_POST['rating']);
                   }
                 ?>
-
+                <button type="button" class="btn btn-outline-secondary btn-fw" onclick="location.href='viewCustomerJobs.php';">Back</button>
+                <br><br>
                 <h4 class="card-title">Rate Job : <?php echo $job_details['vehicle_plate'];?></h4>
                 <p><?php echo $job_details['start_time'];?></p>
                 
@@ -506,8 +507,8 @@
                       </select>
                   </div>  
                   <input type="hidden" id="job_id" name="job_id" value="<?php echo $job_details['job_id'] ?>"></input>
-                  <button type="submit" class="btn btn-primary me-2">Submit</button>
-                  <button type="button" class="btn btn-light" onclick="location.href='viewCustomerJobs.php';">Cancel</button>
+                  <button type="submit" class="btn btn-primary me-2" >Submit</button>
+                  <button type="button" class="btn btn-outline-secondary btn-fw" onclick="location.href='viewCustomerJobs.php';">Cancel</button>
                 </form> 
               </div>
             </div>
