@@ -1,0 +1,18 @@
+Superadmin:
+broken link when accessing my profile from upper right circle
+view owners: next/previous button not working
+register workshop: owners dropdown might not be usable if there's 1000+ owners
+delete_workshop_confirm: Warning on breadcrumbs
+delete_workshop_confirm: Warning on breadcrumbs
+calendar not showing date after selecting year/month
+
+ws admin/owner:
+register worker: worker is added to user table, but not to worker table	
+	Error: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`wms`.`workers`, CONSTRAINT `worker_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+	<br />
+<b>Warning</b>:  Undefined array key 0 in <b>C:\xampp\htdocs\wms_master\SafeTruckWMS\WMS\workshop\admin\workers\register_worker.php</b> on line <b>33</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on value of type null in <b>C:\xampp\htdocs\wms_master\SafeTruckWMS\WMS\workshop\admin\workers\register_worker.php</b> on line <b>33</b><br />
+
+register worker: worker is added to user table, but other user is added to the worker table
+
