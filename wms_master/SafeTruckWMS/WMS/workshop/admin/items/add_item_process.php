@@ -28,5 +28,7 @@ if(isset($_FILES["image"])) {
 
   AddItem($_SESSION["workshop_id"], $itemName, $description, $price, $quantity, $minStockVal, $image, $itemType);
   header("Location:view_items.php?pages=1");
+}else{
+  header("Location:view_items.php?pages=1");
 }
 ?>

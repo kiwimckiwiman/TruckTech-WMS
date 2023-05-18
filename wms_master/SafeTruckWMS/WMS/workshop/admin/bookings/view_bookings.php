@@ -128,7 +128,7 @@
                                       '.$booking["description"].'
                                     </td>
                                     <td>
-                                      '.$formattedDate = date('D | d-M | h:i A', strtotime($booking["time_created"])).'
+                                      '.date('D | d-M | h:i A', strtotime($booking["time_created"])).'
                                     </td>
                                     <td>
                                       '.$booking["vehicle_make"].'
@@ -146,7 +146,7 @@
                               echo '
                                     </td>
                                     <td>
-                                      <form action=\'view_pending_bookings.php?pages=1\' method=\'POST\'>
+                                      <form action=\'view_bookings.php?pages=1\' method=\'POST\'>
                                           <button type=\'submit\' class=\'btn btn-success btn-rounded btn-fw\' name=\'acceptbutton\' value='.$booking['booking_id'].'>Accept</button>
                                       </form>
                                     </td>
@@ -227,12 +227,12 @@
                             };
                               echo '</td>
                                     <td>
-                                      <form action=\'view_pending_bookings.php?pages=1\' method=\'POST\'>
+                                      <form action=\'view_bookings.php?pages=1\' method=\'POST\'>
                                           <button type=\'submit\' class=\'btn btn-success btn-rounded btn-fw\' name=\'acceptbuttonbyid\' value='.$booking['booking_id'].'>Accept</button>
                                       </form>
                                     </td>
                                     <td>
-                                      <form action=\'view_pending_bookings.php?pages=1\' method=\'POST\'>
+                                      <form action=\'view_bookings.php?pages=1\' method=\'POST\'>
                                           <button type=\'submit\' class=\'btn btn-danger btn-rounded btn-fw\' name=\'rejectbutton\' value='.$booking['booking_id'].'>Reject</button>
                                       </form>
                                     </td>

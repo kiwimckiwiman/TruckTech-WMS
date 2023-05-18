@@ -145,6 +145,7 @@
                           echo '
                                   </td>
                                   <td>
+                                    <a href="add_step.php?item='.$item["item_id"].'" class="btn btn-primary me-2">SELECT ITEM</a>
                                   </td>
                                 </tr>';
                                 $count = $count + 1;
@@ -179,7 +180,6 @@
                   </table>
                 </div>
                 </br>
-                  <a href="add_item.php" class="btn btn-success me-2">+ ADD ITEM</a>
                 </div>
                 </div>
               </div>

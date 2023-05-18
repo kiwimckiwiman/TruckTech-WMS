@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2023 at 11:37 AM
+-- Generation Time: May 18, 2023 at 01:06 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -73,7 +73,7 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`item_id`, `workshop_id`, `name`, `description`, `price`, `quantity`, `min_stock`, `img_name`, `item_type`) VALUES
-(1, 7, 'dsadasdasd', 'fd', 213.00, 23344, 0, '646591c1ae3eb.png', 'Engine');
+(1, 7, 'dsadasdasd', 'fd', 213.00, 23342, 0, '646591c1ae3eb.png', 'Engine');
 
 -- --------------------------------------------------------
 
@@ -104,8 +104,9 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`job_id`, `workshop_id`, `customer_id`, `worker_id`, `vehicle_plate`, `vehicle_make`, `description`, `start_time`, `finish_time`, `comment`, `service_fee`, `total_price`, `invoice_link`, `feedback`, `rating`) VALUES
-(1, 7, 2, NULL, 'gdf', 'gfd', 'gf', '2023-05-17 20:21:07', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 7, 2, NULL, 'DS', 'DS', 'DS', '2023-05-17 20:21:10', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 7, 2, NULL, 'gdf', 'gfd', 'gf', '2023-05-18 11:04:58', '2023-05-18 11:00:35', NULL, 47.00, 65117.00, '../../../invoice/1.html', NULL, NULL),
+(2, 7, 2, NULL, 'DS', 'DS', 'DS', '2023-05-17 20:21:10', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 7, 2, NULL, '3qeq', 'wqwwq', 'ewq', '2023-05-18 10:09:58', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -183,7 +184,8 @@ CREATE TABLE `steps` (
 
 INSERT INTO `steps` (`step_id`, `job_id`, `time_created`, `description`, `worker_id`, `comment`, `item_id`, `quantity`, `total_item_price`, `finish`) VALUES
 (1, 1, '2023-05-18 08:05:31', 'dwdwdwd', 149, 'comment', 1, 2, 32322, 1),
-(2, 1, '2023-05-18 08:06:31', '2', 152, 'comment', 1, 3, 32322, 0);
+(2, 1, '2023-05-18 08:06:31', '2', 152, 'comment', 1, 3, 32322, 1),
+(5, 1, '2023-05-18 10:32:34', 'dsadas', 149, 'dad', 1, 2, 426, 1);
 
 -- --------------------------------------------------------
 
@@ -210,7 +212,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, `company`, `phone_no`, `type`, `gender`) VALUES
 (1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's', ''),
-(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'a', ''),
+(2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
 (123, 'MurtadaRashid', 'murtadarashid@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'Rashid', 11, 'a', ''),
 (126, 'MurtadaRashid', 'murtadarashid222@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
 (128, 'dfghjk', '102764926@students.swinburne.edu.my', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-30', 'fbebfiw', 11, 'a', ''),
@@ -230,7 +232,9 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, 
 (151, 'ttt', 'tttt@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'ttt', NULL, 'dasdas', NULL, 's', 'm'),
 (152, 'test_worker3', 'test_worker3@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test_worker', NULL, 'company', NULL, 'w', 'm'),
 (153, 'test', 'test_worker56@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'test', NULL, 'company', NULL, 'w', ''),
-(154, 'admin', 'wdwd@gmaiol.com', '$2y$10$a3CuYLAUhWQFjetrkmxzAeWtQd45d8I/.O3wPBKI9tmDA2wBZeJFW', 'Murtada', '4234-03-11', 'asawww', 11, 'a', 'Male');
+(154, 'admin', 'wdwd@gmaiol.com', '$2y$10$a3CuYLAUhWQFjetrkmxzAeWtQd45d8I/.O3wPBKI9tmDA2wBZeJFW', 'Murtada', '4234-03-11', 'asawww', 11, 'a', 'Male'),
+(155, '', 'murtdasdasdashid222@gmail.com', '$2y$10$4iQ7nVu7nWShw3neSBkmW.Lwq35BIcdo.yIKMn1WqdBBpzDG0gICy', 'dsds', '1235-03-21', NULL, 11, 'w', 'Male'),
+(156, '', 'aaadadddmin@gmail.com', '$2y$10$hxPm.9VJ6gQ7rJrqhNXHz.teUfTkm8OjpxUzVit8.cGz7c.FnPC6W', 'dasdas', '1243-03-12', 'biubub', 11, 'w', 'Male');
 
 -- --------------------------------------------------------
 
@@ -253,7 +257,9 @@ INSERT INTO `workers` (`worker_id`, `workshop_id`, `has_inventory_access`, `has_
 (149, 7, 0, 1),
 (150, 7, 1, 1),
 (152, 7, 1, 1),
-(153, 7, 0, 1);
+(153, 7, 0, 1),
+(154, 7, 1, 0),
+(156, 7, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -282,8 +288,7 @@ INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`,
 (3, 2, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', '110110111', 0.440000, 0.450000),
 (7, 126, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 110.366640, 1.500000),
 (9, 126, '123123', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
-(12, 126, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
-(30, 142, 'dd', '1.5382337115198432, 110.3137185559898', '02:47 PM to 02:48 PM', 'delete', '011-2202-2938', 110.313719, 1.538234);
+(12, 126, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000);
 
 --
 -- Indexes for dumped tables
@@ -371,7 +376,7 @@ ALTER TABLE `workshops`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -383,7 +388,7 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `job_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `job_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `new_login_table`
@@ -407,25 +412,25 @@ ALTER TABLE `purchase_details`
 -- AUTO_INCREMENT for table `steps`
 --
 ALTER TABLE `steps`
-  MODIFY `step_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `step_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
 
 --
 -- AUTO_INCREMENT for table `workers`
 --
 ALTER TABLE `workers`
-  MODIFY `worker_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `worker_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
 
 --
 -- AUTO_INCREMENT for table `workshops`
 --
 ALTER TABLE `workshops`
-  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `workshop_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Constraints for dumped tables

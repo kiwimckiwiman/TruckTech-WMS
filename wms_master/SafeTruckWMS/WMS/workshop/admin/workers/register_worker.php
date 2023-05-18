@@ -21,7 +21,7 @@
     $phone_no = $_POST['phone_no'];
     $inv = $_POST["inv"];
     $job = $_POST["job"];
-    $msg = AddWorker($name, $email, $gender, $DOB, $phone_no, $owner[0]["company"], $inv, $job, $_SESSION["workshop_id"]);
+    $msg = AddWorker($name, $email, $gender, $DOB, $phone_no, $owner["company"], $inv, $job, $_SESSION["workshop_id"]);
   }else{
     $msg = ">&#8203";
   }
@@ -30,7 +30,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title><?php echo $workshop[0]["name"] ?></title>
+  <title>Register Worker</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../../vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../../../../vendors/ti-icons/css/themify-icons.css">

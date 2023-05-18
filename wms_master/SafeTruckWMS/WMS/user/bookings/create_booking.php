@@ -20,6 +20,8 @@
   <title>Enter Details</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../../vendors/ti-icons/css/themify-icons.css">
+
   <!-- endinject -->
   <!-- Plugin css for this page -->
   <!-- End plugin css for this page -->
@@ -88,6 +90,8 @@
 
   <!-- plugins:js -->
   <script src="../../../vendors/js/vendor.bundle.base.js"></script>
+  <script src="../../../js/template.js"></script>
+
   <!-- endinject -->
   <!-- End custom js for this page-->
 </body>

@@ -10,7 +10,7 @@
   include '../../queries/workshop_queries.php';
   if(isset($_POST["id"])){
     $id = $_POST["id"];
-    $result = GetWorkshop($id);
+    $result = GetWorkshopAdmin($id);
     $name = $page = $result["name"];
     DeleteWorkshop($id);
   }else{

@@ -139,6 +139,34 @@
         return $results[0];
     }
 
+    function GetWorkshopAdmin($id){
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'wms';
+
+        if ( mysqli_connect_errno() ) {
+            exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+        }
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+         // replace this with your actual workshop owner id value
+
+        $sql = "SELECT * FROM workshops WHERE workshop_id = :id AND workshop_id > 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        $conn = null;
+
+        return $results[0];
+    }
+
     function GetWorkshopAndOwner($id){
       $servername = 'localhost';
       $username = 'root';
