@@ -7,6 +7,8 @@
   $jobID = $_POST['job_id'];
   $customer_details= getCustomerDetails($_SESSION["user_id"]);
   $job_details = ViewCustomerJob($jobID);
+  $steps = GetAllSteps($jobID);
+  $completedSteps = GetAllCompletedSteps($jobID);
 ?>
 <head>
   <!-- Required meta tags -->
@@ -487,7 +489,7 @@
                    </li>
                   </ul>
                   <div>
-                   
+                  
                     
                   </div>
                 </div>
@@ -519,10 +521,14 @@
                             <p class="statistics-title">Job Description</p>
                             <h3 class="rate-percentage"><?php echo $job_details['descr'];?></h3>
                         </div>
+                        <div>
+                            <p class="statistics-title">Ended on</p>
+                            <h3 class="rate-percentage"><?php echo $job_details['finish_time'];?></h3>
+                        </div>
                         </div>
                       </div>
                     </div>
-                  <div class="row ">
+                    <div class="row ">
                     <div class="col-lg d-flex flex-column">
                       <div class="row flex-grow">
                         <div class="col-12 grid-margin stretch-card">
@@ -531,10 +537,129 @@
                               <div class="d-sm-flex justify-content-between align-items-start">
                                 <div>
                                   <h4 class="card-title card-title-dash">Steps</h4>
+                                  <h4 class="card-title card-title-dash"> Current Steps : <?php echo count($steps) ;?> </h4>
                                 </div>
                                 <!-- <div>
                                   <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
                                 </div> -->
+                              </div>
+                               <div class="table-responsive  mt-1">
+                              <table class="table select-table">
+                                <thead>
+                                  <tr>
+                                    <th>Time Created</th>
+                                    <th>Description</th>
+                                    <th>Item Name</th>
+                                    <th>Item Price</th>
+                                    <th>Quantity Consumed</th>
+                                    <th>Total Inventory Cost</th>
+                                    <!-- <th>Options</th> -->
+                                    </tr>
+                                </thead>
+                              <tbody>
+                              
+                                <?php
+                                  $count = count($steps);
+                                  if($count == 0){ ?>
+                                    <tr>
+                                  <td colspan="5" class="text-center"><h6>Zero Steps on this Job </h6></td>
+                                </tr>
+                                  <?php } else {
+                                    foreach($steps as $step) {
+                                      $item_details =  getItem($_SESSION["workshop_id"],$step['item_id'])
+                                  ?>
+                                    <tr>
+                                    <td>
+                                        <h6><?php echo $step['time_created']; ?></h6>
+                                    </td>
+                                      <td>
+                                      <h6><?php echo $step['descr']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo $item_details['name']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo ($item_details['price']); ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $step['quantity']; ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $step['total_item_price']; ?></h6>
+                                      </td>
+                                      <!-- <td>
+                                        <div style="display: flex; gap: 5px;">
+                                          
+                                          <button class="btn btn-secondary" value="<?php //echo $step['step_id'];?>" onclick="FinishStep(<?php //echo $step['step_id'];?>)"><i class="mdi mdi-check"></i></button>
+                                          </button>
+                                          <button class="btn btn-danger" value="<?php //echo $step['step_id'];?>" onclick="deleteStep(<?php //echo $step['step_id'];?>,<?php //echo $step['quantity']; ?>,<?php //echo $item_details['item_id'];?>,<?php //echo $item_details['quantity'];?>)" class="icon-trash" style="display: flex; align-items: center;">
+                                            <i class="icon-trash"></i>
+                                          </button>
+                                        </div>
+                                      </td> -->
+                                    </tr>
+                                  <?php }} ?>
+                                </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                              <div class="d-sm-flex justify-content-between align-items-start">
+                                <div>
+                                  <h4 class="card-title card-title-dash">Completed steps :  <?php echo count($completedSteps) ;?></h4>
+                                </div>
+                                <!-- <div>
+                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
+                                </div> -->
+                              </div>
+                               <div class="table-responsive  mt-1">
+                              <table class="table select-table">
+                                <thead>
+                                  <tr>
+                                    <th>Time Created</th>
+                                    <th>Description</th>
+                                    <th>Item Name</th>
+                                    <th>Item Price</th>
+                                    <th>Quantity Consumed</th>
+                                    <th>Total Inventory Cost</th>
+                                    </tr>
+                                </thead>
+                              <tbody>
+                              
+                                <?php
+                                  $count = count($completedSteps);
+                                  if($count == 0){ ?>
+                                    <tr>
+                                  <td colspan="5" class="text-center"><h6>Zero Completed Steps on this Job </h6></td>
+                                </tr>
+                                  <?php } else {
+                                    foreach($completedSteps as $cstep) {
+                                      $item_details =  getItem($_SESSION["workshop_id"],$cstep['item_id'])
+                                  ?>
+                                    <tr style="background-color: #f2f2f2;">
+                                    <td>
+                                        <h6><?php echo $cstep['time_created']; ?></h6>
+                                    </td>
+                                      <td>
+                                      <h6><?php echo $cstep['descr']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo $item_details['name']; ?></h6>
+                                      </td>
+                                      <td>
+                                      <h6><?php echo ($item_details['price']); ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $cstep['quantity']; ?></h6>
+                                      </td>
+                                      <td>
+                                        <h6><?php echo $cstep['total_item_price']; ?></h6>
+                                      </td>
+                                      
+                                    </tr>
+                                  <?php }} ?>
+                                </tbody>
+                                </table>
                               </div>
                             </div>
                           </div>

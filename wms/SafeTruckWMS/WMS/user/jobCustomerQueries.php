@@ -151,4 +151,78 @@ function getCustomerDetails($id){
         echo "Error: " . $e->getMessage();
     }
   }
+
+  function FinishStep($stepID){
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'wms';
+        
+        try {
+            // Create a PDO connection
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+            // Prepare and execute the update statement
+            $stmt = $conn->prepare("UPDATE steps SET finish = :finish WHERE step_id = :step_id");
+            $stmt->bindParam(':step_id', $stepID);
+            $stmt->bindValue(':finish', 1, PDO::PARAM_INT);
+            $stmt->execute();
+            #echo "Quantity updated successfully!";
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+
+    function getAllCompletedSteps($job_id) {
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'wms';
+        $finish = 1;
+       
+        if ( mysqli_connect_errno() ) {
+            exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+        }
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT * FROM steps WHERE job_id = :job_id AND finish = :finish";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':job_id', $job_id);
+            $stmt->bindParam(':finish', $finish);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $results;
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+      }
+      function getAllSteps($job_id) {
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'wms';
+        $finish = 0;
+       
+        if ( mysqli_connect_errno() ) {
+            exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+        }
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "SELECT * FROM steps WHERE job_id = :job_id AND finish = :finish";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':job_id', $job_id);
+            $stmt->bindParam(':finish', $finish);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $results;
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+      }
+
+      
 ?>
