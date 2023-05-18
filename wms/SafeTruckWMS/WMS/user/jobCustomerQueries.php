@@ -152,6 +152,31 @@ function getCustomerDetails($id){
     }
   }
 
+  function getItem($workshop_id, $item_id) {
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'wms';
+   
+    if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+    }
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM inventory WHERE workshop_id = :workshop_id AND item_id = :item_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':workshop_id', $workshop_id);
+        $stmt->bindParam(':item_id', $item_id);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results[0];
+    } catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+  }
+  
+
   function FinishStep($stepID){
         $servername = 'localhost';
         $username = 'root';
@@ -224,5 +249,5 @@ function getCustomerDetails($id){
         }
       }
 
-      
+
 ?>
