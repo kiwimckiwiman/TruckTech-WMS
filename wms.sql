@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2023 at 11:43 AM
+-- Generation Time: May 18, 2023 at 11:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -38,8 +38,17 @@ CREATE TABLE `bookings` (
   `description` varchar(255) NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
   `accepted_status` enum('Pending','Accepted','Rejected') NOT NULL,
+  `require_pickup` tinyint(1) NOT NULL,
   `accepted_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `customer_id`, `workshop_id`, `vehicle_plate`, `vehicle_make`, `customer_lng`, `customer_ltd`, `description`, `time_created`, `accepted_status`, `require_pickup`, `accepted_time`) VALUES
+(8, 2, 1, 'dw', 'dw', 110.366640, 1.300000, 'dw', '2023-05-16 12:09:33', 'Pending', 0, NULL),
+(23, 2, 7, 'ds', 'ds', 110.362144, 1.508607, 'ds', '2023-05-17 12:03:39', 'Pending', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -51,12 +60,20 @@ CREATE TABLE `inventory` (
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `desc` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `price` decimal(8,2) UNSIGNED NOT NULL,
   `quantity` int(10) UNSIGNED NOT NULL,
   `min_stock` int(10) UNSIGNED NOT NULL,
-  `img_name` varchar(255) NOT NULL
+  `img_name` varchar(255) NOT NULL,
+  `item_type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`item_id`, `workshop_id`, `name`, `description`, `price`, `quantity`, `min_stock`, `img_name`, `item_type`) VALUES
+(1, 7, 'dsadasdasd', 'fd', 213.00, 23344, 0, '646591c1ae3eb.png', 'Engine');
 
 -- --------------------------------------------------------
 
@@ -68,19 +85,27 @@ CREATE TABLE `jobs` (
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `workshop_id` bigint(20) UNSIGNED NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `worker_id` bigint(20) UNSIGNED,
+  `worker_id` bigint(20) UNSIGNED DEFAULT NULL,
   `vehicle_plate` varchar(255) NOT NULL,
   `vehicle_make` varchar(255) NOT NULL,
-  `descr` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `start_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `finish_time` timestamp NULL DEFAULT NULL,
-  `comment` varchar(255),
-  `service_fee` decimal(8,2),
-  `total_price` decimal(8,2),
-  `invoice_link` varchar(255),
-  `feedback` varchar(255),
-  `rating` decimal(2,1)
+  `comment` varchar(255) DEFAULT NULL,
+  `service_fee` decimal(8,2) DEFAULT NULL,
+  `total_price` decimal(8,2) DEFAULT NULL,
+  `invoice_link` varchar(255) DEFAULT NULL,
+  `feedback` varchar(255) DEFAULT NULL,
+  `rating` decimal(2,1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`job_id`, `workshop_id`, `customer_id`, `worker_id`, `vehicle_plate`, `vehicle_make`, `description`, `start_time`, `finish_time`, `comment`, `service_fee`, `total_price`, `invoice_link`, `feedback`, `rating`) VALUES
+(1, 7, 2, NULL, 'gdf', 'gfd', 'gf', '2023-05-17 20:21:07', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 7, 2, NULL, 'DS', 'DS', 'DS', '2023-05-17 20:21:10', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -125,16 +150,25 @@ CREATE TABLE `purchase_details` (
   `supplier` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `purchase_details`
+--
+
+INSERT INTO `purchase_details` (`purchase_id`, `workshop_id`, `brand`, `item_id`, `quantity`, `price`, `date_purchased`, `supplier`) VALUES
+(1, 7, 'dsd', 1, 23333, 12312.00, '2023-05-17 21:36:58', 'dsds'),
+(2, 7, 'wew', 1, 11, 33.00, '2023-05-17 21:38:28', 'ewe');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `steps`
 --
+
 CREATE TABLE `steps` (
   `step_id` bigint(20) UNSIGNED NOT NULL,
   `job_id` bigint(20) UNSIGNED NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `descr` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `worker_id` bigint(20) UNSIGNED NOT NULL,
   `comment` varchar(255) NOT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
@@ -142,6 +176,14 @@ CREATE TABLE `steps` (
   `total_item_price` int(11) UNSIGNED DEFAULT NULL,
   `finish` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `steps`
+--
+
+INSERT INTO `steps` (`step_id`, `job_id`, `time_created`, `description`, `worker_id`, `comment`, `item_id`, `quantity`, `total_item_price`, `finish`) VALUES
+(1, 1, '2023-05-18 08:05:31', 'dwdwdwd', 149, 'comment', 1, 2, 32322, 1),
+(2, 1, '2023-05-18 08:06:31', '2', 152, 'comment', 1, 3, 32322, 0);
 
 -- --------------------------------------------------------
 
@@ -170,7 +212,7 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `name`, `DOB`, 
 (1, 'admin', 'admin@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Admin', NULL, 'SafeTruck', NULL, 's', ''),
 (2, 'New User', 'hamza.ishrat@yahoo.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'a', ''),
 (123, 'MurtadaRashid', 'murtadarashid@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2020-11-30', 'Rashid', 11, 'a', ''),
-(126, 'MurtadaRashid', 'murtadarashi22d@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
+(126, 'MurtadaRashid', 'murtadarashid222@gmail.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-29', 'biubub', 11, 'a', ''),
 (128, 'dfghjk', '102764926@students.swinburne.edu.my', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Murtada Rashid', '2022-11-30', 'fbebfiw', 11, 'a', ''),
 (129, 'New User', 'abc@abc.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', NULL, NULL, NULL, NULL, 'c', ''),
 (130, 'abcd', 'abcd@abcd.com', '$2y$10$TSej5hh.sbPddZ6ph3VUgey2Mg/jNUSeXxNCnyD6cld7psQ/9/sNq', 'Abc', '2021-10-29', 'abc', 11, 'a', ''),
@@ -203,6 +245,16 @@ CREATE TABLE `workers` (
   `has_job_access` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `workers`
+--
+
+INSERT INTO `workers` (`worker_id`, `workshop_id`, `has_inventory_access`, `has_job_access`) VALUES
+(149, 7, 0, 1),
+(150, 7, 1, 1),
+(152, 7, 1, 1),
+(153, 7, 0, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -226,11 +278,11 @@ CREATE TABLE `workshops` (
 --
 
 INSERT INTO `workshops` (`workshop_id`, `workshop_owner_id`, `name`, `location`, `opening_hours`, `specialisations`, `phone_no`, `workshop_lng`, `workshop_ltd`) VALUES
-(2, 130, 'name', 'there', '9:00 am to 9:01am', 'cars', '22292', 0.000000, 0.000000),
+(1, 1, 'Pending', '', '', '', '', 0.000000, 0.000000),
 (3, 2, 'Alexandria ', 'Alexandria Lawmuston', '9:00 to 11:pm ', 'Tyres ', '110110111', 0.440000, 0.450000),
-(6, 126, 'ggreg', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
-(7, 126, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 0.040000, 0.043000),
-(9, 126, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
+(7, 126, 'ggreg', 'efuiwfw', 'dededed', 'wewe', '11', 110.366640, 1.500000),
+(9, 126, '123123', 'iuguig', 'dededed', 'dwdw', '11', 0.040000, 0.043000),
+(12, 126, 'Mohammed11', 'Yemen Tanzania', 'dededed', 'ALL IN ONE ', '11', 0.040000, 0.043000),
 (30, 142, 'dd', '1.5382337115198432, 110.3137185559898', '02:47 PM to 02:48 PM', 'delete', '011-2202-2938', 110.313719, 1.538234);
 
 --
@@ -319,19 +371,19 @@ ALTER TABLE `workshops`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `booking_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `job_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `job_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `new_login_table`
@@ -349,13 +401,13 @@ ALTER TABLE `password_reset_tokens`
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  MODIFY `purchase_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `purchase_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `steps`
 --
 ALTER TABLE `steps`
-  MODIFY `step_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `step_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -412,8 +464,8 @@ ALTER TABLE `purchase_details`
 --
 ALTER TABLE `steps`
   ADD CONSTRAINT `step_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `step_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `step_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `step_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `step_worker_id_foreign` FOREIGN KEY (`worker_id`) REFERENCES `workers` (`worker_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `workers`
