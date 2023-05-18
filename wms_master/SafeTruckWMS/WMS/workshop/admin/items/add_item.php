@@ -6,31 +6,16 @@
     header("Location: ../../../login/login.php");
   }
   include '../../../queries/workshop_queries.php';
-  include '../../../queries/worker_queries.php';
   include '../../../modules/wadmin_nav_top.php';
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
-  $owner = GetOwner($_SESSION["id"]);
-
-  if((isset($_POST['email']) && !empty($_POST['email']))){
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $gender = $_POST['gender'];
-    $DOB = $_POST['DOB'];
-    $phone_no = $_POST['phone_no'];
-    $inv = $_POST["inv"];
-    $job = $_POST["job"];
-    $msg = AddWorker($name, $email, $gender, $DOB, $phone_no, $owner[0]["company"], $inv, $job, $_SESSION["workshop_id"]);
-  }else{
-    $msg = ">&#8203";
-  }
 ?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title><?php echo $workshop[0]["name"] ?></title>
+  <title>Add Item</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../../vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../../../../vendors/ti-icons/css/themify-icons.css">
@@ -62,49 +47,44 @@
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Create Workshop Worker</h4>
-                      <form class="forms-sample" method="POST" action="register_worker.php">
+                    <h4 class="card-title">Add Inventory Item</h4>
+                    <form class="forms-sample" method="POST" enctype="multipart/form-data" action="add_item_process.php">
                       <div class="form-group">
-                        <label for="name">Worker Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-                      </div>
-                      <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email"placeholder="Email" required>
+                        <label for="itemName">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" name="itemName"  required placeholder="Item Name">
                       </div>
                       <div class="form-group">
-                        <label for="gender">Gender</label>
-                          <select class="form-control" id="gender" name="gender" required>
-                            <option>Male</option>
-                            <option>Female</option>
-                          </select>
+                        <label for="itemType">Item Category</label>
+                        <select class="form-control" name="itemType" required>
+                          <option value="Engine">Engine</option>
+                          <option value="Transmission">Transmission</option>
+                          <option value="Suspension">Suspension</option>
+                          <option value="Electrical">Electrical</option>
+                          <option value="Cooling">Cooling</option>
+                          <option value="Exhaust">Exhaust</option>
+                          <option value="Filters">Filters</option>
+                          <option value="Wheels">Wheels</option>
+                          <option value="Brakes">Brakes</option>
+                          <option value="Others">Others</option>
+                        </select>
                       </div>
                       <div class="form-group">
-                        <label for="DOB">Date of Birth</label>
-                        <input type="date" class="form-control" id="DOB" name="DOB" required>
+                        <label for="desc">Item Description</label><br/>
+                        <input type="text" style="width: 100%; height: 100px;" placeholder="Description of the Product" id="desc" name="desc" required >
                       </div>
                       <div class="form-group">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input type="text" class="form-control" id="phone_no" name="phone_no" required placeholder="Phone Number (012-3456-7890)" maxlength="13" pattern="\d{3}-\d{3,4}-\d{3,4}">
+                        <label for="price">Item Price</label>
+                        <input type="text" class="form-control"   id="price" name="price" required pattern="\d*\.*\d*">
                       </div>
-                      <div class="form-group" >
-                        <label for="access">Access Controls</label>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input type="hidden" class="form-check-input" name="inv" value="0">
-                            <input type="checkbox" class="form-check-input" name="inv" value="1">
-                                Inventory module
-                            <i class="input-helper"></i></label>
-                        </div>
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input type="hidden" class="form-check-input" name="job" value="0">
-                            <input type="checkbox" class="form-check-input" name="job" value="1">
-                                Jobs module
-                            <i class="input-helper"></i></label>
-                        </div>
+                      <div class="form-group">
+                        <label for="minStockVal">Minimum Stock Value</label>
+                        <input type="text" class="form-control"  id="minStockVal" name="minStockVal" required pattern="\d*">
                       </div>
-                      <?php echo "<h6".$msg."</h6>";?>
+                      <div class="form-group">
+                        <label for="myFile">Upload Item Image</label>
+                        <br/>
+                        <input type="file" id="image" name="image" required>
+                      </div>
                       <button type="submit" class="btn btn-primary me-2">SUBMIT</button>
                     </form>
                   </div>
@@ -126,6 +106,32 @@
   <!-- plugins:js -->
   <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
   <script src="../../../../js/template.js"></script>
+  <script>
+  const imageInput = document.getElementById('image');
+
+  if (imageInput.value.trim() !== '') {
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+    const maxFileSize = 500 * 1024; // 500KB
+
+    const fileExtension = imageInput.value.match(allowedExtensions);
+    const fileSize = imageInput.files[0].size;
+
+    if (!fileExtension) {
+      errors.push('Invalid file type. Only JPG, JPEG and PNG images are allowed.');
+    }
+    if (fileSize > maxFileSize) {
+      errors.push('File size exceeds 500KB limit.');
+    }
+  }
+
+  // Display any errors
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+  } else {
+    // If no errors, submit the form
+    form.submit();
+  }
+  </script>
 
 </body>
 </html>

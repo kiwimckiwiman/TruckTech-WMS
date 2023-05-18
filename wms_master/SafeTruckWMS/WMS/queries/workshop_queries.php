@@ -110,7 +110,7 @@
         return $results;
     }
 
-    function GetWorkshop($id){
+    function GetWorkshop($id, $owner){
         $servername = 'localhost';
         $username = 'root';
         $password = '';
@@ -124,9 +124,10 @@
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
          // replace this with your actual workshop owner id value
 
-        $sql = "SELECT * FROM workshops WHERE workshop_id = :id";
+        $sql = "SELECT * FROM workshops WHERE workshop_id = :id AND workshop_id > 1 AND workshop_owner_id = :owner";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':owner', $owner, PDO::PARAM_INT);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -179,7 +180,7 @@
       try {
           $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
           $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id LIMIT :start, :fin");
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE a.workshop_id > 1 LIMIT :start, :fin");
           $start = ($page_no-1)*$lim;
           $stmt->bindParam(':start', $start, PDO::PARAM_INT);
           $stmt->bindParam(':fin', $lim, PDO::PARAM_INT);
@@ -351,9 +352,9 @@
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if($field == "name"){
-          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE a.name LIKE :search");
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE a.name LIKE :search AND a.workshop_id > 1");
         }else{
-          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE b.name LIKE :search");
+          $stmt = $conn->prepare("SELECT a.*, a.name AS workshop_name, b.name FROM workshops a JOIN users b ON a.workshop_owner_id = b.user_id WHERE b.name LIKE :search AND a.workshop_id > 1");
         }
         $stmt->bindParam(':search', $search, PDO::PARAM_STR);
         $stmt->execute();

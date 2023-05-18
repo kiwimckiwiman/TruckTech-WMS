@@ -11,7 +11,7 @@
   if(isset($_POST["id"])){
     $id = $_POST["id"];
     $result = GetWorkshop($id);
-    $name = $result["name"];
+    $name = $page = $result["name"];
     DeleteWorkshop($id);
   }else{
     header("Location:view_workshops.php?pages=1");

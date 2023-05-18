@@ -12,7 +12,7 @@
   if(isset($_POST["id"])){
     $id = $_POST["id"];
     $result = GetOwner($id);
-    $name = $result["name"];
+    $name = $page = $result["name"];
     DeleteAccount($id);
   }else{
     header("Location:../home/dashboard.php");

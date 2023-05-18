@@ -162,7 +162,7 @@
                   </div>
                   </br>
                     <a href="view_workshops.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
-                    <a href="view_workshops.php?pages=<?php if($count < 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                    <a href="view_workshops.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
                   </div>
                   </div>
                 </div>

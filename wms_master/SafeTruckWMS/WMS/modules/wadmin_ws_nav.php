@@ -26,11 +26,11 @@
         <li class="nav-item">
           <a class="nav-link" href="../bookings/view_bookings.php?pages=1">
             <i class="mdi mdi-calendar menu-icon"></i>
-            <span class="menu-title">Bookings</span>
+            <span class="menu-title">Pending Bookings</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../view_inventory.php?pages=1">
+          <a class="nav-link" href="../items/view_items.php?pages=1">
             <i class="mdi mdi-dropbox menu-icon"></i>
             <span class="menu-title">Inventory</span>
           </a>
@@ -41,17 +41,10 @@
             <span class="menu-title">Jobs</span>
           </a>
         </li>
-        <li class="nav-item nav-category">Workers</li>
         <li class="nav-item">
           <a class="nav-link" href="../workers/view_workers.php?pages=1">
             <i class="mdi mdi-account-multiple menu-icon"></i>
-            <span class="menu-title">View Workers</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../workers/register_worker.php">
-            <i class="mdi mdi-account-plus menu-icon"></i>
-            <span class="menu-title">Register Worker</span>
+            <span class="menu-title">Workers</span>
           </a>
         </li>
         <li class="nav-item nav-category">Tools</li>

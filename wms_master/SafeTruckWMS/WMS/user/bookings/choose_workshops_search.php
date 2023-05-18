@@ -2,29 +2,31 @@
 <html lang="en">
 <?php
   session_start();
-  if(!($_SESSION["loggedin"]) && ($_SESSION["type"] != "s")){
-    header("Location: ../login/login.php");
+  if(!($_SESSION["loggedin"]) && ($_SESSION["type"] != "c")){
+    header("Location: ../../login/login.php");
   }
-  include '../../modules/sadmin_nav_top.php';
+  include '../../modules/cust_nav_top.php';
   include '../../modules/footer.php';
   include '../../queries/workshop_queries.php';
-  if(isset($_GET["pages"])){
-    $pages = $_GET["pages"];
-    $results = GetAllOwners(intval($pages));
+  if(isset($_POST["query"]) && !(empty($_POST["query"]))){
+    $query = $_POST["query"];
+    $type = $_POST["query_type"];
+    $results = GetWorkshopSearch($query, $type);
   }else{
-    header("Location:view_owners.php?pages=1");
+    header("Location:choose_workshops.php?pages=1");
   }
 ?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>View Owners</title>
+  <title>View Workshops</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
   <!-- endinject -->
   <!-- Plugin css for this page -->
 
+  <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
   <!-- endinject -->
@@ -39,19 +41,16 @@
       <!-- partial:partials/_settings-panel.html -->
       <!-- partial -->
       <!-- partial:partials/_sidebar.html -->
-      <?php include '../../modules/sadmin_nav.php'; ?>
+      <?php include '../../modules/cust_nav.php'; ?>
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-              <?php include '../../modules/breadcrumbs_admin.php'; ?>
-            </div>
               <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">All owners</h4>
-                    <form method=POST action="view_owners_search.php" class="search-form">
+                    <h4 class="card-title">Choose Workshop</h4>
+                    <form method=POST action="choose_workshops_search.php" class="search-form">
                       <table style="width:100%;">
                         <tr>
                           <td>
@@ -63,7 +62,7 @@
                           <td>
                             <select class="form-control" name="query_type" required>
                               <option value="name">Name</option>
-                              <option value="company">Company</option>
+                              <option value="company">Owner</option>
                             </select>
                           </td>
                         </tr>
@@ -78,13 +77,16 @@
                             Name
                           </th>
                           <th>
-                            Email
+                            Specialisations
                           </th>
                           <th>
                             Phone number
                           </th>
                           <th>
-                            Company
+                            Location
+                          </th>
+                          <th>
+                            Owner
                           </th>
                         </tr>
                       </thead>
@@ -105,43 +107,30 @@
                                   <td>
                                     No data
                                   </td>
+                                  <td>
+                                    No data
+                                  </td>
                                 </tr>';
                         }else{
-                          foreach($results as $owner){
-                            echo '<tr onclick = "location.href=\'view_owner.php?id='.$owner["user_id"].'\';" style="cursor:pointer;">
+                          foreach($results as $workshop){
+                            echo '<tr onclick = "location.href=\'choose_workshop.php?id='.$workshop["workshop_id"].'\';" style="cursor:pointer;">
                                     <td>
-                                      '.$owner["name"].'
+                                      '.$workshop["workshop_name"].'
                                     </td>
                                     <td>
-                                      '.$owner["email"].'
+                                      '.$workshop["specialisations"].'
                                     </td>
                                     <td>
-                                      '.$owner["phone_no"].'
+                                      '.$workshop["phone_no"].'
                                     </td>
                                     <td>
-                                      '.$owner["company"].'
+                                      '.$workshop["location"].'
+                                    </td>
+                                    <td>
+                                      '.$workshop["name"].'
                                     </td>
                                   </tr>';
                                   $count = $count + 1;
-                            }
-
-                          }
-                          if($count < 10){
-                            for($x = 0; $x < (10-$count); $x++){
-                              echo '<tr>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                    </tr>';
                             }
                           }
                        ?>
@@ -149,8 +138,7 @@
                     </table>
                   </div>
                   </br>
-                    <a href="view_owners.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
-                    <a href="view_owners.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                    <a href="choose_workshop.php?pages=1" class="btn btn-primary me-2">RETURN TO ALL</a>
                   </div>
                   </div>
                 </div>
