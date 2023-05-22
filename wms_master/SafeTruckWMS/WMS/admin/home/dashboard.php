@@ -7,6 +7,7 @@
   }
   include '../../modules/sadmin_nav_top.php';
   include '../../modules/footer.php';
+  include '../../queries/admindashboardQueries.php';
 ?>
 <head>
   <!-- Required meta tags -->
@@ -48,29 +49,38 @@
                   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
                     <div class="row">
                       <div class="col-sm-12">
-                        <div class="statistics-details d-flex align-items-center justify-content-between">
-                          <div>
-                            <p class="statistics-title">Total Booking</p>
-                            <h3 class="rate-percentage">329</h3>
+                      <div class="statistics-details d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="statistics-title">Total Workshops registered</p>
+          
+
+                            <h3 class="rate-percentage"> <?php echo getTotalWorkshopsCount(); ?></h3>
+
+                           
                             <!-- <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p> -->
                           </div>
                           <div>
-                            <p class="statistics-title">Total Inventory Items</p>
-                            <h3 class="rate-percentage">7,682</h3>
+                            <p class="statistics-title">Total Workshop Owners</p>
+                           
+
+                            <h3 class="rate-percentage"><?php echo getTotalWorkshopOwnersCount(); ?></h3>
+
                             <!-- <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p> -->
                           </div>
                           <div>
-                            <p class="statistics-title">Number of Employees</p>
-                            <h3 class="rate-percentage">120</h3>
-                            <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>68.8</span></p>
+                            <p class="statistics-title">Best performing Workshop based on number of Completed jobs</p>
+                            <!-- <h3 class="rate-percentage">120</h3> -->
+
+                
+
+                            <h3 class="rate-percentage"><?php echo getWorkshopWithMostCompletedJobs(); ?></h3>
+
+                          
                           </div>
-                          <div class="d-none d-md-block">
-                            <p class="statistics-title">Sales</p>
-                            <h3 class="rate-percentage">68%</h3>
-                            <p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>+0.8%</span></p>
-                          </div>
+                          
 
                         </div>
+                      </div>
                       </div>
                     </div>
                     <div class="row">
@@ -80,14 +90,12 @@
                             <div class="card card-rounded">
                               <div class="card-body">
                                 <div class="d-sm-flex justify-content-between align-items-start">
-                                  <div>
-                                   <h4 class="card-title card-title-dash">Sales Line Chart</h4>
-                                   <h5 class="card-subtitle card-subtitle-dash">Total Sales for this week and last week</h5>
+                                <div>
+                                   <h4 class="card-title card-title-dash">Weekly Sales Line Chart</h4>
                                   </div>
-                                  <div id="performance-line-legend"></div>
                                 </div>
                                 <div class="chartjs-wrapper mt-5">
-                                  <canvas id="performaneLine"></canvas>
+                                <div id="sales-chart" style="width: 100%; height: 170px;"></div>
                                 </div>
                               </div>
                             </div>
@@ -99,17 +107,30 @@
                           <div class="col-md-6 col-lg-12 grid-margin stretch-card">
                             <div class="card bg-primary card-rounded">
                               <div class="card-body pb-0">
-                                <h4 class="card-title card-title-dash text-white mb-4">Status Summary</h4>
+                              <h4 class="card-title card-title-dash text-white mb-4">Best performing Workshop Summary</h4>
                                 <div class="row">
+                                <div class="col-sm-4">
+                                    <p class="status-summary-ight-white mb-1">Accepted</p>
+                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
+                                
+
+                                    <h2 class="text-info"> <?php echo countAcceptedBookingsForBestWorkshop(); ?></h2>
+
+                                  </div>
+                                
                                   <div class="col-sm-4">
-                                    <p class="status-summary-ight-white mb-1">Closed Value</p>
-                                    <h2 class="text-info">357</h2>
+                                    <p class="status-summary-ight-white mb-1">Pending </p>
+                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
+
+                                    <h2 class="text-info"> <?php echo countPendingBookingsForBestWorkshop(); ?></h2>
                                   </div>
-                                  <div class="col-sm-8">
-                                    <div class="status-summary-chart-wrapper pb-4">
-                                      <canvas id="status-summary"></canvas>
-                                    </div>
+                                
+                                  <div class="col-sm-4">
+                                    <p class="status-summary-ight-white mb-1">Rejected</p>
+                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
+                                    <h2 class="text-info"> <?php echo countrejectedBookingsForBestWorkshop(); ?></h2>
                                   </div>
+                                  
                                 </div>
                               </div>
                             </div>
@@ -124,8 +145,10 @@
                                         <div id="totalVisitors" class="progressbar-js-circle pr-2"></div>
                                       </div>
                                       <div>
-                                        <p class="text-small mb-2">Total Visitors</p>
-                                        <h4 class="mb-0 fw-bold">26.80%</h4>
+                                        <p class="text-small mb-2">Acceptance Rate</p>
+                                      
+
+                                        <h4 class="mb-0 fw-bold"><?php echo calculateAcceptancePercentage(); ?>%</h4>
                                       </div>
                                     </div>
                                   </div>
@@ -135,8 +158,10 @@
                                         <div id="visitperday" class="progressbar-js-circle pr-2"></div>
                                       </div>
                                       <div>
-                                        <p class="text-small mb-2">Visits per day</p>
-                                        <h4 class="mb-0 fw-bold">9065</h4>
+                                 
+
+                                        <p class="text-small mb-2">Rejection Rate</p>
+                                        <h4 class="mb-0 fw-bold"><?php echo calculateRejectionPercentage(); ?>%</h4>
                                       </div>
                                     </div>
                                   </div>
@@ -151,78 +176,7 @@
                   </div>
                   <div class="row ">
                     <div class="col-lg d-flex flex-column">
-                      <div class="row flex-grow">
-                        <div class="col-12 grid-margin stretch-card">
-                          <div class="card card-rounded">
-                            <div class="card-body">
-                              <div class="d-sm-flex justify-content-between align-items-start">
-                                <div>
-                                  <h4 class="card-title card-title-dash">Inventory</h4>
-                                 <p class="card-subtitle card-subtitle-dash">You have 1000+  Inventory Items</p>
-                                </div>
-                                <!-- <div>
-                                  <button class="btn btn-primary btn-lg text-white mb-0 me-0" type="button"><i class="mdi mdi-account-plus"></i>Add new member</button>
-                                </div> -->
-                              </div>
-                              <div class="table-responsive  mt-1">
-                                <table class="table select-table">
-                                  <thead>
-                                    <tr>
-
-
-                                      <th>Inventory Item Name</th>
-                                      <th>Inventory Item Price</th>
-                                      <th>Inventory Inventory Item Quantity</th>
-
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-
-                                      <td>
-
-                                            <h6>Tire</h6>
-                                            <p>Description: tire used for 4 wheelers</p>
-                                          </div>
-                                        </div>
-                                      </td>
-                                      <td>
-
-                                        <p>RM 60</p>
-                                      </td>
-                                      <td>
-
-                                        <p>200</p>
-                                      </td>
-                                      </tr>
-                                    <tr>
-
-                                      <td>
-
-                                            <h6>Battery</h6>
-                                            <p>Description:ddsfsd</p>
-                                          </div>
-                                        </div>
-                                      </td>
-                                      <td>
-
-                                          <p>RM 100</p>
-                                        </td>
-                                        <td>
-
-                                            <p>86</p>
-                                          </td>
-                                         </tr>
-                                    </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
                   </div>
-
                 </div>
               </div>
             </div>
@@ -247,7 +201,52 @@
   <script src="../../../vendors/chart.js/Chart.min.js"></script>
   <script src="../../../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
   <script src="../../../vendors/progressbar.js/progressbar.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
 
+function drawChart() {
+  // Fetch the data from the backend using the SalesChart PHP function
+  var chartData = <?php echo json_encode(SalesChart()); ?>;
+
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', chartData[0][0]);
+  data.addColumn('number', chartData[0][1]);
+
+  // Iterate over the chartData array starting from index 1 to skip the header row
+  for (var i = 1; i < chartData.length; i++) {
+    data.addRow(chartData[i]);
+  }
+
+  var options = {
+
+    curveType: 'function',
+    legend: { position: 'bottom' },
+    hAxis: {
+      title: 'Date',
+      titleTextStyle: {
+        color: '#333'
+      }
+    },
+    vAxis: {
+      title: 'Sales',
+      minValue: 0
+    },
+    chartArea: {
+      width: '80%',
+      height: '80%'
+    },
+    colors: ['#4285F4'], // Customize the line color
+    backgroundColor: {
+      fill: 'transparent' // Set the background color to transparent
+    }
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('sales-chart'));
+  chart.draw(data, options);
+}
+  </script>
   <!-- End plugin js for this page -->
   <!-- inject:js -->
   <script src="../../../js/off-canvas.js"></script>
