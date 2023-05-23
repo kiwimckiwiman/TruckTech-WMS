@@ -103,6 +103,7 @@
                                 </div>
                                 <div class="chartjs-wrapper mt-5">
                                 <div id="sales-chart" style="width: 100%; height: 170px;"></div>
+                                
                                 </div>
                               </div>
                             </div>
@@ -122,22 +123,17 @@
 
                                   <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Accepted</p>
-                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
-
                                     <h2 class="text-info"> <?php echo getAcceptedBookingsCount($_SESSION['workshop_id']); ?></h2>
 
                                   </div>
 
                                   <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Pending </p>
-                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
-
                                     <h2 class="text-info"> <?php echo getPendingBookingsCount($_SESSION['workshop_id']); ?></h2>
                                   </div>
 
                                   <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Rejected</p>
-                                    <p class="status-summary-ight-white mb-1">  Bookings</p>
                                     <h2 class="text-info"> <?php echo getRejectedBookingsCount($_SESSION['workshop_id']); ?></h2>
                                   </div>
                                   <!-- <div class="col-sm-8">
@@ -160,8 +156,6 @@
                                       </div>
                                       <div>
                                         <p class="text-small mb-2">Acceptance Rate</p>
-
-
                                         <h4 class="mb-0 fw-bold"><?php echo getAcceptedBookingsPercentage($_SESSION['workshop_id']); ?>%</h4>
                                       </div>
                                     </div>

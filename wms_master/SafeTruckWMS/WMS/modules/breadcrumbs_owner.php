@@ -50,12 +50,20 @@ $curr = ucwords(str_replace('.php', '', $curr));
                 <a href = "" class="crumb">'.$curr.'</a>
               </div>';
       }else{
-        echo '<div class="breadcrumbs">
-                <a href = " ../home/dashboard.php" class="crumb">All Workshops</a>
-                <a href = " ../home/workshop_dashboard.php?workshop='.$workshop["workshop_id"].'" class="crumb">'.trim($workshop["name"]).'</a>
-                <a href = " ../'.$parts[0].'/view_'.$parts[0].'.php?pages=1" class="crumb">All '.ucwords($parts[0]).'</a>
-                <a href = "" class="crumb">'.$curr.'</a>
-              </div>';
+        if($parts[0] == "details"){
+          echo '<div class="breadcrumbs">
+                  <a href = " ../home/dashboard.php" class="crumb">All Workshops</a>
+                  <a href = " ../home/workshop_dashboard.php?workshop='.$workshop["workshop_id"].'" class="crumb">'.trim($workshop["name"]).'</a>
+                  <a href = "" class="crumb">'.$curr.'</a>
+                </div>';
+        }else{
+          echo '<div class="breadcrumbs">
+                  <a href = " ../home/dashboard.php" class="crumb">All Workshops</a>
+                  <a href = " ../home/workshop_dashboard.php?workshop='.$workshop["workshop_id"].'" class="crumb">'.trim($workshop["name"]).'</a>
+                  <a href = " ../'.$parts[0].'/view_'.$parts[0].'.php?pages=1" class="crumb">All '.ucwords($parts[0]).'</a>
+                  <a href = "" class="crumb">'.$curr.'</a>
+                </div>';
+        }
       }
     }
   }

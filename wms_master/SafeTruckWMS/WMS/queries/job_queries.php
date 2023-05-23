@@ -388,11 +388,11 @@ function FinishWorkshopJob($job_id,$service_fee){
 
                 <div class='p_title'>
                   <p>Started On:</p>
-                  <span>" . $job_details['start_time'] . "</span>
+                  <span>" . date('D | d-M | h:i A', strtotime($job_details['start_time'])) . "</span>
                 </div>
                 <div class='p_title'>
                   <p>Finish On:</p>
-                  <span>" . $job_details['finish_time'] . "</span>
+                  <span>" . date('D | d-M | h:i A', strtotime($job_details['finish_time'])) . "</span>
                 </div>
               </div>
               <div class='i_details text_right'>

@@ -11,8 +11,8 @@
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
-  if(empty($_POST["query"]) && ($_POST["job"] == "0") && ($_POST["inv"] == "0")){
-    header("Location:view_workers.php?pages=1");
+  if(empty($_POST["query"])){
+    header("Location:view_items.php?pages=1");
   }else{
     $query = $_POST["query"];
     $query_type = $_POST["query_type"];
@@ -68,6 +68,8 @@
                           <select class="form-control" name="query_type" required>
                             <option value="name">Name</option>
                             <option value="type">Category</option>
+                            <option value="low_stock">Low Stock</option>
+                            <option value="empty_stock">Empty Stock</option>
                           </select>
                         </td>
                       </tr>
@@ -122,7 +124,15 @@
                               </tr>';
                       }else{
                         foreach($items as $item){
-                          echo '<tr onclick = "location.href=\'view_item.php?id='.$item["item_id"].'\';" style="cursor:pointer;">
+                          echo '<tr onclick = "location.href=\'view_item.php?id='.$item["item_id"].'\';" style="cursor:pointer;" ';
+
+                          if($item["quantity"] == "0"){
+                            echo ' class="table-danger"';
+                          }else if($item["quantity"] < $item["min_stock"]){
+                            echo ' class="table-warning"';
+                          }
+
+                          echo    '>
                                   <td>
                                     '.$item["name"].'
                                   </td>
@@ -137,8 +147,10 @@
                                   </td>
 
                                     ';
-                          if($item["quantity"] < $item["min_stock"]){
-                            echo '<td class="text-danger">'.$item["quantity"].' (LOW STOCK)';
+                          if($item["quantity"] == "0"){
+                            echo '<td class="text-danger">'.$item["quantity"].' (EMPTY STOCK)';
+                          }else if($item["quantity"] < $item["min_stock"]){
+                            echo '<td class="text-warning">'.$item["quantity"].' (LOW STOCK)';
                           }else{
                             echo '<td>'.$item["quantity"];
                           }

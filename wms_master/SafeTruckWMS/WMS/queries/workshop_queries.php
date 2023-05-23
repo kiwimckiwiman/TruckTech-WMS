@@ -47,33 +47,32 @@
           // Execute the prepared statement to insert the user data into the table
           $stmt->execute();
 
-          $site = "localhost/wms/SafeTruckWMS/WMS/login/login.php";
-          $content = "<!DOCTYPE html>
-                        <html>
-                        <head>
-                        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
-                        </head>
-                        <body>
+  //        $site = "localhost/wms/SafeTruckWMS/WMS/login/login.php";
+  //        $content = "<!DOCTYPE html>
+  //                      <html>
+//                      <head>
+//                        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
+//                        </head>
+//                        <body>
+//
+//                        <div>
+//                                <h3>Welcome to SafeTruck Workshop Management System</h3>
+//                                <p>Username: ".$email."</p>
+//                                <p>Password: ".$password."</p>
+//                                <p>Login here:</p>
+  //                              <a href =\"".$site."\"><h4>".$site."</h4></a>
+  //                              <p>You may change your password by navigating to the 'Profile' tab on the navigation bar once logged in</p>
+  //                              </br>
+  //                      </div>
+  //                      </body>
+  //                      </html>";
+  //          $headers  = "From: loll8441@gmail.com\r\n";
+  //          $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+//
+  //        mail($email, 'Login Details', $content, $headers);
 
-                        <div>
-                                <h3>Welcome to SafeTruck Workshop Management System</h3>
-                                <h4>Here are your details:</h4?>
-                                <p>Username: ".$email."</p>
-                                <p>Password: ".$password."</p>
-                                <p>Login here:</p>
-                                <a href =\"".$site."\"><h4>".$site."</h4></a>
-                                <p>You may change your password by navigating to the 'Profile' tab on the navigation bar once logged in</p>
-                                </br>
-                        </div>
-                        </body>
-                        </html>";
-            $headers  = "From: loll8441@gmail.com\r\n";
-            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-          mail($email, 'Login Details', $content, $headers);
-
-          $conn = null;
-          return " class=\"text-success\">Account has been created";
+//        $conn = null;
+  //        return " class=\"text-success\">Account has been created";
         }else{
           return " class=\"text-danger\">Email already registered";
         }
@@ -283,8 +282,44 @@
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
-}
+  }
 
+  function UpdateWorkshop($workshop_id, $name, $location, $opening_hrs, $specialisations, $phone_no, $workshop_ltd, $workshop_lng){
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'wms';
+
+    if ( mysqli_connect_errno() ) {
+        exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+    }
+    try {
+
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      $stmt = $conn->prepare("UPDATE workshops SET name = :name, location = :location, opening_hours = :opening_hours, specialisations = :specialisations, phone_no = :phone_no, workshop_lng = :workshop_lng, workshop_ltd = :workshop_ltd
+                              WHERE workshop_id = :workshop_id");
+
+      // Bind the workshop data values to the prepared statement parameters
+      $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+      $stmt->bindParam(':location', $location, PDO::PARAM_STR);
+      $stmt->bindParam(':opening_hours', $opening_hrs, PDO::PARAM_STR);
+      $stmt->bindParam(':specialisations', $specialisations, PDO::PARAM_STR);
+      $stmt->bindParam(':phone_no', $phone_no, PDO::PARAM_STR);
+      $stmt->bindParam(':workshop_id', $workshop_id, PDO::PARAM_INT);
+      $stmt->bindParam(':workshop_ltd', $workshop_ltd, PDO::PARAM_STR);
+      $stmt->bindParam(':workshop_lng', $workshop_lng, PDO::PARAM_STR);
+
+      // Execute the prepared statement to insert the workshop data into the table
+      $stmt->execute();
+      // Prepare the SQL statement for inserting workshop data into the table
+      $conn = null;
+      return "Workshop registered";
+    } catch(PDOException $e) {
+      echo "Error: " . $e->getMessage();
+    }
+  }
   function GetAllOwners($page_no){
     $lim = 10;
     $servername = 'localhost';

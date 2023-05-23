@@ -14,10 +14,11 @@ include '../../../queries/job_queries.php';
     $comment = $_POST['comment'];
     $job_id = $_SESSION['job_id'];
     $totalPrice = GetItem($_SESSION['workshop_id'], $item_id)['price']* $quantity;
-    $worker_id = $_SESSION["id"];
+    $worker_id = 169;
     $finish = 0;
 
     AddStep($job_id, $stepDescr, $worker_id, $comment, $item_id, $quantity, $totalPrice, $finish);
+    header("Location:view_job.php?id=".$job_id);
   }
 
 

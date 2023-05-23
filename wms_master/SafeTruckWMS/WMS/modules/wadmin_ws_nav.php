@@ -18,7 +18,7 @@
         </li>
         <li class="nav-item nav-category">Manage</li>
         <li class="nav-item">
-          <a class="nav-link" href="../details/details.php">
+          <a class="nav-link" href="../details/workshop_details.php">
             <i class="mdi mdi-home-variant menu-icon"></i>
             <span class="menu-title">Details</span>
           </a>
@@ -58,6 +58,12 @@
           <a class="nav-link" href="../../../login/login.php">
             <i class="mdi mdi-power menu-icon"></i>
             <span class="menu-title">Logout</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../datagen/datagen.php">
+            <i class="mdi mdi-power menu-icon"></i>
+            <span class="menu-title">datagen</span>
           </a>
         </li>
       </ul>

@@ -47,6 +47,9 @@
       $headers  = "From: loll8441@gmail.com\r\n";
       $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
       mail($email, 'Verification code', $content, $headers);
+      return true;
+    }else{
+      return false;
     }
   }
 

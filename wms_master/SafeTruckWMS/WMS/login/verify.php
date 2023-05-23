@@ -2,9 +2,11 @@
   include '../queries/account_queries.php';
   if(isset($_POST['email']) && !empty($_POST['email'])){
     $email=$_POST["email"];
-    Verify($email);
-  }else{
+    if(Verify($email) == FALSE){
       header('Location: register.php?error=exists');
+    }
+  }else{
+      header('Location: register.php');
   }
 ?>
 <!DOCTYPE html>
@@ -35,6 +37,7 @@
                 </div>
                 <div class="form-group">
                   <input type="hidden" class="form-control form-control-lg" name="email" value=<?php echo $email; ?>>
+                  <input type="hidden" class="form-control form-control-lg" name="password" value=<?php echo $_POST["password"]; ?>>
                 </div>
                 <div class="mt-3">
                   <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" name="verify" type="submit">

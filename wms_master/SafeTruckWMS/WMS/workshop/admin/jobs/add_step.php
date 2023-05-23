@@ -15,9 +15,7 @@
   if(isset($_SESSION["job_id"])){
     $id = $_SESSION["job_id"];
       $steps = GetAllSteps($id);
-    if($steps == null){
-      header("Location:view_jobs.php?pages=1");
-    }
+    
     $page="Job ID: ".$id;
   }else{
     header("Location:view_jobs.php?pages=1");
