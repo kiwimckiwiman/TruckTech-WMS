@@ -12,7 +12,9 @@
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   if(isset($_GET["pages"])){
+    $id = $_SESSION["job_id"];
     $pages = $_GET["pages"];
+    $page="Job ID: ".$id;
     $items = GetAllWorkshopItems($_SESSION["workshop_id"], intval($pages));
   }else{
     header("Location:add_items.php?pages=1");
@@ -122,36 +124,44 @@
                                 </tr>';
                         }else{
                           foreach($items as $item){
-                            echo '<tr>
-                                    <td>
-                                      '.$item["name"].'
-                                    </td>
-                                    <td>
-                                      '.$item["description"].'
-                                    </td>
-                                    <td>
-                                      '.$item["item_type"].'
-                                    </td>
-                                    <td>
-                                      '.$item["price"].'
-                                    </td>
+                            if($item["quantity"] != 0){
+                              echo '<tr';
 
-                                      ';
-                            if($item["quantity"] < $item["min_stock"]){
-                              echo '<td class="text-danger">'.$item["quantity"].' (LOW STOCK)';
-                            }else{
-                              echo '<td>'.$item["quantity"];
-                            }
-                            echo '
-                                    </td>
-                                    <td>
-                                      <a href="add_step.php?item='.$item["item_id"].'" class="btn btn-primary me-2">SELECT ITEM</a>
-                                    </td>
-                                  </tr>';
-                                  $count = $count + 1;
-                            }
+                              if($item["quantity"] < $item["min_stock"]){
+                                echo ' class="table-warning"';
+                              }
 
+
+                              echo  '>
+                                      <td>
+                                        '.$item["name"].'
+                                      </td>
+                                      <td>
+                                        '.$item["description"].'
+                                      </td>
+                                      <td>
+                                        '.$item["item_type"].'
+                                      </td>
+                                      <td>
+                                        '.$item["price"].'
+                                      </td>
+
+                                        ';
+                              if($item["quantity"] < $item["min_stock"]){
+                                echo '<td class="text-danger">'.$item["quantity"].' (LOW STOCK)';
+                              }else{
+                                echo '<td>'.$item["quantity"];
+                              }
+                              echo '
+                                      </td>
+                                      <td>
+                                        <a href="add_step.php?item='.$item["item_id"].'" class="btn btn-primary me-2">SELECT ITEM</a>
+                                      </td>
+                                    </tr>';
+                                    $count = $count + 1;
+                            }
                           }
+                        }
                           if($count < 10){
                             for($x = 0; $x < (10-$count); $x++){
                               echo '<tr>

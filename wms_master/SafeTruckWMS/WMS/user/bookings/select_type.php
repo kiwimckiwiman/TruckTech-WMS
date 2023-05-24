@@ -80,12 +80,10 @@
 <script>
 var select = document.getElementById("select");
 select.addEventListener("click", function() {
-  // Perform the desired action when the div is clicked
   window.location.href = "choose_workshops.php?pages=1";
 });
 var geo = document.getElementById("geo");
 geo.addEventListener("click", function() {
-  // Perform the desired action when the div is clicked
   window.location.href = "create_booking.php";
 });
 </script>

@@ -11,7 +11,7 @@ function GetItemPurchases($workshop_id, $item_id) {
   try {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $sql = "SELECT * FROM purchase_details WHERE workshop_id = :workshop_id AND item_id = :item_id";
+      $sql = "SELECT * FROM purchase_details WHERE workshop_id = :workshop_id AND item_id = :item_id ORDER BY date_purchased DESC";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':workshop_id', $workshop_id);
       $stmt->bindParam(':item_id', $item_id);
@@ -172,19 +172,32 @@ function AddItem($workshop_id, $itemName, $description, $price, $quantity, $minS
     $username = 'root';
     $password = '';
     $dbname = 'wms';
-    $search = $search . "%";
     if ( mysqli_connect_errno() ) {
         exit('Failed to connect to MySQL: ' . mysqli_connect_error());
     }
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if($field == "name"){
-          $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND name LIKE :search");
-        }else{
-          $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND item_type LIKE :search");
+        switch($field){
+          case "name":
+            $search = "%". $search . "%";
+            $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND name LIKE :search");
+            $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+            break;
+          case "type":
+            $search = $search . "%";
+            $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND item_type LIKE :search");
+            $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+            break;
+          case "low_stock":
+            $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND quantity < min_stock AND quantity != 0");
+            break;
+          case "empty_stock":
+            $stmt = $conn->prepare("SELECT * FROM inventory WHERE workshop_id = :workshop_id AND quantity = 0");
+            break;
+          default:
+            break;
         }
-        $stmt->bindParam(':search', $search, PDO::PARAM_STR);
         $stmt->bindParam(':workshop_id', $workshop_id, PDO::PARAM_INT);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -197,7 +210,7 @@ function AddItem($workshop_id, $itemName, $description, $price, $quantity, $minS
     return $results;
     }
 
-  function DeleteItem($itemId, $workshopId) {
+  function DeleteItem($workshop_id, $item_id) {
     $servername = 'localhost';
     $username = 'root';
     $password = '';
@@ -207,25 +220,21 @@ function AddItem($workshop_id, $itemName, $description, $price, $quantity, $minS
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      // Prepare and execute the SQL query to delete the item
-      $sql = "DELETE FROM inventory WHERE item_id = :itemId AND workshop_id = :workshopId";
-      $stmt = $conn->prepare($sql);
-      $stmt->bindParam(':itemId', $itemId);
-      $stmt->bindParam(':workshopId', $workshopId);
+      $item = GetItem($workshop_id, $item_id);
+      if (file_exists("../../../../images/inventory/".$item["img_name"])) {
+          unlink("../../../../images/inventory/".$item["img_name"]);
+      }
+      $stmt = $conn->prepare("DELETE FROM inventory WHERE item_id = :item_id AND workshop_id = :workshop_id");
+      $stmt->bindParam(':workshop_id', $workshop_id);
+      $stmt->bindParam(':item_id', $item_id);
       $stmt->execute();
 
-      // Check if any rows were affected by the delete query
-      $rowCount = $stmt->rowCount();
-      if ($rowCount > 0) {
-        return true; // Return true if the item was successfully deleted
-      } else {
-        return false; // Return false if the item was not found or could not be deleted
-      }
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
       return false; // Return false if there was an error with the database connection or query
     }
   }
+
   function GetItem($workshop_id, $item_id) {
     $servername = 'localhost';
     $username = 'root';
@@ -258,7 +267,7 @@ function UpdateItem($workshop_id, $item_id, $item_name, $description, $price, $m
   $dbname = 'wms';
 
   try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbnamex", $username, $password);
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
       // Check if item_id and workshop_id are set in POST

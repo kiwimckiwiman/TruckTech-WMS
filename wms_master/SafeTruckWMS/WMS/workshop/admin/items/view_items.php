@@ -74,6 +74,8 @@
                           </td>
                         </tr>
                       </table>
+                      </br>
+                      <button type="submit" class="btn btn-primary me-2">SUBMIT</button>
                     </form>
                   </br>
                   <div class="table-responsive">

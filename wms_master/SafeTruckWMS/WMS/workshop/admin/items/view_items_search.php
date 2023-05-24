@@ -11,12 +11,30 @@
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
-  if(empty($_POST["query"])){
-    header("Location:view_items.php?pages=1");
-  }else{
-    $query = $_POST["query"];
-    $query_type = $_POST["query_type"];
-    $items = GetAllWorkshopItemsSearch($_SESSION["workshop_id"], $query, $query_type);
+
+  switch($_POST["query_type"]){
+    case "name":
+      if(isset($_POST["query"])){
+        $items = GetAllWorkshopItemsSearch($_SESSION["workshop_id"], $_POST["query"], $_POST["query_type"]);
+      }else{
+        header("Location:view_items.php?pages=1");
+      }
+      break;
+    case "type":
+      if(isset($_POST["query"])){
+        $items = GetAllWorkshopItemsSearch($_SESSION["workshop_id"], $_POST["query"], $_POST["query_type"]);
+      }else{
+        header("Location:view_items.php?pages=1");
+      }
+      break;
+    case "low_stock":
+      $items = GetAllWorkshopItemsSearch($_SESSION["workshop_id"], "none", $_POST["query_type"]);
+      break;
+    case "empty_stock":
+      $items = GetAllWorkshopItemsSearch($_SESSION["workshop_id"], "none", $_POST["query_type"]);
+      break;
+    default:
+      header("Location:view_items.php?pages=1");
   }
 ?>
 
@@ -74,6 +92,8 @@
                         </td>
                       </tr>
                     </table>
+                    </br>
+                    <button type="submit" class="btn btn-primary me-2">SUBMIT</button>
                   </form>
                 </br>
                 <div class="table-responsive">

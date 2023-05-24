@@ -12,13 +12,13 @@
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   if(isset($_GET["id"])){
-    $id = $_GET["id"];
-    $item = GetItem($_SESSION["workshop_id"], $id);
+    $id = $_SESSION["item_id"] = $_GET["id"];
+    $item = GetItem($_SESSION["workshop_id"], $_GET["id"]);
     $purchases = GetItemPurchases($_SESSION["workshop_id"], $item["item_id"]);
     if($item == null){
       header("Location:view_items.php?pages=1");
     }
-    $page=$item["name"];
+    $page="Item: ".$item["name"];
   }else{
     header("Location:view_items.php?pages=1");
   }
@@ -107,25 +107,14 @@
                                  ?>
                             </td>
                           </tr>
-                          <tr>
-                            <th>
-                              Minimum Stock
-                            </th>
-                            <td>
-                              <?php echo $item["min_stock"]; ?>
-                            </td>
-                          </tr>
                           <tr></tr>
                         </th>
                     </table>
                     </br>
-                    <form method="POST" action="delete_worker.php">
                       <a href="view_items.php?page=1" class="btn btn-primary me-2">BACK</a>
-                      <a href="add_stock.php?id=<?php echo $item["item_id"];?>" class="btn btn-success me-2">ADD STOCK</a>
-                      <a href="edit_item.php?id=<?php echo $item["item_id"];?>" class="btn btn-primary me-2">EDIT ITEM</a>
-                      <input type="hidden" name="id" value="<?php echo $item["item_id"]; ?>">
-                      <button type="submit" class="btn btn-danger me-2">DELETE ITEM</button>
-                    </form>
+                      <a href="add_stock.php" class="btn btn-primary me-2">ADD STOCK</a>
+                      <a href="edit_item.php" class="btn btn-success me-2">EDIT ITEM</a>
+                      <a href="#" onclick="deleteItem()" class="btn btn-danger me-2">DELETE ITEM</a>
                   </div>
                   <div class="card-body">
                     <h4 class="card-title">Purchase History</h4>
@@ -164,7 +153,7 @@
                           foreach($purchases as $purchase){
                             echo '<tr>
                                     <td>
-                                      '.$purchase["date_purchased"].'
+                                      '.date('D | d-M | h:i A', strtotime($purchase["date_purchased"])).'
                                     </td>
                                     <td>
                                       '.$purchase["supplier"].'
@@ -200,10 +189,18 @@
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
-  </di v>
+  </div>
 
   <!-- plugins:js -->
   <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
+  <script>
+  function deleteItem() {
+    var result = confirm("Do you wish to delete this item? This action cannot be undone");
+    if (result) {
+      window.location.href = "delete_item.php";
+    }
+  }
+  </script>
   <!-- endinject -->
   <!-- End custom js for this page-->
 </body>

@@ -8,7 +8,6 @@
   include '../../../queries/workshop_queries.php';
   include '../../../modules/wadmin_nav_top.php';
   include '../../../modules/wadmin_dash_nav.php';
-  include '../../../modules/breadcrumbs_owner.php';
   include '../../../modules/footer.php';
 ?>
 <head>

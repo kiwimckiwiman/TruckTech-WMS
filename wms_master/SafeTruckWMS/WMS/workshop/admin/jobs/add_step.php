@@ -14,9 +14,8 @@
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   if(isset($_SESSION["job_id"])){
     $id = $_SESSION["job_id"];
-      $steps = GetAllSteps($id);
-    
-    $page="Job ID: ".$id;
+    $steps = GetAllSteps($_SESSION["job_id"]);
+    $page="Job ID: ".$_SESSION["job_id"];
   }else{
     header("Location:view_jobs.php?pages=1");
   }
@@ -58,26 +57,31 @@
                     <h4 class="card-title">Add Step</h4>
                     <form class="forms-sample" method="POST" action="add_step_process.php">
                       <div class="form-group">
+                        <?php
+                          if(isset($_GET["item"])){
+                            $item = GetItem($_SESSION["workshop_id"], $_GET["item"]);
+                            if(!empty($item)){
+                              echo '<label for="workshop-owner">Inventory Item:</label>
+                                    <input type="text" disabled class="form-control" placeholder="Item" value="'.$item["name"].'">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required max="'.$item["quantity"].'" min="1">
+                                    <input type="hidden" class="form-control" id="item_id" name="item_id" value="'.$item["item_id"].'">';
+
+                              if($item["quantity"] < $item["min_stock"]){
+                                echo '<label class="text-danger">WARNING: Stock is at '.$item["quantity"].'</label>';
+                              }
+                            }
+                          }
+                         ?>
+                         </br>
+                        <a href="add_items.php?page=1" class="btn btn-primary me-2">SELECT INVENTORY ITEM</a>
+                      </div>
+                      <div class="form-group">
                         <label for="name">Step Description</label>
                         <input type="text" class="form-control" id="stepDescr" name="stepDescr" placeholder="Description" required>
                       </div>
                       <div class="form-group">
-                        <label for="workshop-owner">Choose Inventory Item:</label>
-                        <input type="text" disabled class="form-control" placeholder="Item" value="<?php
-                        if(isset($_GET["item"])){
-                          echo GetItem($_SESSION["workshop_id"], $_GET["item"])["name"];
-                        }
-                         ?>">
-                         <input type="hidden" class="form-control" id="id" name="id" value="<?php if(isset($_GET["item"])){echo $_GET["item"];}else{echo "0";} ?>">
-                        </br>
-                        <a href="add_items.php?page=1" class="btn btn-primary me-2">SELECT INVENTORY ITEM</a>
-                      </div>
-                      <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="text" class="form-control" id="quantity" name="quantity" required>
-                      </div>
-                      <div class="form-group">
-                        <label for="comment">Comment </label>
+                        <label for="comment">Comment</label>
                         <input type="text" class="form-control" id="comment"  required name="comment" placeholder="Your Comment">
                       </div>
                       <button type="submit" class="btn btn-primary me-2">SUBMIT</button>
@@ -95,7 +99,7 @@
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
-  </di v>
+  </div>
 
   <!-- plugins:js -->
   <script src="../../../../vendors/js/vendor.bundle.base.js"></script>

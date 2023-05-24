@@ -1,4 +1,4 @@
-<?php
+  <?php
   //--- BOOKING ADMIN SQL FUNCTIONS ---
 
   function ViewAllPendingBookings($workshop_lng, $workshop_ltd)

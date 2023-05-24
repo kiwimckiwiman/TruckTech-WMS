@@ -12,13 +12,13 @@
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
   $owner = GetOwner($_SESSION["id"]);
-  if(isset($_GET["id"])){
-    $id = $_GET["id"];
+  if(isset($_SESSION["item_id"])){
+    $id = $_SESSION["item_id"];
     $item = GetItem($_SESSION["workshop_id"], $id);
     if($item == null){
       header("Location:view_items.php?pages=1");
     }
-    $page=$item["name"];
+    $page="Item: ".$item["name"];
   }else{
     header("Location:view_items.php?pages=1");
   }

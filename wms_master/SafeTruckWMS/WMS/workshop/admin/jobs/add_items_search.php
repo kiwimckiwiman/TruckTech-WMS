@@ -11,6 +11,8 @@
   include '../../../modules/wadmin_ws_nav.php';
   include '../../../modules/footer.php';
   $workshop = GetWorkshop($_SESSION["workshop_id"], $_SESSION["id"]);
+  $id = $_SESSION["job_id"];
+  $page="Job ID: ".$id;
   if(empty($_POST["query"]) && ($_POST["job"] == "0") && ($_POST["inv"] == "0")){
     header("Location:view_workers.php?pages=1");
   }else{

@@ -1,11 +1,5 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="nav-item">
-      <a class="nav-link" href="../home/dashboard.php">
-        <i class="mdi mdi-grid-large menu-icon"></i>
-        <span class="menu-title">Dashboard</span>
-      </a>
-    </li>
     <li class="nav-item nav-category">Bookings</li>
     <li class="nav-item">
       <a class="nav-link" href="../bookings/view_bookings.php?pages=1">

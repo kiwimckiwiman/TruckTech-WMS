@@ -1,5 +1,5 @@
 <?php
-function AddStep($job_id, $stepDescr, $worker_id, $comment, $item_id, $quantity, $totalPrice, $finish){
+function AddStep($job_id, $stepDescr, $comment, $item_id, $quantity, $totalPrice, $finish){
   $servername = 'localhost';
   $username = 'root';
   $password = '';
@@ -14,11 +14,10 @@ function AddStep($job_id, $stepDescr, $worker_id, $comment, $item_id, $quantity,
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
       // Prepare the SQL statement for inserting user data into the table
-      $stmt = $conn->prepare("INSERT INTO steps (job_id, time_created, description, worker_id, comment, item_id, quantity, total_item_price,finish)
-      VALUES (:job_id, NOW(), :stepDescr, :worker_id, :comment, :item_id, :quantity, :totalprice, :finish)");
+      $stmt = $conn->prepare("INSERT INTO steps (job_id, time_created, description, comment, item_id, quantity, total_item_price,finish)
+      VALUES (:job_id, NOW(), :stepDescr, :comment, :item_id, :quantity, :totalprice, :finish)");
       $stmt->bindParam(':job_id', $job_id);
       $stmt->bindParam(':stepDescr', $stepDescr);
-      $stmt->bindParam(':worker_id', $worker_id); // Replace 'worker_id' with the actual variable containing the worker ID
       $stmt->bindParam(':comment', $comment);
       $stmt->bindParam(':item_id', $item_id);
       $stmt->bindParam(':quantity', $quantity);
@@ -60,56 +59,28 @@ function FinishStep($stepID){
   }
 
 function AlterInventory($itemId,$stepQty){
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$dbname = 'wms';
-
-try {
-    // Create a PDO connection
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Prepare and execute the update statement
-    $stmt = $conn->prepare("UPDATE inventory SET quantity = :quantity WHERE item_id = :item_id");
-    $stmt->bindParam(':quantity', $stepQty);
-    $stmt->bindParam(':item_id', $itemId);
-    $stmt->execute();
-
-    echo "Quantity updated successfully!";
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
-}
-
-function DeleteStep($stepID) {
   $servername = 'localhost';
   $username = 'root';
   $password = '';
   $dbname = 'wms';
 
   try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      // Create a PDO connection
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare and execute the SQL query to delete the item
-    $sql = "DELETE FROM steps WHERE step_id = :step_id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':step_id', $stepID);
-    $stmt->execute();
+      // Prepare and execute the update statement
+      $stmt = $conn->prepare("UPDATE inventory SET quantity = :quantity WHERE item_id = :item_id");
+      $stmt->bindParam(':quantity', $stepQty);
+      $stmt->bindParam(':item_id', $itemId);
+      $stmt->execute();
 
-    // Check if any rows were affected by the delete query
-    $rowCount = $stmt->rowCount();
-    if ($rowCount > 0) {
-      return true; // Return true if the item was successfully deleted
-    } else {
-      return false; // Return false if the item was not found or could not be deleted
-    }
-  } catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-    return false; // Return false if there was an error with the database connection or query
+      echo "Quantity updated successfully!";
+  } catch (PDOException $e) {
+      echo "Error: " . $e->getMessage();
   }
 }
+
 
 function GetAllSteps($job_id) {
   $servername = 'localhost';
@@ -158,7 +129,7 @@ function ViewWorkshopJobs($workshop_id){
     }
 }
 
-function DeleteJob($jobId) {
+function DeleteJob($job_id) {
   $servername = 'localhost';
   $username = 'root';
   $password = '';
@@ -168,48 +139,50 @@ function DeleteJob($jobId) {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare("DELETE FROM jobs WHERE job_id = :jobId");
-    $stmt->bindParam(':jobId', $jobId);
+    $conn -> beginTransaction();
+    $stmt = $conn->prepare("UPDATE inventory
+                            JOIN steps ON inventory.item_id = steps.item_id
+                            SET inventory.quantity = inventory.quantity + steps.quantity
+                            WHERE steps.job_id = :job_id
+                              AND steps.item_id IS NOT NULL;");
+    $stmt->bindParam(':job_id', $job_id);
     $stmt->execute();
-    // No need to fetch results after DELETE statement
+    $stmt = $conn->prepare("DELETE FROM steps WHERE job_id = :job_id;");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+    $stmt = $conn->prepare("DELETE FROM jobs WHERE job_id = :job_id;");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
+    $conn -> commit();
   } catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
   }
 }
 
-function DeleteWorkshopJob($job_id){
-    $servername = 'localhost';
-    $username = 'root';
-    $password = '';
-    $dbname = 'wms';
+function DeleteStep($step_id){
+  $servername = 'localhost';
+  $username = 'root';
+  $password = '';
+  $dbname = 'wms';
 
-    if ( mysqli_connect_errno() ) {
-      exit('Failed to connect to MySQL: ' . mysqli_connect_error());
-    }
-    try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $stmt = $conn->prepare("SELECT * FROM Jobs WHERE job_id = :job_id");
-      $stmt->bindParam(':job_id', $job_id);
-      $stmt->execute();
-      $result = $stmt->fetch();
-
-      try{
-        if (gettype($result) == 'boolean'){
-          throw new Exception("This job is no longer available");
-        }else{
-          $stmt = $conn->prepare("DELETE FROM jobs WHERE job_id = :job_id");
-          $stmt->bindParam(':job_id', $job_id);
-          $stmt->execute();
-          echo "Job deleted successfully.";
-        }
-      }catch(Exception $e) {
-        echo 'Message: ' .$e->getMessage();
-      }
-    } catch(PDOException $e) {
-      echo "Error: " . $e->getMessage();
-    }
+    $conn -> beginTransaction();
+    $stmt = $conn->prepare("UPDATE inventory
+                            JOIN steps ON inventory.item_id = steps.item_id
+                            SET inventory.quantity = inventory.quantity + steps.quantity
+                            WHERE steps.step_id = :step_id;");
+    $stmt->bindParam(':step_id', $step_id);
+    $stmt->execute();
+    $stmt = $conn->prepare("DELETE FROM steps WHERE step_id = :step_id;");
+    $stmt->bindParam(':step_id', $step_id);
+    $stmt->execute();
+    $conn -> commit();
+  } catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  }
 }
 
 function ViewWorkshopJob($workshop_id, $job_id){
@@ -236,30 +209,8 @@ function ViewWorkshopJob($workshop_id, $job_id){
     }
 }
 
-function EditWorkshopJobComment($job_id,$comment){
-  $servername = 'localhost';
-  $username = 'root';
-  $password = '';
-  $dbname = 'wms';
 
-  if ( mysqli_connect_errno() ) {
-    exit('Failed to connect to MySQL: ' . mysqli_connect_error());
-  }
-  try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $stmt = $conn->prepare("UPDATE Jobs SET comment = :comment WHERE job_id = :job_id");
-    $stmt->bindParam(':job_id', $job_id);
-    $stmt->bindParam(':comment', $comment);
-    $stmt->execute();
-    echo "New comment added successfully.";
-  } catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-  }
-}
-
-function FinishWorkshopJob($job_id,$service_fee){
+function FinishWorkshopJob($job_id, $service_fee, $comment){
   //update finish_time + generate invoice (PDF? FPDF library)
   //only available if finish_time is NULL
   $servername = 'localhost';
@@ -274,8 +225,11 @@ function FinishWorkshopJob($job_id,$service_fee){
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $conn->prepare("UPDATE Jobs SET service_fee = :service_fee, finish_time = CURRENT_TIMESTAMP() WHERE job_id = :job_id");
+    $conn->beginTransaction();
+
+    $stmt = $conn->prepare("UPDATE Jobs SET service_fee = :service_fee, comment = :comment, finish_time = CURRENT_TIMESTAMP() WHERE job_id = :job_id");
     $stmt->bindParam(':job_id', $job_id);
+    $stmt->bindParam(':comment', $comment);
     $stmt->bindParam(':service_fee', $service_fee);
     $stmt->execute();
 
@@ -306,15 +260,15 @@ function FinishWorkshopJob($job_id,$service_fee){
     $stmt->execute();
     $customer_details = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $stmt = $conn->prepare("SELECT inventory.name, steps.quantity, steps.total_item_price
+    $stmt = $conn->prepare("SELECT inventory.name, steps.quantity, steps.total_item_price, steps.description
     FROM steps
-    INNER JOIN inventory
-    ON steps.item_id=inventory.item_id AND steps.job_id = :job_id");
+    LEFT JOIN inventory
+    ON steps.item_id=inventory.item_id WHERE steps.job_id = :job_id");
     $stmt->bindParam(':job_id', $job_id);
     $stmt->execute();
     $steps_details = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $invoice_id_string = strval($job_id);
+    $invoice_id_string = uniqid().strval($job_id);
     $file_type = ".html";
     $invoicehtml = $invoice_id_string . $file_type;
 
@@ -415,7 +369,10 @@ function FinishWorkshopJob($job_id,$service_fee){
               <div class='i_table_head'>
                 <div class='i_row'>
                   <div class='i_col w_55'>
-                    <p class='p_title'>Item/Service Charge</p>
+                    <p class='p_title'>Service Charge</p>
+                  </div>
+                  <div class='i_col w_55'>
+                    <p class='p_title'>Item(s) Charge</p>
                   </div>
                   <div class='i_col w_15 text_center'>
                     <p class='p_title'>Qty</p>
@@ -430,22 +387,47 @@ function FinishWorkshopJob($job_id,$service_fee){
               </div>";
 
 foreach ($steps_details as $step_details) {
-  $txt .=
-              "<div class='i_table_body'>
-                <div class='i_row'>
-                  <div class='i_col w_55'>
-                    <p>" . $step_details['name'] . "</p>
-                  </div>
-                  <div class='i_col w_15 text_center'>
-                    <p>" . $step_details['quantity'] . "</p>
-                  </div>
-                  <div class='i_col w_15 text_center'>
-                    <p>" . $step_details['total_item_price']/$step_details['quantity'] . "</p>
-                  </div>
-                  <div class='i_col w_15 text_right'>
-                    <p>" . $step_details['total_item_price'] . "</p>
-                  </div>
-                </div>";
+  if($step_details['quantity'] == 0){
+    $txt .=
+                "<div class='i_table_body'>
+                  <div class='i_row'>
+                    <div class='i_col w_55'>
+                      <p>" . $step_details['description'] . "</p>
+                    </div>
+                    <div class='i_col w_55'>
+                      <p> n/a </p>
+                    </div>
+                    <div class='i_col w_15 text_center'>
+                      <p> n/a </p>
+                    </div>
+                    <div class='i_col w_15 text_center'>
+                      <p> n/a </p>
+                    </div>
+                    <div class='i_col w_15 text_right'>
+                      <p> n/ a</p>
+                    </div>
+                  </div>";
+  }else{
+    $txt .=
+                "<div class='i_table_body'>
+                  <div class='i_row'>
+                    <div class='i_col w_55'>
+                      <p>" . $step_details['description'] . "</p>
+                    </div>
+                    <div class='i_col w_55'>
+                      <p>" . $step_details['name'] . "</p>
+                    </div>
+                    <div class='i_col w_15 text_center'>
+                      <p>" . $step_details['quantity'] . "</p>
+                    </div>
+                    <div class='i_col w_15 text_center'>
+                      <p>" . $step_details['total_item_price']/$step_details['quantity'] . "</p>
+                    </div>
+                    <div class='i_col w_15 text_right'>
+                      <p>" . $step_details['total_item_price'] . "</p>
+                    </div>
+                  </div>";
+  }
   }
 
   $txt .=
@@ -454,10 +436,10 @@ foreach ($steps_details as $step_details) {
                   <p>Service Fee</p>
                 </div>
                 <div class='i_col w_15 text_center'>
-                  <p>-</p>
+                  <p></p>
                 </div>
                 <div class='i_col w_15 text_center'>
-                  <p>-</p>
+                  <p></p>
                 </div>
                 <div class='i_col w_15 text_right'>
                   <p>" . $job_details['service_fee'] . "</p>
@@ -480,6 +462,7 @@ foreach ($steps_details as $step_details) {
         </div>
         <div class='invoice_notes'>
           <div class='main_title'>
+            </br>
             <p>Notes</p>
           </div>
           <p>" . $job_details['comment'] . "</p>
@@ -499,12 +482,12 @@ foreach ($steps_details as $step_details) {
     $stmt->bindParam(':invoice_link', $invoicelink);
     $stmt->execute();
 
-    //[done] calculate 'steps' here for 'total_price'
-    //[done] genereate PDF script
-    //[done] store in invoice folder
-    //store the link in job table
+    $stmt = $conn->prepare("DELETE FROM Steps WHERE job_id = :job_id");
+    $stmt->bindParam(':job_id', $job_id);
+    $stmt->execute();
 
-    //echo "A job finished successfully.";
+    $conn->commit();
+
   } catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
   }
