@@ -9,6 +9,8 @@
   include '../../../modules/worker_nav_top.php';
   include '../../../modules/footer.php';
   include '../../../queries/inventory_queries.php';
+  $id = $_SESSION["job_id"];
+  $page="Job ID: ".$id;
   if(empty($_POST["query"]) && ($_POST["job"] == "0") && ($_POST["inv"] == "0")){
     header("Location:view_workers.php?pages=1");
   }else{

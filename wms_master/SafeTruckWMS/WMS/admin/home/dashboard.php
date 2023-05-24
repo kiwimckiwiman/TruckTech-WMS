@@ -7,7 +7,7 @@
   }
   include '../../modules/sadmin_nav_top.php';
   include '../../modules/footer.php';
-  include '../../queries/admindashboardQueries.php';
+  include '../../queries/admin_data_queries.php';
 ?>
 <head>
   <!-- Required meta tags -->
@@ -52,16 +52,16 @@
                       <div class="statistics-details d-flex align-items-center justify-content-between">
                         <div>
                             <p class="statistics-title">Total Workshops registered</p>
-          
+
 
                             <h3 class="rate-percentage"> <?php echo getTotalWorkshopsCount(); ?></h3>
 
-                           
+
                             <!-- <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p> -->
                           </div>
                           <div>
                             <p class="statistics-title">Total Workshop Owners</p>
-                           
+
 
                             <h3 class="rate-percentage"><?php echo getTotalWorkshopOwnersCount(); ?></h3>
 
@@ -71,13 +71,13 @@
                             <p class="statistics-title">Best performing Workshop based on number of Completed jobs</p>
                             <!-- <h3 class="rate-percentage">120</h3> -->
 
-                
+
 
                             <h3 class="rate-percentage"><?php echo getWorkshopWithMostCompletedJobs(); ?></h3>
 
-                          
+
                           </div>
-                          
+
 
                         </div>
                       </div>
@@ -112,25 +112,25 @@
                                 <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Accepted</p>
                                     <p class="status-summary-ight-white mb-1">  Bookings</p>
-                                
+
 
                                     <h2 class="text-info"> <?php echo countAcceptedBookingsForBestWorkshop(); ?></h2>
 
                                   </div>
-                                
+
                                   <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Pending </p>
                                     <p class="status-summary-ight-white mb-1">  Bookings</p>
 
                                     <h2 class="text-info"> <?php echo countPendingBookingsForBestWorkshop(); ?></h2>
                                   </div>
-                                
+
                                   <div class="col-sm-4">
                                     <p class="status-summary-ight-white mb-1">Rejected</p>
                                     <p class="status-summary-ight-white mb-1">  Bookings</p>
                                     <h2 class="text-info"> <?php echo countrejectedBookingsForBestWorkshop(); ?></h2>
                                   </div>
-                                  
+
                                 </div>
                               </div>
                             </div>
@@ -146,7 +146,7 @@
                                       </div>
                                       <div>
                                         <p class="text-small mb-2">Acceptance Rate</p>
-                                      
+
 
                                         <h4 class="mb-0 fw-bold"><?php echo calculateAcceptancePercentage(); ?>%</h4>
                                       </div>
@@ -158,7 +158,7 @@
                                         <div id="visitperday" class="progressbar-js-circle pr-2"></div>
                                       </div>
                                       <div>
-                                 
+
 
                                         <p class="text-small mb-2">Rejection Rate</p>
                                         <h4 class="mb-0 fw-bold"><?php echo calculateRejectionPercentage(); ?>%</h4>

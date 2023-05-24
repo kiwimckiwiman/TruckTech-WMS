@@ -34,8 +34,7 @@ $curr = ucwords(str_replace('.php', '', $curr));
     }
   }else{
     if(strpos($parts[1], "pages")){
-      if(strpos($parts[1], "items")){
-        echo $parts[1];
+      if(strpos($parts[1], "items") && ($parts[0] == "jobs")){
         echo '<div class="breadcrumbs">
                 <a href  = " ../home/dashboard.php" class="crumb">All Workshops</a>
                 <a href = " ../home/workshop_dashboard.php?workshop='.$workshop["workshop_id"].'" class="crumb">Workshop: '.trim($workshop["name"]).'</a>

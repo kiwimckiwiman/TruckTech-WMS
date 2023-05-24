@@ -11,6 +11,7 @@
   include '../../../queries/inventory_queries.php';
   if(isset($_GET["pages"])){
     $id = $_SESSION["job_id"];
+    $page="Job ID: ".$id;
     $pages = $_GET["pages"];
     $items = GetAllWorkshopItems($_SESSION["workshop_id"], intval($pages));
   }else{

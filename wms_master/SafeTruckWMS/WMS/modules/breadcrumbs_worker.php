@@ -22,10 +22,21 @@ if($parts[0] == "profile"){
   }
 }else{
   if(strpos($parts[1], "pages")){
-    echo '<div class="breadcrumbs">
-            <a href = " ../home/dashboard.php" class="crumb">Dashboard</a>
-            <a href = "view_'.$parts[0].'.php?pages=1" class="crumb">All '.ucwords($parts[0]).'</a>
-          </div>';
+    if(strpos($parts[1], "items") && ($parts[0] == "jobs")){
+      echo '<div class="breadcrumbs">
+              <a href  = " ../home/dashboard.php" class="crumb">Dashboard</a>
+              <a href = " ../'.$parts[0].'/view_'.$parts[0].'.php?pages=1" class="crumb">All '.ucwords($parts[0]).'</a>
+              <a href = "../'.$parts[0].'/view_'.substr($parts[0], 0, -1).'.php?id='.$id.'" class="crumb">'.$page.'</a>
+              <a href = "" class="crumb">'.$curr.'</a>
+            </div>';
+    }else{
+      $curr = implode(' ', array_slice(explode(' ', $curr), 1));
+      echo '<div class="breadcrumbs">
+              <a href = " ../home/dashboard.php" class="crumb">Dashboard</a>
+              <a href = " ../'.$parts[0].'/view_'.$parts[0].'.php?pages=1" class="crumb">All '.$curr.'</a>
+            </div>';
+    }
+
   }else{
     if(isset($id)){
       echo '<div class="breadcrumbs">
