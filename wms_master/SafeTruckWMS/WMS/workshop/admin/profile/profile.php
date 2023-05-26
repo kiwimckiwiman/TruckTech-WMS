@@ -48,7 +48,7 @@
                           </div>
                           <div class="form-group">
                             <label for="company">Company Name</label>
-                            <input type="text" class="form-control" id="company" name="company" value="<?php echo $account["company"]?>" required placeholder="Company Name">
+                            <input type="text" class="form-control" id="company" name="company" value="<?php echo $account["company"]?>" placeholder="Company Name">
                           </div>
                           <div class="form-group">
                               <label for="phoneNumber">Phone Number</label>

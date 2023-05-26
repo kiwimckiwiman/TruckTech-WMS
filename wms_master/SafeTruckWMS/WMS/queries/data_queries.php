@@ -1,5 +1,4 @@
 <?php
-#require('fpdf185/fpdf.php');
 
 function SalesChart($workshop_id){
   $servername = 'localhost';
@@ -77,8 +76,9 @@ function getRejectedBookingsPercentage($workshop_id) {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $sql = "SELECT COUNT(*) AS total_bookings FROM bookings";
+      $sql = "SELECT COUNT(*) AS total_bookings FROM bookings WHERE workshop_id = :workshop_id";
       $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':workshop_id', $workshop_id);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $totalBookings = $result['total_bookings'];
@@ -89,12 +89,14 @@ function getRejectedBookingsPercentage($workshop_id) {
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $rejectedBookings = $result['rejected_bookings'];
-
+      if($totalBookings !=0){
+        $percentage = ($rejectedBookings / $totalBookings) * 100;
+        $percentage = number_format($percentage, 2);
+        return $percentage;
+        }else{
+          return 0;
+        }
       // Calculate the percentage
-      $percentage = ($rejectedBookings / $totalBookings) * 100;
-      $percentage = number_format($percentage, 2);
-
-      return $percentage;
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -110,8 +112,9 @@ function getAcceptedBookingsPercentage($workshop_id) {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      $sql = "SELECT COUNT(*) AS total_bookings FROM bookings";
+      $sql = "SELECT COUNT(*) AS total_bookings FROM bookings WHERE workshop_id = :workshop_id";
       $stmt = $conn->prepare($sql);
+      $stmt->bindParam(':workshop_id', $workshop_id);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $totalBookings = $result['total_bookings'];
@@ -122,16 +125,20 @@ function getAcceptedBookingsPercentage($workshop_id) {
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $acceptedBookings = $result['accepted_bookings'];
-
-      // Calculate the percentage
+      if($totalBookings !=0){
       $percentage = ($acceptedBookings / $totalBookings) * 100;
       $percentage = number_format($percentage, 2);
       return $percentage;
+      }else{
+        return 0;
+      }
+      // Calculate the percentage
+
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
   }
-  
+
 function getPendingBookingsCount($workshop_id) {
     $servername = 'localhost';
     $username = 'root';

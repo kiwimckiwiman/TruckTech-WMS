@@ -198,7 +198,7 @@ function ViewWorkshopJob($workshop_id, $job_id){
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $conn->prepare("SELECT * FROM jobs WHERE job_id = :job_id AND workshop_id = :workshop_id");
+        $stmt = $conn->prepare("SELECT b.name, a.* FROM jobs a JOIN users b ON a.customer_id = b.user_id WHERE a.job_id = :job_id AND a.workshop_id = :workshop_id");
         $stmt->bindParam(':job_id', $job_id);
         $stmt->bindParam(':workshop_id', $workshop_id);
         $stmt->execute();

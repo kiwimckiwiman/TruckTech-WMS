@@ -8,22 +8,18 @@
   include '../../modules/cust_nav_top.php';
   include '../../modules/footer.php';
   include '../../queries/booking_queries_customer.php';
+  include '../../queries/job_queries_customer.php';
   if (isset ($_POST['deletebutton'])){
     DeleteCustomerBooking($_POST['deletebutton']);
   }
-  if(isset($_GET["pages"])){
-    $pages = $_GET["pages"];
-    $bookings = ViewCustomerBookings($_SESSION["id"], $pages);
-  }else{
-    header("Location:view_bookings.php?pages=1");
-  }
-
+  $bookings = ViewCustomerBookings($_SESSION["id"]);
+  $jobs = ViewCustomerJobs($_SESSION["id"]);
 ?>
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>View Workshops</title>
+  <title>View Bookings</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
   <!-- endinject -->
@@ -51,7 +47,7 @@
               <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">View Bookings</h4>
+                    <h4 class="card-title">Pending Bookings</h4>
                   </br>
                   <div class="table-responsive">
                     <table class="table table-hover">
@@ -70,21 +66,14 @@
                             Workshop
                           </th>
                           <th>
-                            Status
-                          </th>
-                          <th>
 
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                       <?php
-                      $count = 0;
                         if(empty($bookings)){
                           echo '<tr>
-                                  <td>
-                                    No data
-                                  </td>
                                   <td>
                                     No data
                                   </td>
@@ -110,13 +99,10 @@
                                       '.$booking["vehicle_plate"].'
                                     </td>
                                     <td>
-                                      '.$booking["time_created"].'
+                                      '.date('D | d-M | h:i A', strtotime($booking["time_created"])).'
                                     </td>
                                     <td>
                                       '.$booking["name"].'
-                                    </td>
-                                    <td>
-                                      '.$booking["accepted_status"].'
                                     </td>
                                     <td>
                                       <form method=post action=\'view_bookings.php?pages=1\'>
@@ -126,38 +112,84 @@
                                       </form>
                                     </td>
                                   </tr>';
-                                  $count = $count + 1;
-                            }
-
-                          }
-                          if($count < 10){
-                            for($x = 0; $x < (10-$count); $x++){
-                              echo '<tr>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                      <td>
-                                        &#8203
-                                      </td>
-                                    </tr>';
                             }
                           }
                        ?>
                      </tbody>
                     </table>
                   </div>
+                  </div>
+                  <div class="card-body">
+                    <h4 class="card-title">On going jobs</h4>
                   </br>
-                    <a href="view_bookings.php?pages=<?php if($pages == 1){echo $pages;}else{echo $pages-1;} ?>" class="btn btn-primary me-2">PREVIOUS</a>
-                    <a href="view_bookings.php?pages=<?php if($count == 10){echo $pages+1;}else{echo $pages;} ?>" class="btn btn-primary me-2">NEXT</a>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Job ID
+                          </th>
+                          <th>
+                            Vehicle plate
+                          </th>
+                          <th>
+                            Description
+                          </th>
+                          <th>
+                            Time Started
+                          </th>
+                          <th>
+                            Workshop
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                        if(empty($jobs)){
+                          echo '<tr>
+                                  <td>
+                                    No data
+                                  </td>
+                                  <td>
+                                    No data
+                                  </td>
+                                  <td>
+                                    No data
+                                  </td>
+                                  <td>
+                                    No data
+                                  </td>
+                                  <td>
+                                    No data
+                                  </td>
+                                </tr>';
+                        }else{
+                          foreach($jobs as $job){
+                            echo '<tr>
+                                    <td>
+                                      '.$job["job_id"].'
+                                    </td>
+                                    <td>
+                                      '.$job["vehicle_plate"].'
+                                    </td>
+                                    <td>
+                                      '.substr($job["description"], 0, 20).'
+                                    </td>
+                                    <td>
+                                    '.date('D | d-M | h:i A', strtotime($job["start_time"])).'
+                                    </td>
+                                    <td>
+                                      '.$job["name"].'
+                                    </td>
+                                  </tr>';
+                            }
+                          }
+                       ?>
+                     </tbody>
+                    </table>
+                    <a href="view_history.php" class="btn btn-primary me-2">VIEW COMPLETED JOBS</a>
+                  </br>
+                  </div>
                   </div>
                   </div>
                 </div>

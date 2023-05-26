@@ -1,5 +1,4 @@
 <?php
-#require('fpdf185/fpdf.php');
 function SalesChart(){
   $servername = 'localhost';
   $username = 'root';
@@ -59,11 +58,15 @@ function calculateRejectionPercentage() {
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $rejectedBookings = $result['rejected_bookings'];
-
+      if($totalBookings !=0){
+        $percentage = ($rejectedBookings / $totalBookings) * 100;
+        $percentage = number_format($percentage, 2);
+        return $percentage;
+        }else{
+          return 0;
+        }
       // Calculate the rejection percentage
-      $percentage = ($rejectedBookings / $totalBookings) * 100;
-      $percentage = number_format($percentage, 2);
-      return $percentage;
+
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -92,9 +95,13 @@ function calculateAcceptancePercentage() {
       $acceptedBookings = $result['accepted_bookings'];
 
       // Calculate the acceptance percentage
-      $percentage = ($acceptedBookings / $totalBookings) * 100;
-      $percentage = number_format($percentage, 2);
-      return $percentage;
+      if($totalBookings !=0){
+        $percentage = ($acceptedBookings / $totalBookings) * 100;
+        $percentage = number_format($percentage, 2);
+        return $percentage;
+        }else{
+          return 0;
+        }
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -114,8 +121,8 @@ function countPendingBookingsForBestWorkshop() {
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result != 0){
       $workshopId = $result['workshop_id'];
-
       $sql = "SELECT COUNT(*) AS total_accepted_bookings FROM bookings WHERE accepted_status = 'pending' AND workshop_id = :workshop_id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':workshop_id', $workshopId);
@@ -124,6 +131,11 @@ function countPendingBookingsForBestWorkshop() {
       $totalAcceptedBookings = $result['total_accepted_bookings'];
 
       return $totalAcceptedBookings;
+      }
+      else{
+        return "TBA";
+      }
+
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -142,6 +154,7 @@ function countrejectedBookingsForBestWorkshop() {
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result != 0){
       $workshopId = $result['workshop_id'];
 
       $sql = "SELECT COUNT(*) AS total_accepted_bookings FROM bookings WHERE accepted_status = 'rejected' AND workshop_id = :workshop_id";
@@ -151,7 +164,10 @@ function countrejectedBookingsForBestWorkshop() {
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $totalAcceptedBookings = $result['total_accepted_bookings'];
 
-      return $totalAcceptedBookings;
+      return $totalAcceptedBookings;}
+      else{
+        return "TBA";
+      }
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -170,6 +186,7 @@ function countAcceptedBookingsForBestWorkshop() {
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      if($result != 0){
       $workshopId = $result['workshop_id'];
 
       $sql = "SELECT COUNT(*) AS total_accepted_bookings FROM bookings WHERE accepted_status = 'accepted' AND workshop_id = :workshop_id";
@@ -178,8 +195,8 @@ function countAcceptedBookingsForBestWorkshop() {
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
       $totalAcceptedBookings = $result['total_accepted_bookings'];
-
-      return $totalAcceptedBookings;
+      return $totalAcceptedBookings;}
+      else {return "TBA";}
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }
@@ -199,9 +216,9 @@ function getWorkshopWithMostCompletedJobs() {
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       $result = $stmt->fetch(PDO::FETCH_ASSOC);
-      $workshopId = $result['workshop_id'];
 
-      // Get the workshop name associated with the workshop_id
+      if($result !=0){
+      $workshopId = $result['workshop_id'];
       $sql = "SELECT name FROM workshops WHERE workshop_id = :workshop_id";
       $stmt = $conn->prepare($sql);
       $stmt->bindParam(':workshop_id', $workshopId);
@@ -210,6 +227,11 @@ function getWorkshopWithMostCompletedJobs() {
       $workshopName = $result['name'];
 
       return $workshopName;
+      }else{
+        return "No Enough Details Available";
+      }
+      // Get the workshop name associated with the workshop_id
+
     } catch(PDOException $e) {
       echo "Error: " . $e->getMessage();
     }

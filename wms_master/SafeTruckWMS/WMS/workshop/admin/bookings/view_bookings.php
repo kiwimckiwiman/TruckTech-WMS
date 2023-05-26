@@ -264,7 +264,6 @@
   <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
   <script src="../../../../js/template.js"></script>
 
-
   <!-- endinject -->
   <!-- End custom js for this page-->
 </body>

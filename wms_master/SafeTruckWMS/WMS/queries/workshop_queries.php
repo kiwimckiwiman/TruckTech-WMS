@@ -47,32 +47,32 @@
           // Execute the prepared statement to insert the user data into the table
           $stmt->execute();
 
-  //        $site = "localhost/wms/SafeTruckWMS/WMS/login/login.php";
-  //        $content = "<!DOCTYPE html>
-  //                      <html>
-//                      <head>
-//                        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
-//                        </head>
-//                        <body>
-//
-//                        <div>
-//                                <h3>Welcome to SafeTruck Workshop Management System</h3>
-//                                <p>Username: ".$email."</p>
-//                                <p>Password: ".$password."</p>
-//                                <p>Login here:</p>
-  //                              <a href =\"".$site."\"><h4>".$site."</h4></a>
-  //                              <p>You may change your password by navigating to the 'Profile' tab on the navigation bar once logged in</p>
-  //                              </br>
-  //                      </div>
-  //                      </body>
-  //                      </html>";
-  //          $headers  = "From: loll8441@gmail.com\r\n";
-  //          $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-//
-  //        mail($email, 'Login Details', $content, $headers);
+          $site = "localhost/wms/SafeTruckWMS/WMS/login/login.php";
+          $content = "<!DOCTYPE html>
+                        <html>
+                      <head>
+                        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
+                        </head>
+                        <body>
 
-//        $conn = null;
-  //        return " class=\"text-success\">Account has been created";
+                        <div>
+                                <h3>Welcome to SafeTruck Workshop Management System</h3>
+                                <p>Username: ".$email."</p>
+                                <p>Password: ".$password."</p>
+                                <p>Login here:</p>
+                                <a href =\"".$site."\"><h4>".$site."</h4></a>
+                                <p>You may change your password by navigating to the 'Profile' tab on the navigation bar once logged in</p>
+                                </br>
+                        </div>
+                        </body>
+                        </html>";
+            $headers  = "From: loll8441@gmail.com\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+          mail($email, 'Login Details', $content, $headers);
+
+          $conn = null;
+          return " class=\"text-success\">Account has been created";
         }else{
           return " class=\"text-danger\">Email already registered";
         }

@@ -109,7 +109,7 @@
                           </tr>
                           <tr></tr>
                         </th>
-                    </table>
+                      </table>
                     </br>
                       <a href="view_items.php?page=1" class="btn btn-primary me-2">BACK</a>
                       <a href="add_stock.php" class="btn btn-primary me-2">ADD STOCK</a>

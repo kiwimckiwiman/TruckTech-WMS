@@ -32,8 +32,7 @@
       }
     }
 
-    function ViewCustomerBookings($customer_id, $page_no){
-      $lim = 10;
+    function ViewCustomerBookings($customer_id){
       $servername = 'localhost';
       $username = 'root';
       $password = '';
@@ -46,10 +45,7 @@
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $conn->prepare("SELECT * FROM bookings a JOIN workshops b ON a.workshop_id = b.workshop_id WHERE customer_id = :customer_id AND accepted_status = 'pending' ORDER BY a.time_created DESC LIMIT :start, :fin");
-        $start = ($page_no-1)*$lim;
-        $stmt->bindParam(':start', $start, PDO::PARAM_INT);
-        $stmt->bindParam(':fin', $lim, PDO::PARAM_INT);
+        $stmt = $conn->prepare("SELECT * FROM bookings a JOIN workshops b ON a.workshop_id = b.workshop_id WHERE customer_id = :customer_id AND accepted_status = 'pending' ORDER BY a.time_created DESC");
         $stmt->bindParam(':customer_id', $customer_id);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -58,28 +54,6 @@
         echo "Error: " . $e->getMessage();
       }
     }
-
-    // function DeleteCustomerBooking($booking_id){
-    //   $servername = 'localhost';
-    //   $username = 'root';
-    //   $password = '';
-    //   $dbname = 'wms';
-
-    //   if ( mysqli_connect_errno() ) {
-    //     exit('Failed to connect to MySQL: ' . mysqli_connect_error());
-    //   }
-    //   try {
-    //     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    //     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    //     $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = :booking_id AND accepted_status = 'pending'");
-    //     $stmt->bindParam(':booking_id', $booking_id);
-    //     $stmt->execute();
-    //     echo "New booking deleted successfully.";
-    //   } catch(PDOException $e) {
-    //     echo "Error: " . $e->getMessage();
-    //   }
-    // }
 
     function DeleteCustomerBooking($booking_id){
       $servername = 'localhost';
